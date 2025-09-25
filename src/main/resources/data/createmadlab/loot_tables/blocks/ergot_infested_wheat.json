@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:wheat" }
+      ]
+    },
+    {
+      "rolls": { "min": 0, "max": 2 },
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:wheat_seeds" }
+      ]
+    },
+    {
+      "rolls": { "min": 1, "max": 2 },
+      "entries": [
+        { "type": "minecraft:item", "name": "createmadlab:ergot_fungus" }
+      ]
+    }
+  ]
+}
