@@ -5,6 +5,7 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.buda1bb.createmadlab.block.ModBlocks;
 import net.buda1bb.createmadlab.fluid.ModFluids;
+import net.buda1bb.createmadlab.item.ModConsumables;
 import net.buda1bb.createmadlab.item.ModCreativeTabs;
 import net.buda1bb.createmadlab.item.ModItems;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -29,12 +30,11 @@ public class CreateMadLab {
 
     public CreateMadLab(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
-        Registrate registrate = Registrate.create(MOD_ID);
 
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-        ModFluids.register(registrate);
+        ModFluids.register(REGISTRATE);
 
 
         // Forge events

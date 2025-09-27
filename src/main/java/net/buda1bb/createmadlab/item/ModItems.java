@@ -1,5 +1,6 @@
 package net.buda1bb.createmadlab.item;
 
+import com.tterrag.registrate.util.entry.ItemEntry;
 import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.block.ModBlocks;
 import net.minecraft.world.item.BlockItem;
@@ -7,6 +8,8 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import static net.buda1bb.createmadlab.CreateMadLab.REGISTRATE;
 
 public class ModItems {
 
@@ -35,6 +38,8 @@ public class ModItems {
     public static final RegistryObject<Item> ERGOT_PAPER =
             ITEMS.register("ergot_paper", () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> LSD_PAPER =
-            ITEMS.register("lsd_paper", () -> new Item(new Item.Properties()));
+    public static final ItemEntry<LSDPaperItem> LSD_PAPER =
+            REGISTRATE.item("lsd_paper", LSDPaperItem::new)
+                    .properties(p -> p.stacksTo(16))
+                    .register();
 }
