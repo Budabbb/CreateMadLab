@@ -1,0 +1,22 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "createmadlab:ergot_fungus",
+      "amount": 1
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:ergot_powder",
+      "count": 1,
+      "chance": 1
+    },
+    {
+      "item": "createmadlab:ergot_powder",
+      "count": 1,
+      "chance": 0.2
+    }
+  ],
+  "processingTime": 50
+}

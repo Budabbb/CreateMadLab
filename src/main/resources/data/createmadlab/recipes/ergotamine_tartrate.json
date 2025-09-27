@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:purified_ergot_solution",
+      "amount": 35
+    },
+    {
+      "fluid": "createbb:ammonia",
+      "amount": 15
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:ergotamine_tartrate",
+      "amount": 1
+    }
+  ]
+}

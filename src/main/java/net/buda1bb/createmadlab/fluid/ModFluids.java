@@ -1,0 +1,125 @@
+package net.buda1bb.createmadlab.fluid;
+
+import com.simibubi.create.AllFluids;
+import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.util.entry.FluidEntry;
+import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+
+public class ModFluids {
+    public static Registrate REGISTRATE;
+
+    public static ResourceLocation still = new ResourceLocation("block/water_still");
+    public static ResourceLocation flow = new ResourceLocation("block/water_flow");
+
+    // chloroform
+    public static FluidEntry<ForgeFlowingFluid.Flowing> CHLOROFORM;
+    public static ItemEntry<BucketItem> CHLOROFORM_BUCKET;
+
+    // new fluids
+    public static FluidEntry<ForgeFlowingFluid.Flowing> ANHYDROUS_HYDRAZINE;
+    public static ItemEntry<BucketItem> ANHYDROUS_HYDRAZINE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> ACETONE;
+    public static ItemEntry<BucketItem> ACETONE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> PURIFIED_ERGOT_SOLUTION;
+    public static ItemEntry<BucketItem> PURIFIED_ERGOT_SOLUTION_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> LYSERGIC_SOLUTION;
+    public static ItemEntry<BucketItem> LYSERGIC_SOLUTION_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_LSD;
+    public static ItemEntry<BucketItem> LIQUID_LSD_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> ERGOT_EXTRACT_SOLUTION;
+    public static ItemEntry<BucketItem> ERGOT_EXTRACT_SOLUTION_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> SLUDGE;
+    public static ItemEntry<BucketItem> SLUDGE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> RESIDUE;
+    public static ItemEntry<BucketItem> RESIDUE_BUCKET;
+
+
+    public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name) {
+        return basicFluid(name, 0xffffffff);
+    }
+
+    public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name, int color) {
+        return REGISTRATE.fluid(name, still, flow, (p, r1, r2) -> new NoColorFluidAttributes(p, color))
+                .properties(p -> p.viscosity(500).density(500))
+                .fluidProperties(p -> p.tickRate(5).slopeFindDistance(6).explosionResistance(100f))
+                .source(ForgeFlowingFluid.Source::new);
+    }
+
+    public static ItemEntry<BucketItem> getBucket(FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> fluid) {
+        return fluid.bucket().properties(p -> p.stacksTo(1)).register();
+    }
+
+    public static void register(Registrate registrate) {
+        REGISTRATE = registrate;
+
+        var fChl = basicFluid("chloroform", 0xffffffff);
+        CHLOROFORM_BUCKET = getBucket(fChl);
+        CHLOROFORM = fChl.register();
+
+        var fHyd = basicFluid("anhydrous_hydrazine", 0xffffffff);
+        ANHYDROUS_HYDRAZINE_BUCKET = getBucket(fHyd);
+        ANHYDROUS_HYDRAZINE = fHyd.register();
+
+        var fAcetone = basicFluid("acetone", 0xffffffff);
+        ACETONE_BUCKET = getBucket(fAcetone);
+        ACETONE = fAcetone.register();
+
+        var fPurErgot = basicFluid("purified_ergot_solution", 0xffffffff);
+        PURIFIED_ERGOT_SOLUTION_BUCKET = getBucket(fPurErgot);
+        PURIFIED_ERGOT_SOLUTION = fPurErgot.register();
+
+        var fLysergicSol = basicFluid("lysergic_solution", 0xffffffff);
+        LYSERGIC_SOLUTION_BUCKET = getBucket(fLysergicSol);
+        LYSERGIC_SOLUTION = fLysergicSol.register();
+
+        var fLSD = basicFluid("liquid_lsd", 0xff905a80);
+        LIQUID_LSD_BUCKET = getBucket(fLSD);
+        LIQUID_LSD = fLSD.register();
+
+        var fErgotExtract = basicFluid("ergot_extract_solution", 0xff2c2506);
+        ERGOT_EXTRACT_SOLUTION_BUCKET = getBucket(fErgotExtract);
+        ERGOT_EXTRACT_SOLUTION = fErgotExtract.register();
+
+        var fSludge = basicFluid("sludge", 0xff574226);
+        SLUDGE_BUCKET = getBucket(fSludge);
+        SLUDGE = fSludge.register();
+
+        var fResidue = basicFluid("residue", 0xffffffff);
+        RESIDUE_BUCKET = getBucket(fResidue);
+        RESIDUE = fResidue.register();
+    }
+
+    public static class NoColorFluidAttributes extends AllFluids.TintedFluidType {
+        private final int color;
+        public NoColorFluidAttributes(Properties properties, int color) {
+            super(properties, still, flow);
+            this.color = color;
+        }
+
+        @Override
+        protected int getTintColor(FluidStack stack) {
+            return color;
+        }
+
+        @Override
+        public int getTintColor(FluidState state, BlockAndTintGetter world, BlockPos pos) {
+            return color;
+        }
+
+    }
+}

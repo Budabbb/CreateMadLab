@@ -1,0 +1,20 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:lysergic_solution",
+      "amount": 150
+    },
+    {
+      "fluid": "createbb:acetic_anhydride",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:lysergic_acid",
+      "amount": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

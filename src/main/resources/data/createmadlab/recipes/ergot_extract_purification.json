@@ -1,0 +1,24 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:ergot_paper",
+      "amount": 1
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:purified_ergot_solution",
+      "amount": 25
+    },
+    {
+      "fluid": "createmadlab:sludge",
+      "amount": 75
+    },
+    {
+      "item": "minecraft:paper",
+      "amount": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

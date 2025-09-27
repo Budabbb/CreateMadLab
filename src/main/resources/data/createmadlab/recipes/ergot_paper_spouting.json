@@ -1,0 +1,19 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:paper",
+      "amount": 1
+    },
+    {
+      "fluid": "createmadlab:ergot_extract_solution",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:ergot_paper",
+      "amount": 1
+    }
+  ]
+}

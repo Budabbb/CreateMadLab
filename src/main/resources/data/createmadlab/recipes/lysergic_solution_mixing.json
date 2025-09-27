@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:ergotamine_tartrate",
+      "amount": 3
+    },
+    {
+      "fluid": "createmadlab:anhydrous_hydrazine",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:lysergic_solution",
+      "amount": 100
+    },
+    {
+      "fluid": "createmadlab:residue",
+      "amount": 150
+    }
+  ]
+}

@@ -1,4 +1,44 @@
 {
-  "creativetab.createmadlab_tab": "Create: Mad Lab",
-  "block.createmadlab.ergot_infested_wheat": "Ergot Infested Wheat"
+  "creativetab.createmadlab_tab": "Mad Lab",
+
+  "block.createmadlab.ergot_infested_wheat": "Ergot Infested Wheat",
+
+  "item.createmadlab.ergot_fungus": "Ergot Fungus",
+  "item.createmadlab.ergot_powder": "Ergot Powder",
+
+  "item.createmadlab.phosphorus_pentoxide": "Phosporus Pentoxide",
+  "item.createmadlab.ergotamine_tartrate": "Ergotamine Tartrate",
+
+  "item.createmadlab.lysergic_acid": "Lysergic Acid",
+  "item.createmadlab.lsd_crystal": "Exciting Crystal",
+
+  "item.createmadlab.ergot_paper": "Ergot Paper",
+  "item.createmadlab.lsd_paper": "Exciting Paper",
+
+  "fluid.createmadlab.chloroform": "Chloroform",
+  "item.createmadlab.chloroform_bucket": "Bucket of Chloroform",
+
+  "fluid.createmadlab.anhydrous_hydrazine": "Anhydrous Hydrazine",
+  "item.createmadlab.anhydrous_hydrazine_bucket": "Bucket of Anhydrous Hydrazine",
+
+  "fluid.createmadlab.acetone": "Acetone",
+  "item.createmadlab.acetone_bucket": "Bucket of Acetone",
+
+  "fluid.createmadlab.ergot_extract_solution": "Ergot Extract Solution",
+  "item.createmadlab.ergot_extract_solution_bucket": "Bucket of Ergot Extract Solution",
+
+  "fluid.createmadlab.purified_ergot_solution": "Purified Ergot Solution",
+  "item.createmadlab.purified_ergot_solution_bucket": "Bucket of Purified Ergot Solution",
+
+  "fluid.createmadlab.lysergic_solution": "Lysergic Solution",
+  "item.createmadlab.lysergic_solution_bucket": "Bucket of Lysergic Solution",
+
+  "fluid.createmadlab.liquid_lsd": "Exciting Liquid",
+  "item.createmadlab.liquid_lsd_bucket": "Bucket of Exciting Liquid",
+
+  "fluid.createmadlab.sludge": "Sludge",
+  "item.createmadlab.sludge_bucket": "Bucket of Sludge",
+
+  "fluid.createmadlab.residue": "Residue",
+  "item.createmadlab.residue_bucket": "Bucket of Residue"
 }

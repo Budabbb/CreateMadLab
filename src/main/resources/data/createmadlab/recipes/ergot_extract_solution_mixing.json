@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:ergot_powder",
+      "amount": 1
+    },
+    {
+      "fluid": "createmadlab:chloroform",
+      "amount": 35
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:ergot_extract_solution",
+      "amount": 50
+    }
+  ]
+}

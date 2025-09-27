@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 300,
+  "experience": 0.1,
+  "ingredient": "createbb:red_phosphorus",
+  "result": {
+    "id": "createmadlab:phosporus_pentoxide"
+  }
+}
