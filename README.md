@@ -1,4 +1,4 @@
-![CreateMadLab Logo](logo.png)
+[![CreateMadLab Logo](logo.png)](https://github.com/Budabbb/CreateMadLab/blob/master/logo.png?raw=true)
 
 # Create: Mad Lab
 
