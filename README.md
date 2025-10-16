@@ -1,5 +1,3 @@
-[![CreateMadLab Logo](logo.png)](https://github.com/Budabbb/CreateMadLab/blob/master/logo.png?raw=true)
-
-# Create: Mad Lab
-
-**Version:** 1.0, 1.20.1
+<p align="center">
+  <img src="https://github.com/Budabbb/CreateMadLab/blob/master/logo.png?raw=true" alt="Logo" width="200"/>
+<h1 align="center">Create: Mad Lab  <br>
