@@ -1,6 +1,6 @@
 #version 120
 
-const float Color = 1.; //Rainbow intensity
+const float Color = .8; //Rainbow intensity
 const float Animation = .4; //Animation speed
 const float Spread = .5; //Color Spread
 uniform sampler2D texture;
@@ -29,24 +29,24 @@ vec3 value3(vec3 p)
 }
 void main()
 {
-    // Internal fade timer - 20s fade in, 3:27 full, 20s fade out
-    float totalDuration = 247.0; // 3 minutes 47 seconds
-    float fadeInDuration = 20.0;
-    float fadeOutDuration = 20.0;
-    float fullDuration = totalDuration - fadeInDuration - fadeOutDuration;
+    // Internal fade timer - 1m fade in, 3m peak, 1m fade out
+    float totalDuration = 300.0; // 5 minutes total
+    float fadeInDuration = 60.0; // 1 minute
+    float peakDuration = 180.0;  // 3 minutes
+    float fadeOutDuration = 60.0; // 1 minute
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
 
     if (elapsed < fadeInDuration) {
-        // Fade in
+        // Fade in (0 to 1 over 1 minute)
         fadeIntensity = elapsed / fadeInDuration;
-    } else if (elapsed < fadeInDuration + fullDuration) {
-        // Full intensity
+    } else if (elapsed < fadeInDuration + peakDuration) {
+        // Peak intensity (3 minutes)
         fadeIntensity = 1.0;
     } else {
-        // Fade out
-        float fadeOutElapsed = elapsed - (fadeInDuration + fullDuration);
+        // Fade out (1 to 0 over 1 minute)
+        float fadeOutElapsed = elapsed - (fadeInDuration + peakDuration);
         fadeIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
 

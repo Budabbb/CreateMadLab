@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class LSDPaperItem extends Item {
     // Timer duration in ticks (20 ticks = 1 second)
-    private static final int LSD_DURATION_TICKS = (3 * 60 + 47) * 20; // 3 minutes 47 seconds
+    private static final int LSD_DURATION_TICKS = (5 * 60 + 20) * 20; // 5 minutes 20 seconds
 
     public LSDPaperItem(Properties properties) {
         super(properties.food(ModConsumables.LSD_PAPER));
@@ -56,10 +56,6 @@ public class LSDPaperItem extends Item {
         ShaderFileSwapper.activateLSDShaders();
 
         player.playSound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 0.8F);
-        player.displayClientMessage(
-                Component.literal("Whoa... everything is moving..."),
-                true
-        );
 
         System.out.println("LSD effect activated for player: " + player.getName().getString());
 
@@ -69,12 +65,6 @@ public class LSDPaperItem extends Item {
                     @Override
                     public void run() {
                         ShaderFileSwapper.deactivateLSDShaders();
-                        if (player != null) {
-                            player.displayClientMessage(
-                                    Component.literal("The world slowly returns to normal..."),
-                                    true
-                            );
-                        }
                     }
                 },
                 LSD_DURATION_TICKS * 50 // Convert ticks to milliseconds
