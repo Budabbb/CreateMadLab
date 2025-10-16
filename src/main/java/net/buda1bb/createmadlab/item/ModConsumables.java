@@ -6,8 +6,8 @@ import net.minecraft.world.food.FoodProperties;
 
 public class ModConsumables {
     public static final FoodProperties LSD_PAPER = new FoodProperties.Builder()
-            .nutrition(0) // doesn’t restore hunger
+            .nutrition(0)
             .saturationMod(0.0F)
-            .alwaysEat() // can eat even if full
+            .alwaysEat()
             .build();
 }
