@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 @Mod(CreateMadLab.MOD_ID)
 public class CreateMadLab {
     public static final String MOD_ID = "createmadlab";
-    private static final Logger LOGGER = LogUtils.getLogger();
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
     public CreateMadLab(FMLJavaModLoadingContext context) {

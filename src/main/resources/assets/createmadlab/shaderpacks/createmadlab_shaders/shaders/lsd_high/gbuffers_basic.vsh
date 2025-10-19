@@ -1,12 +1,14 @@
 #version 120
 
-const float Terrain = .6; //Terrain distortion level [.0 .2 .4 .6 .8 1.]
-const float Hand = 1.; //Hand distortion level [.0 1.]
-const float Offset = 1.; //Camera height offset [.0 1.]
+const float Radius = 6.; //Globe radius
+const float Toggle = -1.; //Enable, disable or invert globe [-1. 0. 1.]
 
-const float Amount = .5; //Wave distortion intensity [.0 .2 .5 .8 1.]
-const float Frequency = .5; //Wave frequency  [.0 .2 .5 .8 1.]
-const float Speed = .5; //Wave animation speed [.0 .2 .5 .8 1.]
+const float Terrain = 1.; //Terrain distortion level
+const float Offset = 1.; //Camera height offset
+
+const float Amount = .8; //Wave distortion intensity
+const float Frequency = .8; //Wave frequency
+const float Speed = .8; //Wave animation speed
 
 attribute vec2 mc_Entity;
 
@@ -16,11 +18,6 @@ uniform vec3 cameraPosition;
 uniform float frameTimeCounter;
 
 varying vec4 color;
-varying vec3 model;
-varying vec3 world;
-varying vec2 coord0;
-varying vec2 coord1;
-varying float id;
 
 vec3 hash3(vec3 p)
 {
@@ -45,9 +42,9 @@ vec3 off(vec3 p)
 void main()
 {
     // Internal fade timer - 1m fade in, 3m peak, 1m fade out
-    float totalDuration = 300.0; // 5 minutes total
-    float fadeInDuration = 60.0; // 1 minute
-    float peakDuration = 180.0;  // 3 minutes
+    float totalDuration = 360.0; // 6 minutes total
+    float fadeInDuration = 120.0; // 2 minutes
+    float peakDuration = 180.0;   // 3 minutes
     float fadeOutDuration = 60.0; // 1 minute
 
     float elapsed = mod(frameTimeCounter, totalDuration);
@@ -67,19 +64,16 @@ void main()
 
     vec3 pos = (gl_ModelViewMatrix * gl_Vertex).xyz;
     pos = mat3(gbufferModelViewInverse) * pos  + gbufferModelViewInverse[3].xyz;
-    model = pos+cameraPosition;
 
     // Apply vertex distortions with fade intensity
-    vec3 distortion = off(pos+cameraPosition) * Hand * fadeIntensity;
+    vec3 distortion = off(pos+cameraPosition) * fadeIntensity;
     pos += distortion;
-    pos.y -= off(cameraPosition-vec3(0,1,0)).y*Offset*Hand * fadeIntensity;
+    vec3 h = pos+cameraPosition;
+    pos.y -= off(cameraPosition-vec3(0,1,0)).y*Offset * fadeIntensity;
+    pos.y -= dot(pos.xz,pos.xz)/Radius/Radius*Toggle * fadeIntensity;
 
     gl_Position = gl_ProjectionMatrix * gbufferModelView * vec4(pos,1);
     gl_FogFragCoord = length(pos);
 
     color = gl_Color;
-    world = pos;
-    coord0 = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-    coord1 = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
-    id = mc_Entity.x;
 }

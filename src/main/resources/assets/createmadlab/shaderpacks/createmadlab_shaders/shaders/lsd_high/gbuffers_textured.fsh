@@ -1,8 +1,8 @@
 #version 120
 
-const float Color = .8; //Rainbow intensity
-const float Animation = .4; //Animation speed
-const float Spread = .5; //Color Spread
+const float Color = 1.; //Rainbow intensity
+const float Animation = .8; //Animation speed
+const float Spread = .8; //Color Spread
 
 const float Shininess = 1.; //Water shine intensity
 
@@ -40,23 +40,19 @@ vec3 value3(vec3 p)
 }
 void main()
 {
-    // Internal fade timer - 1m fade in, 3m peak, 1m fade out
-    float totalDuration = 300.0; // 5 minutes total
-    float fadeInDuration = 60.0; // 1 minute
-    float peakDuration = 180.0;  // 3 minutes
-    float fadeOutDuration = 60.0; // 1 minute
+    float totalDuration = 360.0;    // 6 minutes total
+    float fadeInDuration = 120.0;   // 2 minutes fade in
+    float peakDuration = 180.0;     // 3 minutes peak intensity
+    float fadeOutDuration = 60.0;   // 1 minute fade out
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
 
     if (elapsed < fadeInDuration) {
-        // Fade in (0 to 1 over 1 minute)
         fadeIntensity = elapsed / fadeInDuration;
     } else if (elapsed < fadeInDuration + peakDuration) {
-        // Peak intensity (3 minutes)
         fadeIntensity = 1.0;
     } else {
-        // Fade out (1 to 0 over 1 minute)
         float fadeOutElapsed = elapsed - (fadeInDuration + peakDuration);
         fadeIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
@@ -79,7 +75,6 @@ void main()
     col.rgb = mix(col.rgb, gl_Fog.color.rgb, fog);
     col.rgb = mix(col.rgb, entityColor.rgb, entityColor.a);
 
-    // Fade in/out effect
     vec4 normalColor = tex * vec4(light, 1.0);
     normalColor.rgb = mix(normalColor.rgb, gl_Fog.color.rgb, fog);
     normalColor.rgb = mix(normalColor.rgb, entityColor.rgb, entityColor.a);

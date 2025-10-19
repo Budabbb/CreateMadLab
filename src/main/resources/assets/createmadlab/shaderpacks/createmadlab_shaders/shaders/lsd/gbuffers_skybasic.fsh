@@ -1,8 +1,9 @@
 #version 120
 
-const float Color = .8; //Rainbow intensity
+const float Color = .2; //Rainbow intensity
 const float Animation = .4; //Animation speed
 const float Spread = .5; //Color Spread
+
 uniform sampler2D texture;
 
 uniform float frameTimeCounter;
@@ -11,7 +12,6 @@ uniform int isEyeInWater;
 
 varying vec4 color;
 varying vec3 world;
-varying vec2 coord0;
 
 vec3 hash3(vec3 p)
 {
@@ -29,38 +29,34 @@ vec3 value3(vec3 p)
 }
 void main()
 {
-    // Internal fade timer - 1m fade in, 3m peak, 1m fade out
-    float totalDuration = 300.0; // 5 minutes total
-    float fadeInDuration = 60.0; // 1 minute
-    float peakDuration = 180.0;  // 3 minutes
-    float fadeOutDuration = 60.0; // 1 minute
+    float totalDuration = 360.0;    // 6 minutes total
+    float fadeInDuration = 120.0;   // 2 minutes fade in
+    float peakDuration = 180.0;     // 3 minutes peak intensity
+    float fadeOutDuration = 60.0;   // 1 minute fade out
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
 
     if (elapsed < fadeInDuration) {
-        // Fade in (0 to 1 over 1 minute)
         fadeIntensity = elapsed / fadeInDuration;
     } else if (elapsed < fadeInDuration + peakDuration) {
-        // Peak intensity (3 minutes)
         fadeIntensity = 1.0;
     } else {
-        // Fade out (1 to 0 over 1 minute)
         float fadeOutElapsed = elapsed - (fadeInDuration + peakDuration);
         fadeIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
 
+    float light = 1.-blindness;
+
     float fog = (isEyeInWater>0) ? 1.-exp(-gl_FogFragCoord * gl_Fog.density):
     clamp((gl_FogFragCoord-gl_Fog.start) * gl_Fog.scale, 0., 1.);
 
-    vec4 tex = texture2D(texture,coord0);
-    vec4 col = vec4(value3(world*.04*Spread)*8.+value3((world+world.zxy)*.1*Spread)*3.,0);
-    col = mix(color * tex, color  * vec4(cos(tex.rgb*3.+col.rgb+frameTimeCounter*Animation)*.5+.5,tex.a), Color);
-    col.rgb = mix(col.rgb, gl_Fog.color.rgb, fog)*(1.-blindness);
+    vec4 col = vec4(vec3(value3(world*.04*Spread)*8.+value3((world+world.zxy)*.1*Spread)*3.),0)*light;
+    col = mix(color,vec4(cos(color.rgb*3.+col.rgb+frameTimeCounter*Animation)*.5+.5,color.a),Color);
+    col.rgb = mix(col.rgb, gl_Fog.color.rgb, fog);
 
-    // Fade in/out effect
-    vec4 normalColor = color * tex;
-    normalColor.rgb = mix(normalColor.rgb, gl_Fog.color.rgb, fog)*(1.-blindness);
+    vec4 normalColor = color;
+    normalColor.rgb = mix(normalColor.rgb, gl_Fog.color.rgb, fog);
     col.rgb = mix(normalColor.rgb, col.rgb, fadeIntensity);
 
     gl_FragData[0] = col;

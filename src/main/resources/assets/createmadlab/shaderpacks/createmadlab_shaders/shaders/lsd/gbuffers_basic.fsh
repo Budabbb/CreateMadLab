@@ -8,24 +8,20 @@ varying vec4 color;
 
 void main()
 {
-    // Internal fade timer - 20s fade in, 3:27 full, 20s fade out
-    float totalDuration = 247.0; // 3 minutes 47 seconds
-    float fadeInDuration = 20.0;
-    float fadeOutDuration = 20.0;
-    float fullDuration = totalDuration - fadeInDuration - fadeOutDuration;
+    float totalDuration = 360.0;    // 6 minutes total
+    float fadeInDuration = 120.0;   // 2 minutes fade in
+    float peakDuration = 180.0;     // 3 minutes peak intensity
+    float fadeOutDuration = 60.0;   // 1 minute fade out
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
 
     if (elapsed < fadeInDuration) {
-        // Fade in
         fadeIntensity = elapsed / fadeInDuration;
-    } else if (elapsed < fadeInDuration + fullDuration) {
-        // Full intensity
+    } else if (elapsed < fadeInDuration + peakDuration) {
         fadeIntensity = 1.0;
     } else {
-        // Fade out
-        float fadeOutElapsed = elapsed - (fadeInDuration + fullDuration);
+        float fadeOutElapsed = elapsed - (fadeInDuration + peakDuration);
         fadeIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
 
