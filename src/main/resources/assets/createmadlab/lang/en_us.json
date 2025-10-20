@@ -16,29 +16,32 @@
   "item.createmadlab.lsd_paper": "Exciting Paper",
 
   "fluid.createmadlab.chloroform": "Chloroform",
-  "item.createmadlab.chloroform_bucket": "Bucket of Chloroform",
+  "item.createmadlab.chloroform_bucket": "Chloroform Bucket",
 
   "fluid.createmadlab.anhydrous_hydrazine": "Anhydrous Hydrazine",
-  "item.createmadlab.anhydrous_hydrazine_bucket": "Bucket of Anhydrous Hydrazine",
+  "item.createmadlab.anhydrous_hydrazine_bucket": "Anhydrous Hydrazine Bucket",
 
   "fluid.createmadlab.acetone": "Acetone",
-  "item.createmadlab.acetone_bucket": "Bucket of Acetone",
+  "item.createmadlab.acetone_bucket": "Acetone Bucket",
 
   "fluid.createmadlab.ergot_extract_solution": "Ergot Extract Solution",
-  "item.createmadlab.ergot_extract_solution_bucket": "Bucket of Ergot Extract Solution",
+  "item.createmadlab.ergot_extract_solution_bucket": "Ergot Extract Solution Bucket",
 
   "fluid.createmadlab.purified_ergot_solution": "Purified Ergot Solution",
-  "item.createmadlab.purified_ergot_solution_bucket": "Bucket of Purified Ergot Solution",
+  "item.createmadlab.purified_ergot_solution_bucket": "Purified Ergot Solution Bucket",
 
   "fluid.createmadlab.lysergic_solution": "Lysergic Solution",
-  "item.createmadlab.lysergic_solution_bucket": "Bucket of Lysergic Solution",
+  "item.createmadlab.lysergic_solution_bucket": "Lysergic Solution Bucket",
 
   "fluid.createmadlab.liquid_lsd": "Exciting Liquid",
-  "item.createmadlab.liquid_lsd_bucket": "Bucket of Exciting Liquid",
+  "item.createmadlab.liquid_lsd_bucket": "Exciting Liquid Bucket",
+
+  "fluid.createmadlab.chlorine": "Chlorine",
+  "item.createmadlab.chlorine_bucket": "Chlorine Bucket",
 
   "fluid.createmadlab.sludge": "Sludge",
-  "item.createmadlab.sludge_bucket": "Bucket of Sludge",
+  "item.createmadlab.sludge_bucket": "Sludge Bucket",
 
   "fluid.createmadlab.residue": "Residue",
-  "item.createmadlab.residue_bucket": "Bucket of Residue"
+  "item.createmadlab.residue_bucket": "Residue Bucket"
 }

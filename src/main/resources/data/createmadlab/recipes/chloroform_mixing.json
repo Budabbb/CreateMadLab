@@ -2,19 +2,18 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createbb:brine",
-      "amount": 2
+      "fluid": "createmadlab:chlorine",
+      "amount": 50
     },
     {
-      "item": "minecraft:redstone",
-      "amount": 1
+      "fluid": "createbb:methanol",
+      "amount": 50
     }
   ],
   "results": [
     {
       "fluid": "createmadlab:chloroform",
-      "amount": 30
+      "amount": 100
     }
-  ],
-  "heatRequirement": "heated"
+  ]
 }

@@ -48,6 +48,9 @@ public class ModFluids {
     public static FluidEntry<ForgeFlowingFluid.Flowing> RESIDUE;
     public static ItemEntry<BucketItem> RESIDUE_BUCKET;
 
+    public static FluidEntry<ForgeFlowingFluid.Flowing> CHLORINE;
+    public static ItemEntry<BucketItem> CHLORINE_BUCKET;
+
 
     public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name) {
         return basicFluid(name, 0xffffffff);
@@ -94,6 +97,10 @@ public class ModFluids {
         var fErgotExtract = basicFluid("ergot_extract_solution", 0xff2c2506);
         ERGOT_EXTRACT_SOLUTION_BUCKET = getBucket(fErgotExtract);
         ERGOT_EXTRACT_SOLUTION = fErgotExtract.register();
+
+        var fChlorine = basicFluid("chlorine", 0xffffffff);
+        CHLORINE_BUCKET = getBucket(fChlorine);
+        CHLORINE = fChlorine.register();
 
         var fSludge = basicFluid("sludge", 0xff574226);
         SLUDGE_BUCKET = getBucket(fSludge);

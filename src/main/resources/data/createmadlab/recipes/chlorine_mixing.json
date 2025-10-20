@@ -1,0 +1,28 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "minecraft:water",
+      "amount": 500
+    },
+    {
+      "item": "minecraft:redstone",
+      "amount": 1
+    },
+    {
+      "item": "createbb:copper_zinc_catalyst",
+      "amount": 1
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:chlorine",
+      "amount": 25
+    },
+    {
+      "item": "createbb:copper_zinc_catalyst",
+      "amount": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

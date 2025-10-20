@@ -38,6 +38,7 @@ public class ModCreativeTabs {
                         pOutput.accept(ModFluids.ACETONE_BUCKET.get());
                         pOutput.accept(ModFluids.ANHYDROUS_HYDRAZINE_BUCKET.get());
                         pOutput.accept(ModFluids.ERGOT_EXTRACT_SOLUTION_BUCKET.get());
+                        pOutput.accept(ModFluids.CHLORINE_BUCKET.get());
                         pOutput.accept(ModFluids.SLUDGE_BUCKET.get());
                         pOutput.accept(ModFluids.RESIDUE_BUCKET.get());
                     })
