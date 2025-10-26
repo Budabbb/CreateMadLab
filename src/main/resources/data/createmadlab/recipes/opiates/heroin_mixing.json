@@ -1,0 +1,28 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:diamorphine",
+      "amount": 3
+    },
+    {
+      "fluid": "createmadlab:diethyl_ether",
+      "amount": 25
+    },
+    {
+      "fluid": "createmadlab:hydrochloric_acid",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:heroin",
+      "amount": 1
+    },
+    {
+      "fluid": "createmadlab:residue",
+      "amount": 75
+    }
+  ],
+  "heatRequirement": "heated"
+}

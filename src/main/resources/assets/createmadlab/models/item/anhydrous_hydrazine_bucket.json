@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "createmadlab:item/chloroform_bucket"
+    "layer0": "createmadlab:item/anhydrous_hydrazine_bucket"
   }
 }

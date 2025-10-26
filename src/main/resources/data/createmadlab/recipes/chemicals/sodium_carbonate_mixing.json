@@ -1,0 +1,24 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:sand",
+      "amount": 5
+    },
+    {
+      "item": "minecraft:coal",
+      "amount": 1
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:sodium_carbonate",
+      "amount": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

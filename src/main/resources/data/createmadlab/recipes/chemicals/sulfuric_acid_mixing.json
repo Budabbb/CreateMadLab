@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "minecraft:water",
+      "amount": 25
+    },
+    {
+      "fluid": "createmadlab:sulfur_trioxide",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:sulfuric_acid",
+      "amount": 50
+    }
+  ]
+}

@@ -2,18 +2,18 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "fluid": "minecraft:water",
-      "amount": 200
+      "item": "minecraft:bone_meal",
+      "amount": 1
     },
     {
-      "fluid": "createbb:ammonia",
+      "fluid": "minecraft:water",
       "amount": 100
     }
   ],
   "results": [
     {
-      "fluid": "createmadlab:anhydrous_hydrazine",
-      "amount": 75
+      "item": "createmadlab:calcium_hydroxide",
+      "amount": 1
     }
   ],
   "heatRequirement": "heated"

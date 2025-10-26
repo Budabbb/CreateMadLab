@@ -1,0 +1,18 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "minecraft:poppy"
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:opium_latex",
+      "amount": 5
+    },
+    {
+      "fluid": "createmadlab:sludge",
+      "amount": 15
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:opium_latex",
+      "amount": 25
+    },
+    {
+      "item": "createmadlab:calcium_hydroxide",
+      "amount": 5
+    },
+    {
+      "item": "createmadlab:ammonium_chloride",
+      "amount": 5
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:morphine_base",
+      "amount": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

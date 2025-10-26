@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -16,20 +15,27 @@ public class ModCreativeTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CreateMadLab.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> CREATEMADLAB_TAB = CREATIVE_MODE_TABS.register("createmadlab_tab",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.LSD_PAPER.get()))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.SYRINGE.get()))
                     .title(Component.translatable("creativetab.createmadlab_tab"))
                     .displayItems((pParameters, pOutput) -> {
                         pOutput.accept(ModItems.ERGOT_FUNGUS.get());
                         pOutput.accept(ModItems.ERGOT_POWDER.get());
+                        pOutput.accept(ModItems.ERGOT_PAPER.get());
 
                         pOutput.accept(ModItems.PHOSPHORUS_PENTOXIDE.get());
                         pOutput.accept(ModItems.ERGOTAMINE_TARTRATE.get());
+                        pOutput.accept(ModItems.CALCIUM_HYDROXIDE.get());
+                        pOutput.accept(ModItems.AMMONIUM_CHLORIDE.get());
+                        pOutput.accept(ModItems.SODIUM_CARBONATE.get());
+                        pOutput.accept(ModItems.MORPHINE_BASE.get());
+                        pOutput.accept(ModItems.DIAMORPHINE.get());
 
                         pOutput.accept(ModItems.LYSERGIC_ACID.get());
                         pOutput.accept(ModItems.LSD_CRYSTAL.get());
 
-                        pOutput.accept(ModItems.ERGOT_PAPER.get());
+                        pOutput.accept(ModItems.SYRINGE.get());
                         pOutput.accept(ModItems.LSD_PAPER.get());
+                        pOutput.accept(ModItems.HEROIN.get());
 
                         pOutput.accept(ModFluids.CHLOROFORM_BUCKET.get());
                         pOutput.accept(ModFluids.LYSERGIC_SOLUTION_BUCKET.get());
@@ -41,6 +47,10 @@ public class ModCreativeTabs {
                         pOutput.accept(ModFluids.CHLORINE_BUCKET.get());
                         pOutput.accept(ModFluids.SLUDGE_BUCKET.get());
                         pOutput.accept(ModFluids.RESIDUE_BUCKET.get());
+                        pOutput.accept(ModFluids.DIETHYL_ETHER_BUCKET.get());
+                        pOutput.accept(ModFluids.HYDROCHLORIC_ACID_BUCKET.get());
+                        pOutput.accept(ModFluids.OPIUM_LATEX_BUCKET.get());
+                        pOutput.accept(ModFluids.HEROIN_SOLUTION_BUCKET.get());
                     })
                     .build());
 

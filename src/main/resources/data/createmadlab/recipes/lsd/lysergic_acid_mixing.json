@@ -3,11 +3,11 @@
   "ingredients": [
     {
       "fluid": "createmadlab:lysergic_solution",
-      "amount": 150
+      "amount": 50
     },
     {
       "fluid": "createbb:acetic_anhydride",
-      "amount": 100
+      "amount": 50
     }
   ],
   "results": [

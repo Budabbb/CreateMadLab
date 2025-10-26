@@ -27,7 +27,7 @@ public class ShaderpackExtractor {
         }
     }
 
-    public static void activateShaders(double dose) {
+    public static void activateLSDShaders(double dose) {
         Path shaderpacksDir = FMLPaths.GAMEDIR.get().resolve("shaderpacks");
         Path targetDir = shaderpacksDir.resolve(SHADERPACK_NAME);
         Path shadersDir = targetDir.resolve("shaders");
@@ -42,6 +42,20 @@ public class ShaderpackExtractor {
                 extractEffectShaders("lsd", shadersDir);
             }
 
+        } catch (IOException e) {
+            // Silent fail
+        }
+    }
+
+    public static void activateHeroinShaders() {
+        Path shaderpacksDir = FMLPaths.GAMEDIR.get().resolve("shaderpacks");
+        Path targetDir = shaderpacksDir.resolve(SHADERPACK_NAME);
+        Path shadersDir = targetDir.resolve("shaders");
+
+        try {
+            Files.createDirectories(shadersDir);
+            deleteShaderFiles();
+            extractEffectShaders("heroin", shadersDir);
         } catch (IOException e) {
             // Silent fail
         }

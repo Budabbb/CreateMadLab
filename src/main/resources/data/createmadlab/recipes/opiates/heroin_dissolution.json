@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:heroin",
+      "amount": 1
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 10
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:heroin_solution",
+      "amount": 50
+    }
+  ]
+}

@@ -51,6 +51,17 @@ public class ModFluids {
     public static FluidEntry<ForgeFlowingFluid.Flowing> CHLORINE;
     public static ItemEntry<BucketItem> CHLORINE_BUCKET;
 
+    public static FluidEntry<ForgeFlowingFluid.Flowing> DIETHYL_ETHER;
+    public static ItemEntry<BucketItem> DIETHYL_ETHER_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> HYDROCHLORIC_ACID;
+    public static ItemEntry<BucketItem> HYDROCHLORIC_ACID_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> OPIUM_LATEX;
+    public static ItemEntry<BucketItem> OPIUM_LATEX_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> HEROIN_SOLUTION;
+    public static ItemEntry<BucketItem> HEROIN_SOLUTION_BUCKET;
 
     public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name) {
         return basicFluid(name, 0xffffffff);
@@ -70,23 +81,23 @@ public class ModFluids {
     public static void register(Registrate registrate) {
         REGISTRATE = registrate;
 
-        var fChl = basicFluid("chloroform", 0xffffffff);
+        var fChl = basicFluid("chloroform", 0xffefffff);
         CHLOROFORM_BUCKET = getBucket(fChl);
         CHLOROFORM = fChl.register();
 
-        var fHyd = basicFluid("anhydrous_hydrazine", 0xffffffff);
+        var fHyd = basicFluid("anhydrous_hydrazine", 0xfff4fff4);
         ANHYDROUS_HYDRAZINE_BUCKET = getBucket(fHyd);
         ANHYDROUS_HYDRAZINE = fHyd.register();
 
-        var fAcetone = basicFluid("acetone", 0xffffffff);
+        var fAcetone = basicFluid("acetone", 0xffefffff);
         ACETONE_BUCKET = getBucket(fAcetone);
         ACETONE = fAcetone.register();
 
-        var fPurErgot = basicFluid("purified_ergot_solution", 0xffffffff);
+        var fPurErgot = basicFluid("purified_ergot_solution", 0xffbeb4ce);
         PURIFIED_ERGOT_SOLUTION_BUCKET = getBucket(fPurErgot);
         PURIFIED_ERGOT_SOLUTION = fPurErgot.register();
 
-        var fLysergicSol = basicFluid("lysergic_solution", 0xffffffff);
+        var fLysergicSol = basicFluid("lysergic_solution", 0xffcdbbe2);
         LYSERGIC_SOLUTION_BUCKET = getBucket(fLysergicSol);
         LYSERGIC_SOLUTION = fLysergicSol.register();
 
@@ -98,7 +109,7 @@ public class ModFluids {
         ERGOT_EXTRACT_SOLUTION_BUCKET = getBucket(fErgotExtract);
         ERGOT_EXTRACT_SOLUTION = fErgotExtract.register();
 
-        var fChlorine = basicFluid("chlorine", 0xffffffff);
+        var fChlorine = basicFluid("chlorine", 0xffd8e95b);
         CHLORINE_BUCKET = getBucket(fChlorine);
         CHLORINE = fChlorine.register();
 
@@ -109,6 +120,22 @@ public class ModFluids {
         var fResidue = basicFluid("residue", 0xffffffff);
         RESIDUE_BUCKET = getBucket(fResidue);
         RESIDUE = fResidue.register();
+
+        var fDietyhlEther = basicFluid("diethyl_ether", 0xffefffff);
+        DIETHYL_ETHER_BUCKET = getBucket(fDietyhlEther);
+        DIETHYL_ETHER = fDietyhlEther.register();
+
+        var fHydA = basicFluid("hydrochloric_acid", 0xfff6f6f6);
+        HYDROCHLORIC_ACID_BUCKET = getBucket(fHydA);
+        HYDROCHLORIC_ACID = fHydA.register();
+
+        var fOpLatex = basicFluid("opium_latex", 0xff6b4a2b);
+        OPIUM_LATEX_BUCKET = getBucket(fOpLatex);
+        OPIUM_LATEX = fOpLatex.register();
+
+        var fHerSol = basicFluid("heroin_solution", 0xffffffff);
+        HEROIN_SOLUTION_BUCKET = getBucket(fHerSol);
+        HEROIN_SOLUTION = fHerSol.register();
     }
 
     public static class NoColorFluidAttributes extends AllFluids.TintedFluidType {

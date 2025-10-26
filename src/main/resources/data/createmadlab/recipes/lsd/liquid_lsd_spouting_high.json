@@ -1,5 +1,5 @@
 {
-  "type": "create:filling",
+  "type": "createmadlab:custom_filling",
   "ingredients": [
     {
       "item": "createmadlab:lsd_paper"
@@ -12,7 +12,6 @@
   "results": [
     {
       "item": "createmadlab:lsd_paper",
-      "count": 1,
       "nbt": {
         "dose": 2.0
       }

@@ -2,8 +2,6 @@ package net.buda1bb.createmadlab.item;
 
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.buda1bb.createmadlab.CreateMadLab;
-import net.buda1bb.createmadlab.block.ModBlocks;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,4 +40,27 @@ public class ModItems {
             REGISTRATE.item("lsd_paper", LSDPaperItem::new)
                     .properties(p -> p.stacksTo(16))
                     .register();
+
+    public static final ItemEntry<SyringeItem> SYRINGE =
+            REGISTRATE.item("syringe", SyringeItem::new)
+                    .properties(p -> p.stacksTo(1))
+                    .register();
+
+    public static final RegistryObject<Item> CALCIUM_HYDROXIDE =
+            ITEMS.register("calcium_hydroxide", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> AMMONIUM_CHLORIDE =
+            ITEMS.register("ammonium_chloride", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> SODIUM_CARBONATE =
+            ITEMS.register("sodium_carbonate", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> MORPHINE_BASE =
+            ITEMS.register("morphine_base", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> DIAMORPHINE =
+            ITEMS.register("diamorphine", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> HEROIN =
+            ITEMS.register("heroin", () -> new Item(new Item.Properties()));
 }

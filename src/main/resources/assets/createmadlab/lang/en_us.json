@@ -8,6 +8,18 @@
 
   "item.createmadlab.phosphorus_pentoxide": "Phosporus Pentoxide",
   "item.createmadlab.ergotamine_tartrate": "Ergotamine Tartrate",
+  "item.createmadlab.calcium_hydroxide": "Calcium Hydroxide",
+  "item.createmadlab.ammonium_chloride": "Ammonium Chloride",
+  "item.createmadlab.sodium_carbonate": "Sodium Carbonate",
+
+  "item.createmadlab.morphine_base": "Morphine Base",
+  "item.createmadlab.diamorphine": "Diamorphine",
+
+  "item.createmadlab.vanadium_pentoxide": "Vanadium Pentoxide",
+  "item.createmadlab.vanadium_pentoxide_catalyst": "Vanadium Pentoxide Catalyst",
+
+  "item.createmadlab.heroin": "Bliss Dust",
+  "item.createmadlab.syringe": "Syringe",
 
   "item.createmadlab.lysergic_acid": "Lysergic Acid",
   "item.createmadlab.lsd_crystal": "Exciting Crystal",
@@ -15,33 +27,70 @@
   "item.createmadlab.ergot_paper": "Ergot Paper",
   "item.createmadlab.lsd_paper": "Exciting Paper",
 
+
+
+  "block.createmadlab.chloroform": "Chloroform",
   "fluid.createmadlab.chloroform": "Chloroform",
   "item.createmadlab.chloroform_bucket": "Chloroform Bucket",
 
+  "block.createmadlab.anhydrous_hydrazine": "Anhydrous Hydrazine",
   "fluid.createmadlab.anhydrous_hydrazine": "Anhydrous Hydrazine",
   "item.createmadlab.anhydrous_hydrazine_bucket": "Anhydrous Hydrazine Bucket",
 
+  "block.createmadlab.acetone": "Acetone",
   "fluid.createmadlab.acetone": "Acetone",
   "item.createmadlab.acetone_bucket": "Acetone Bucket",
 
+  "block.createmadlab.ergot_extract_solution": "Ergot Extract Solution",
   "fluid.createmadlab.ergot_extract_solution": "Ergot Extract Solution",
   "item.createmadlab.ergot_extract_solution_bucket": "Ergot Extract Solution Bucket",
 
+  "block.createmadlab.purified_ergot_solution": "Purified Ergot Solution",
   "fluid.createmadlab.purified_ergot_solution": "Purified Ergot Solution",
   "item.createmadlab.purified_ergot_solution_bucket": "Purified Ergot Solution Bucket",
 
+  "block.createmadlab.lysergic_solution": "Lysergic Solution",
   "fluid.createmadlab.lysergic_solution": "Lysergic Solution",
   "item.createmadlab.lysergic_solution_bucket": "Lysergic Solution Bucket",
 
+  "block.createmadlab.liquid_lsd": "Exciting Liquid",
   "fluid.createmadlab.liquid_lsd": "Exciting Liquid",
   "item.createmadlab.liquid_lsd_bucket": "Exciting Liquid Bucket",
 
+  "block.createmadlab.chlorine": "Chlorine",
   "fluid.createmadlab.chlorine": "Chlorine",
   "item.createmadlab.chlorine_bucket": "Chlorine Bucket",
 
+  "block.createmadlab.sludge": "Sludge",
   "fluid.createmadlab.sludge": "Sludge",
   "item.createmadlab.sludge_bucket": "Sludge Bucket",
 
+  "block.createmadlab.residue": "Residue",
   "fluid.createmadlab.residue": "Residue",
-  "item.createmadlab.residue_bucket": "Residue Bucket"
+  "item.createmadlab.residue_bucket": "Residue Bucket",
+
+  "block.createmadlab.sulfur_trioxide": "Sulfur Trioxide",
+  "fluid.createmadlab.sulfur_trioxide": "Sulfur Trioxide",
+  "item.createmadlab.sulfur_trioxide_bucket": "Sulfur Trioxide Bucket",
+
+  "block.createmadlab.sulfuric_acid": "Sulfuric Acid",
+  "fluid.createmadlab.sulfuric_acid": "Sulfuric Acid",
+  "item.createmadlab.sulfuric_acid_bucket": "Sulfuric Acid Bucket",
+
+  "block.createmadlab.diethyl_ether": "Diethyl Ether",
+  "fluid.createmadlab.diethyl_ether": "Diethyl Ether",
+  "item.createmadlab.diethyl_ether_bucket": "Diethyl Ether Bucket",
+
+  "block.createmadlab.hydrochloric_acid": "Hydrochloric Acid",
+  "fluid.createmadlab.hydrochloric_acid": "Hydrochloric Acid",
+  "item.createmadlab.hydrochloric_acid_bucket": "Hydrochloric Acid Bucket",
+
+  "block.createmadlab.opium_latex": "Opium Latex",
+  "fluid.createmadlab.opium_latex": "Opium Latex",
+  "item.createmadlab.opium_latex_bucket": "Opium Latex Bucket",
+
+  "block.createmadlab.heroin_solution": "Liquid Bliss",
+  "fluid.createmadlab.heroin_solution": "Liquid Bliss",
+  "item.createmadlab.heroin_solution_bucket": "Liquid Bliss Bucket"
+
 }

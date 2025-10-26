@@ -1,0 +1,28 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:blaze_powder",
+      "count": 2
+    },
+    {
+      "fluid": "createbb:oxygen",
+      "amount": 30
+    },
+    {
+      "item": "createmadlab:vanadium_pentoxide_catalyst",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:sulfur_trioxide",
+      "amount": 50
+    },
+    {
+      "item": "createmadlab:vanadium_pentoxide_catalyst",
+      "count": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

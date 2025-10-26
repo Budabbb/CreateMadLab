@@ -3,11 +3,11 @@
   "ingredients": [
     {
       "fluid": "createmadlab:purified_ergot_solution",
-      "amount": 35
+      "amount": 75
     },
     {
       "fluid": "createbb:ammonia",
-      "amount": 15
+      "amount": 25
     }
   ],
   "results": [

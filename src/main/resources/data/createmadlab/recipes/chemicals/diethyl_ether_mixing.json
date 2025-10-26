@@ -1,0 +1,24 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createbb:methanol",
+      "amount": 25
+    },
+    {
+      "item": "minecraft:coal",
+      "amount": 1
+    },
+    {
+      "item": "minecraft:glowstone_dust",
+      "amount": 1
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:diethyl_ether",
+      "amount": 50
+    }
+  ],
+  "heatRequirement": "heated"
+}
