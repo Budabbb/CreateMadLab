@@ -39,6 +39,9 @@ public class ModFluids {
     public static FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_LSD;
     public static ItemEntry<BucketItem> LIQUID_LSD_BUCKET;
 
+    public static FluidEntry<ForgeFlowingFluid.Flowing> LSD_SOLUTION;
+    public static ItemEntry<BucketItem> LSD_SOLUTION_BUCKET;
+
     public static FluidEntry<ForgeFlowingFluid.Flowing> ERGOT_EXTRACT_SOLUTION;
     public static ItemEntry<BucketItem> ERGOT_EXTRACT_SOLUTION_BUCKET;
 
@@ -62,6 +65,24 @@ public class ModFluids {
 
     public static FluidEntry<ForgeFlowingFluid.Flowing> HEROIN_SOLUTION;
     public static ItemEntry<BucketItem> HEROIN_SOLUTION_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> MORPHINE_SOLUTION;
+    public static ItemEntry<BucketItem> MORPHINE_SOLUTION_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> SULFUR_TRIOXIDE;
+    public static ItemEntry<BucketItem> SULFUR_TRIOXIDE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> SULFURIC_ACID;
+    public static ItemEntry<BucketItem> SULFURIC_ACID_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> ETHANOL;
+    public static ItemEntry<BucketItem> ETHANOL_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> ETHYL_CHLORIDE;
+    public static ItemEntry<BucketItem> ETHYL_CHLORIDE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> DIETHYLAMINE;
+    public static ItemEntry<BucketItem> DIETHYLAMINE_BUCKET;
 
     public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name) {
         return basicFluid(name, 0xffffffff);
@@ -105,6 +126,10 @@ public class ModFluids {
         LIQUID_LSD_BUCKET = getBucket(fLSD);
         LIQUID_LSD = fLSD.register();
 
+        var fLSDSol = basicFluid("lsd_solution", 0xff946686);
+        LSD_SOLUTION_BUCKET = getBucket(fLSDSol);
+        LSD_SOLUTION = fLSDSol.register();
+
         var fErgotExtract = basicFluid("ergot_extract_solution", 0xff2c2506);
         ERGOT_EXTRACT_SOLUTION_BUCKET = getBucket(fErgotExtract);
         ERGOT_EXTRACT_SOLUTION = fErgotExtract.register();
@@ -136,6 +161,30 @@ public class ModFluids {
         var fHerSol = basicFluid("heroin_solution", 0xffffffff);
         HEROIN_SOLUTION_BUCKET = getBucket(fHerSol);
         HEROIN_SOLUTION = fHerSol.register();
+
+        var fMorSol = basicFluid("morphine_solution", 0xffffffff);
+        MORPHINE_SOLUTION_BUCKET = getBucket(fMorSol);
+        MORPHINE_SOLUTION = fMorSol.register();
+
+        var fSulfTri = basicFluid("sulfur_trioxide", 0xfff2db5a);
+        SULFUR_TRIOXIDE_BUCKET = getBucket(fSulfTri);
+        SULFUR_TRIOXIDE = fSulfTri.register();
+
+        var fSulfA = basicFluid("sulfuric_acid", 0xfff8f8e0);
+        SULFURIC_ACID_BUCKET = getBucket(fSulfA);
+        SULFURIC_ACID = fSulfA.register();
+
+        var fEth = basicFluid("ethanol", 0xfff8f8e0);
+        ETHANOL_BUCKET = getBucket(fEth);
+        ETHANOL = fEth.register();
+
+        var fEthChl = basicFluid("ethyl_chloride", 0xfff8f8e0);
+        ETHYL_CHLORIDE_BUCKET = getBucket(fEthChl);
+        ETHYL_CHLORIDE = fEthChl.register();
+
+        var fDieth = basicFluid("diethylamine", 0xfff8f8e0);
+        DIETHYLAMINE_BUCKET = getBucket(fDieth);
+        DIETHYLAMINE = fDieth.register();
     }
 
     public static class NoColorFluidAttributes extends AllFluids.TintedFluidType {

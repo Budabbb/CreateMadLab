@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:morphine_sulfate"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:morphine_solution",
+      "amount": 50
+    }
+  ]
+}

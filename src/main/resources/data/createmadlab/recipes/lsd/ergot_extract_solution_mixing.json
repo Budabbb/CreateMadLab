@@ -2,8 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createmadlab:ergot_powder",
-      "amount": 1
+      "item": "createmadlab:ergot_powder"
     },
     {
       "fluid": "createmadlab:chloroform",

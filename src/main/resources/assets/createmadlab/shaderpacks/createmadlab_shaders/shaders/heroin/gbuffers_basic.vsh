@@ -2,7 +2,7 @@
 // So yeah, possible seasickness warning.
 // By Beed28
 
-#version 120 // This will always get moved to the top of the code in pre-processing.
+#version 120 
 
 varying vec4 texcoord;
 varying vec4 color;
@@ -23,7 +23,6 @@ void main() {
 
     float PI = 3.14159265358979323846264;
 
-    // Fade timing: 10s fade-in, 150s peak, 20s fade-out (total 180s/3min)
     float totalDuration = 180.0;
     float fadeInDuration = 10.0;
     float peakDuration = 150.0;
@@ -41,7 +40,6 @@ void main() {
         fadeIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
 
-    //Selection box
     if (gl_Color.a == 0.4) {
         float y = position.y;
         float z = position.z;
@@ -57,7 +55,6 @@ void main() {
         position.x = x*cos(om)-y*sin(om);
     }
 
-    //Stars
     if (gl_Color.a != 0.4) {
         float y = position.y;
         float z = position.z;

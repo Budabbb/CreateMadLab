@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "forge:salts"
+    },
+    {
+      "fluid": "createmadlab:sulfuric_acid",
+      "amount": 5
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:sodium_sulfate",
+      "count": 1
+    },
+    {
+      "fluid": "createmadlab:hydrochloric_acid",
+      "amount": 10
+    }
+  ],
+  "heatRequirement": "heated"
+}

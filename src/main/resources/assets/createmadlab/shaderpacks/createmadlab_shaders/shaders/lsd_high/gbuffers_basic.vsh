@@ -41,23 +41,23 @@ vec3 off(vec3 p)
 
 void main()
 {
-    // Internal fade timer - 1m fade in, 3m peak, 1m fade out
-    float totalDuration = 360.0; // 6 minutes total
-    float fadeInDuration = 120.0; // 2 minutes
-    float peakDuration = 180.0;   // 3 minutes
-    float fadeOutDuration = 60.0; // 1 minute
+
+    float totalDuration = 360.0; 
+    float fadeInDuration = 120.0; 
+    float peakDuration = 180.0;   
+    float fadeOutDuration = 60.0; 
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
 
     if (elapsed < fadeInDuration) {
-        // Fade in (0 to 1 over 1 minute)
+
         fadeIntensity = elapsed / fadeInDuration;
     } else if (elapsed < fadeInDuration + peakDuration) {
-        // Peak intensity (3 minutes)
+
         fadeIntensity = 1.0;
     } else {
-        // Fade out (1 to 0 over 1 minute)
+
         float fadeOutElapsed = elapsed - (fadeInDuration + peakDuration);
         fadeIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
@@ -65,7 +65,6 @@ void main()
     vec3 pos = (gl_ModelViewMatrix * gl_Vertex).xyz;
     pos = mat3(gbufferModelViewInverse) * pos  + gbufferModelViewInverse[3].xyz;
 
-    // Apply vertex distortions with fade intensity
     vec3 distortion = off(pos+cameraPosition) * fadeIntensity;
     pos += distortion;
     vec3 h = pos+cameraPosition;

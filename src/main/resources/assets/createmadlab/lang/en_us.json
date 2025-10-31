@@ -2,18 +2,22 @@
   "creativetab.createmadlab_tab": "Create: Mad Lab",
 
   "block.createmadlab.ergot_infested_wheat": "Ergot Infested Wheat",
+  "block.createmadlab.purple_tray": "Purple Tray",
 
   "item.createmadlab.ergot_fungus": "Ergot Fungus",
   "item.createmadlab.ergot_powder": "Ergot Powder",
 
-  "item.createmadlab.phosphorus_pentoxide": "Phosporus Pentoxide",
+  "item.createmadlab.sea_salt": "Sea Salt",
   "item.createmadlab.ergotamine_tartrate": "Ergotamine Tartrate",
   "item.createmadlab.calcium_hydroxide": "Calcium Hydroxide",
   "item.createmadlab.ammonium_chloride": "Ammonium Chloride",
+  "item.createmadlab.calcium_chloride": "Calcium Chloride",
   "item.createmadlab.sodium_carbonate": "Sodium Carbonate",
+  "item.createmadlab.sodium_sulfate": "Sodium Sulfate",
 
   "item.createmadlab.morphine_base": "Morphine Base",
   "item.createmadlab.diamorphine": "Diamorphine",
+  "item.createmadlab.morphine_sulfate": "Morphine Sulfate",
 
   "item.createmadlab.vanadium_pentoxide": "Vanadium Pentoxide",
   "item.createmadlab.vanadium_pentoxide_catalyst": "Vanadium Pentoxide Catalyst",
@@ -91,6 +95,26 @@
 
   "block.createmadlab.heroin_solution": "Liquid Bliss",
   "fluid.createmadlab.heroin_solution": "Liquid Bliss",
-  "item.createmadlab.heroin_solution_bucket": "Liquid Bliss Bucket"
+  "item.createmadlab.heroin_solution_bucket": "Liquid Bliss Bucket",
+
+  "block.createmadlab.lsd_solution": "Exciting Solution",
+  "fluid.createmadlab.lsd_solution": "Exciting Solution",
+  "item.createmadlab.lsd_solution_bucket": "Exciting Solution Bucket",
+
+  "block.createmadlab.morphine_solution": "Morphine Solution",
+  "fluid.createmadlab.morphine_solution": "Morphine Solution",
+  "item.createmadlab.morphine_solution_bucket": "Morphine Solution Bucket",
+
+  "block.createmadlab.ethanol": "Ethanol",
+  "fluid.createmadlab.ethanol": "Ethanol",
+  "item.createmadlab.ethanol_bucket": "Ethanol Bucket",
+
+  "block.createmadlab.ethyl_chloride": "Ethyl Chloride",
+  "fluid.createmadlab.ethyl_chloride": "Ethyl Chloride",
+  "item.createmadlab.ethyl_chloride_bucket": "Ethyl Chloride Bucket",
+
+  "block.createmadlab.diethylamine": "Diethylamine",
+  "fluid.createmadlab.diethylamine": "Diethylamine",
+  "item.createmadlab.diethylamine_bucket": "Diethylamine Bucket"
 
 }

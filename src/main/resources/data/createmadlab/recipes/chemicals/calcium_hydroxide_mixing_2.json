@@ -1,0 +1,27 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:calcium_chloride"
+    },
+    {
+      "fluid": "createbb:ammonia",
+      "amount": 50
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 50
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:calcium_hydroxide",
+      "count": 1
+    },
+    {
+      "item": "createmadlab:ammonium_chloride",
+      "count": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

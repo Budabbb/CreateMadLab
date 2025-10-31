@@ -2,8 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createmadlab:lsd_crystal",
-      "amount": 1
+      "item": "createmadlab:lsd_crystal"
     },
     {
       "fluid": "createmadlab:acetone",
@@ -12,7 +11,7 @@
   ],
   "results": [
     {
-      "fluid": "createmadlab:liquid_lsd",
+      "fluid": "createmadlab:lsd_solution",
       "amount": 25
     }
   ]

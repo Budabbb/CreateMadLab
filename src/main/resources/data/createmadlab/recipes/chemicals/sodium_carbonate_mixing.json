@@ -2,22 +2,25 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:sand",
-      "amount": 5
+      "tag": "forge:salts"
     },
     {
-      "item": "minecraft:coal",
-      "amount": 1
+      "fluid": "createbb:ammonia",
+      "amount": 50
     },
     {
-      "fluid": "minecraft:water",
-      "amount": 100
+      "fluid": "createmadlab:chloroform",
+      "amount": 50
     }
   ],
   "results": [
     {
       "item": "createmadlab:sodium_carbonate",
-      "amount": 1
+      "count": 1
+    },
+    {
+      "item": "createmadlab:calcium_chloride",
+      "count": 1
     }
   ],
   "heatRequirement": "heated"

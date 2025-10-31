@@ -2,26 +2,28 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createmadlab:morphine_base",
-      "amount": 1
+      "item": "createmadlab:morphine_base"
     },
     {
       "fluid": "createbb:acetic_anhydride",
-      "amount": 10
+      "amount": 5
     },
     {
-      "item": "createmadlab:sodium_carbonate",
-      "amount": 1
+      "item": "createmadlab:sodium_carbonate"
     },
     {
       "fluid": "minecraft:water",
-      "amount": 15
+      "amount": 5
     }
   ],
   "results": [
     {
       "item": "createmadlab:diamorphine",
-      "amount": 1
+      "count": 1
+    },
+    {
+      "fluid": "createmadlab:residue",
+      "amount": 10
     }
   ],
   "heatRequirement": "heated"

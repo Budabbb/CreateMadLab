@@ -1,8 +1,9 @@
 package net.buda1bb.createmadlab.client;
 
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.effect.BlissEffectsManager;
+import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.buda1bb.createmadlab.item.LSDPaperItem;
-import net.buda1bb.createmadlab.item.SyringeItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,6 +21,7 @@ public class ShaderFileSwapper {
     private static final AtomicBoolean reloadScheduled = new AtomicBoolean(false);
     private static boolean lsdShadersActive = false;
     private static boolean heroinShadersActive = false;
+    private static boolean morphineShadersActive = false;
     private static boolean playerWasDead = false;
     private static boolean initialized = false;
 
@@ -31,33 +33,46 @@ public class ShaderFileSwapper {
         }
         Player player = event.getPlayer();
         if (player != null) {
-            SyringeItem.handlePlayerLogin(player, player.level());
+            BlissEffectsManager.handlePlayerLogin(player, player.level());
         }
     }
 
-    // LSD Methods - unchanged
+    // LSD Methods
     public static void activateLSDShaders(double dose) {
         ShaderpackExtractor.activateLSDShaders(dose);
         lsdShadersActive = true;
-        heroinShadersActive = false; // Ensure only one effect is active at a time
+        heroinShadersActive = false;
+        morphineShadersActive = false;
         playerWasDead = false;
         reloadScheduled.set(true);
     }
 
-    // Heroin Methods - simplified, timing handled in SyringeItem
+    // Heroin Methods
     public static void activateHeroinShaders() {
         ShaderpackExtractor.activateHeroinShaders();
         heroinShadersActive = true;
-        lsdShadersActive = false; // Ensure only one effect is active at a time
+        lsdShadersActive = false;
+        morphineShadersActive = false;
         playerWasDead = false;
         reloadScheduled.set(true);
     }
 
-    // Single deactivation method for both LSD and heroin shaders
+    // Morphine Methods
+    public static void activateMorphineShaders() {
+        ShaderpackExtractor.activateMorphineShaders();
+        morphineShadersActive = true;
+        lsdShadersActive = false;
+        heroinShadersActive = false;
+        playerWasDead = false;
+        reloadScheduled.set(true);
+    }
+
+    // Single deactivation method for all shaders
     public static void deactivateShaders() {
         ShaderpackExtractor.deactivateShaders();
         lsdShadersActive = false;
         heroinShadersActive = false;
+        morphineShadersActive = false;
         playerWasDead = false;
         reloadScheduled.set(true);
     }
@@ -67,11 +82,25 @@ public class ShaderFileSwapper {
         if (event.phase == TickEvent.Phase.END && event.player != null) {
             // Handle both LSD and heroin effects
             LSDPaperItem.handleLSDEffects(event.player, event.player.level());
-            SyringeItem.handleBlissEffects(event.player, event.player.level());
+            BlissEffectsManager.handleBlissEffects(event.player, event.player.level());
 
-            // Extra safety: Clean up bliss effect if player is dead but still has data
-            if (event.player.isDeadOrDying() && SyringeItem.isBlissActive(event.player)) {
-                SyringeItem.cleanupBlissEffect(event.player, event.player.level());
+            // Handle morphine effects
+            if (MorphineEffectsManager.isMorphineActive(event.player)) {
+                long startTime = MorphineEffectsManager.getMorphineStartTime(event.player);
+                long currentTime = event.player.level().getGameTime();
+                long elapsedTicks = currentTime - startTime;
+
+                MorphineEffectsManager.handleMorphineEffectTicks(event.player, event.player.level(), elapsedTicks);
+            }
+
+            // Extra safety: Clean up effects if player is dead but still has data
+            if (event.player.isDeadOrDying()) {
+                if (BlissEffectsManager.isBlissActive(event.player)) {
+                    BlissEffectsManager.cleanupBlissEffect(event.player, event.player.level());
+                }
+                if (MorphineEffectsManager.isMorphineActive(event.player)) {
+                    MorphineEffectsManager.cleanupMorphineEffects(event.player, event.player.level());
+                }
             }
         }
     }
@@ -90,7 +119,7 @@ public class ShaderFileSwapper {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
 
-        if (player != null && (lsdShadersActive || heroinShadersActive)) {
+        if (player != null && (lsdShadersActive || heroinShadersActive || morphineShadersActive)) {
             if (player.isDeadOrDying()) {
                 if (!playerWasDead) {
                     deactivateShaders();
@@ -108,12 +137,15 @@ public class ShaderFileSwapper {
             Player player = (Player) event.getEntity();
             Minecraft mc = Minecraft.getInstance();
             if (player == mc.player) {
-                // Force cleanup of bliss effect on death
-                if (SyringeItem.isBlissActive(player)) {
-                    SyringeItem.cleanupBlissEffect(player, player.level());
+                // Force cleanup of effects on death
+                if (BlissEffectsManager.isBlissActive(player)) {
+                    BlissEffectsManager.cleanupBlissEffect(player, player.level());
+                }
+                if (MorphineEffectsManager.isMorphineActive(player)) {
+                    MorphineEffectsManager.cleanupMorphineEffects(player, player.level());
                 }
 
-                if (lsdShadersActive || heroinShadersActive) {
+                if (lsdShadersActive || heroinShadersActive || morphineShadersActive) {
                     deactivateShaders();
                 }
             }
@@ -125,13 +157,16 @@ public class ShaderFileSwapper {
         Player player = event.getEntity();
         Minecraft mc = Minecraft.getInstance();
         if (player == mc.player) {
-            // Force cleanup of bliss effect on respawn
-            if (SyringeItem.isBlissActive(player)) {
-                SyringeItem.cleanupBlissEffect(player, player.level());
+            // Force cleanup of effects on respawn
+            if (BlissEffectsManager.isBlissActive(player)) {
+                BlissEffectsManager.cleanupBlissEffect(player, player.level());
+            }
+            if (MorphineEffectsManager.isMorphineActive(player)) {
+                MorphineEffectsManager.cleanupMorphineEffects(player, player.level());
             }
 
             // Ensure shaders are deactivated
-            if (lsdShadersActive || heroinShadersActive) {
+            if (lsdShadersActive || heroinShadersActive || morphineShadersActive) {
                 deactivateShaders();
             }
         }
@@ -141,10 +176,11 @@ public class ShaderFileSwapper {
     public static void onPlayerLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         Player player = event.getPlayer();
         if (player != null) {
-            SyringeItem.cleanupBlissEffect(player, player.level());
+            BlissEffectsManager.cleanupBlissEffect(player, player.level());
+            MorphineEffectsManager.cleanupMorphineEffects(player, player.level());
         }
 
-        if (lsdShadersActive || heroinShadersActive) {
+        if (lsdShadersActive || heroinShadersActive || morphineShadersActive) {
             deactivateShaders();
         }
         initialized = false;
@@ -170,7 +206,7 @@ public class ShaderFileSwapper {
     }
 
     public static boolean areShadersActive() {
-        return lsdShadersActive || heroinShadersActive;
+        return lsdShadersActive || heroinShadersActive || morphineShadersActive;
     }
 
     public static boolean areLSDShadersActive() {
@@ -179,5 +215,9 @@ public class ShaderFileSwapper {
 
     public static boolean areHeroinShadersActive() {
         return heroinShadersActive;
+    }
+
+    public static boolean areMorphineShadersActive() {
+        return morphineShadersActive;
     }
 }

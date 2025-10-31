@@ -2,8 +2,7 @@
   "type": "create:filling",
   "ingredients": [
     {
-      "item": "minecraft:paper",
-      "amount": 1
+      "item": "minecraft:paper"
     },
     {
       "fluid": "createmadlab:ergot_extract_solution",
@@ -13,7 +12,7 @@
   "results": [
     {
       "item": "createmadlab:ergot_paper",
-      "amount": 1
+      "count": 1
     }
   ]
 }

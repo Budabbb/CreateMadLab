@@ -46,10 +46,10 @@ vec3 off(vec3 p)
 
 void main()
 {
-    float totalDuration = 360.0;    // 6 minutes total
-    float fadeInDuration = 120.0;   // 2 minutes fade in
-    float peakDuration = 180.0;     // 3 minutes peak intensity
-    float fadeOutDuration = 60.0;   // 1 minute fade out
+    float totalDuration = 360.0;    
+    float fadeInDuration = 120.0;   
+    float peakDuration = 180.0;     
+    float fadeOutDuration = 60.0;   
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
@@ -70,7 +70,6 @@ void main()
     float c = fract(pos.y+cameraPosition.y);
     c *= min(10.-c/.1,1.);
 
-    // Apply vertex distortions with fade intensity
     vec3 distortion = off(pos+cameraPosition) * fadeIntensity;
     pos += distortion;
     vec3 h = pos+cameraPosition;

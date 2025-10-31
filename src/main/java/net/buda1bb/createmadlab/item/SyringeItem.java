@@ -1,6 +1,8 @@
 package net.buda1bb.createmadlab.item;
 
-import net.buda1bb.createmadlab.client.ShaderFileSwapper;
+import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.effect.BlissEffectsManager;
+import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -18,10 +20,6 @@ import java.util.List;
 
 public class SyringeItem extends Item {
     private static final String CONTENT_TAG = "content";
-    private static final String BLISS_START_TIME_TAG = "BlissStartTime";
-    private static final String BLISS_ACTIVE_TAG = "BlissActive";
-    private static final int HEROIN_EFFECT_DURATION = 185 * 20;
-    public static final int COOLDOWN_DURATION = HEROIN_EFFECT_DURATION;
 
     public SyringeItem(Properties properties) {
         super(properties.stacksTo(1));
@@ -30,28 +28,46 @@ public class SyringeItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof Player player) {
-            if (!hasContent(stack) || !"bliss".equals(getContent(stack))) {
-                return stack;
-            }
+            String content = getContent(stack);
 
-            if (level.isClientSide && !isShaderpackEnabled()) {
-                player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
-                return stack;
-            }
-
-            startBlissEffect(player, level);
-
-            applyCrossCooldowns(player);
-
-            if (!player.getAbilities().instabuild) {
-                stack.shrink(1);
-
-                ItemStack emptySyringe = new ItemStack(this);
-                setContent(emptySyringe, "empty");
-
-                if (!player.getInventory().add(emptySyringe)) {
-                    player.drop(emptySyringe, false);
+            if ("bliss".equals(content) || "morphine".equals(content)) {
+                if (level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
+                    player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
+                    return stack;
                 }
+
+                if (!CreateMadLab.isShaderpackEnabled()) {
+                    return stack;
+                }
+
+                if ("bliss".equals(content)) {
+                    if (level.isClientSide) {
+                        BlissEffectsManager.startBlissEffect(player, level);
+                    }
+
+                    if (!level.isClientSide) {
+                        BlissEffectsManager.applyBlissEffects(player, level);
+                        applyBlissCooldowns(player);
+                    }
+                }
+                else if ("morphine".equals(content)) {
+                    MorphineEffectsManager.startMorphineEffect(player, level);
+                    applyMorphineCooldowns(player);
+                }
+
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+
+                    ItemStack emptySyringe = new ItemStack(this);
+                    setContent(emptySyringe, "empty");
+
+                    if (!player.getInventory().add(emptySyringe)) {
+                        player.drop(emptySyringe, false);
+                    }
+                }
+            }
+            else {
+                return stack;
             }
         }
         return stack;
@@ -75,8 +91,16 @@ public class SyringeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        String content = getContent(stack);
 
-        if (!hasContent(stack) || !"bliss".equals(getContent(stack))) {
+        if ("empty".equals(content) || content == null) {
+            return InteractionResultHolder.fail(stack);
+        }
+
+        if (!CreateMadLab.isShaderpackEnabled()) {
+            if (level.isClientSide) {
+                player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
+            }
             return InteractionResultHolder.fail(stack);
         }
 
@@ -92,7 +116,14 @@ public class SyringeItem extends Item {
         if ("bliss".equals(content)) {
             tooltip.add(Component.literal("§dFull of Liquid Bliss"));
 
-            if (level != null && level.isClientSide && !isShaderpackEnabled()) {
+            if (level != null && level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
+                tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
+                tooltip.add(Component.literal("§7Enable 'createmadlab_shaders' for effects"));
+            }
+        } else if ("morphine".equals(content)) {
+            tooltip.add(Component.literal("§bFull of Morphine"));
+
+            if (level != null && level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
                 tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
                 tooltip.add(Component.literal("§7Enable 'createmadlab_shaders' for effects"));
             }
@@ -103,12 +134,14 @@ public class SyringeItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        return hasContent(stack) && "bliss".equals(getContent(stack)) ? 8 : 0;
+        String content = getContent(stack);
+        return ("bliss".equals(content) || "morphine".equals(content)) ? 8 : 0;
     }
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        return hasContent(stack) && "bliss".equals(getContent(stack)) ? UseAnim.DRINK : UseAnim.NONE;
+        String content = getContent(stack);
+        return ("bliss".equals(content) || "morphine".equals(content)) ? UseAnim.DRINK : UseAnim.NONE;
     }
 
     @Override
@@ -116,113 +149,37 @@ public class SyringeItem extends Item {
         return false;
     }
 
-    private void startBlissEffect(Player player, Level level) {
-        CompoundTag persistentData = player.getPersistentData();
-        CompoundTag compoundtag = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-        compoundtag.putLong(BLISS_START_TIME_TAG, level.getGameTime());
-        compoundtag.putBoolean(BLISS_ACTIVE_TAG, true);
-        persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
-
-        if (level.isClientSide) {
-            ShaderFileSwapper.activateHeroinShaders();
-        }
-    }
-
-    public static void handleBlissEffects(Player player, Level level) {
-        if (!isBlissActive(player) || player.isDeadOrDying()) {
-            return;
-        }
-
-        CompoundTag persistentData = player.getPersistentData();
-        CompoundTag compoundtag = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-        long startTime = compoundtag.getLong(BLISS_START_TIME_TAG);
-        long currentTime = level.getGameTime();
-        long elapsedTicks = currentTime - startTime;
-
-        if (elapsedTicks >= HEROIN_EFFECT_DURATION) {
-            endBlissEffect(player, level);
-        }
-    }
-
-    public static void cleanupBlissEffect(Player player, Level level) {
-        CompoundTag persistentData = player.getPersistentData();
-        CompoundTag compoundtag = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-
-        compoundtag.remove(BLISS_START_TIME_TAG);
-        compoundtag.remove(BLISS_ACTIVE_TAG);
-        persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
-
-        if (level.isClientSide && ShaderFileSwapper.areHeroinShadersActive()) {
-            ShaderFileSwapper.deactivateShaders();
-        }
-    }
-
-    public static void handlePlayerLogin(Player player, Level level) {
-        if (hasBlissData(player)) {
-            cleanupBlissEffect(player, level);
-        }
-    }
-
-    private static void endBlissEffect(Player player, Level level) {
-        if (level.isClientSide && ShaderFileSwapper.areHeroinShadersActive()) {
-            ShaderFileSwapper.deactivateShaders();
-        }
-        cleanupBlissEffect(player, level);
-    }
-
-    public static boolean isBlissActive(Player player) {
-        if (player == null || player.isDeadOrDying()) return false;
-
-        CompoundTag persistentData = player.getPersistentData();
-        if (!persistentData.contains(Player.PERSISTED_NBT_TAG)) {
-            return false;
-        }
-
-        CompoundTag compoundtag = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-
-        if (!compoundtag.contains(BLISS_START_TIME_TAG) || !compoundtag.contains(BLISS_ACTIVE_TAG)) {
-            return false;
-        }
-
-        return compoundtag.getBoolean(BLISS_ACTIVE_TAG);
-    }
-
-    private static boolean hasBlissData(Player player) {
-        if (player == null) return false;
-
-        CompoundTag persistentData = player.getPersistentData();
-        if (!persistentData.contains(Player.PERSISTED_NBT_TAG)) {
-            return false;
-        }
-
-        CompoundTag compoundtag = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-        return compoundtag.contains(BLISS_START_TIME_TAG) || compoundtag.contains(BLISS_ACTIVE_TAG);
-    }
-
-    private boolean isShaderpackEnabled() {
-        try {
-            Class<?> irisClass = Class.forName("net.irisshaders.iris.Iris");
-            java.lang.reflect.Method getCurrentPackNameMethod = irisClass.getMethod("getCurrentPackName");
-            String currentPack = (String) getCurrentPackNameMethod.invoke(null);
-
-            return currentPack != null && currentPack.equals("createmadlab_shaders");
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private void applyCrossCooldowns(Player player) {
-        player.getCooldowns().addCooldown(this, COOLDOWN_DURATION);
+    private void applyBlissCooldowns(Player player) {
+        player.getCooldowns().addCooldown(this, BlissEffectsManager.getCooldownDuration());
 
         Item LSDPaperItem = ModItems.LSD_PAPER.get();
         if (LSDPaperItem != null) {
-            player.getCooldowns().addCooldown(LSDPaperItem, COOLDOWN_DURATION);
+            player.getCooldowns().addCooldown(LSDPaperItem, BlissEffectsManager.getCooldownDuration());
+        }
+
+        Item SyringeItem = ModItems.SYRINGE.get();
+        if (SyringeItem != null) {
+            player.getCooldowns().addCooldown(SyringeItem, BlissEffectsManager.getCooldownDuration());
+        }
+    }
+
+    private void applyMorphineCooldowns(Player player) {
+        player.getCooldowns().addCooldown(this, MorphineEffectsManager.getCooldownDuration());
+
+        Item LSDPaperItem = ModItems.LSD_PAPER.get();
+        if (LSDPaperItem != null) {
+            player.getCooldowns().addCooldown(LSDPaperItem, MorphineEffectsManager.getCooldownDuration());
+        }
+
+        Item SyringeItem = ModItems.SYRINGE.get();
+        if (SyringeItem != null) {
+            player.getCooldowns().addCooldown(SyringeItem, MorphineEffectsManager.getCooldownDuration());
         }
     }
 
     public static boolean hasContent(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(CONTENT_TAG) &&
-                !stack.getTag().getString(CONTENT_TAG).equals("empty");
+        String content = getContent(stack);
+        return content != null && !"empty".equals(content);
     }
 
     public static String getContent(ItemStack stack) {

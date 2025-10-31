@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "createbb:red_phosphorus"
-  },
-  "result": "createmadlab:phosphorus_pentoxide",
-  "experience": 0.1,
-  "cookingtime": 200
-}

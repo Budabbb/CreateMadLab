@@ -2,18 +2,17 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createmadlab:lysergic_acid",
-      "amount": 1
+      "item": "createmadlab:lysergic_acid"
     },
     {
-      "item": "createmadlab:phosphorus_pentoxide",
-      "amount": 1
+      "fluid": "createmadlab:diethylamine",
+      "amount": 25
     }
   ],
   "results": [
     {
-      "item": "createmadlab:lsd_crystal",
-      "amount": 1
+      "fluid": "createmadlab:liquid_lsd",
+      "amount": 50
     }
   ],
   "heatRequirement": "heated"

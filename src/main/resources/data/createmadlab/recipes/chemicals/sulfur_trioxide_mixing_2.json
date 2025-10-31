@@ -1,0 +1,27 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "forge:sulfur"
+    },
+    {
+      "fluid": "createbb:oxygen",
+      "amount": 15
+    },
+    {
+      "item": "createmadlab:vanadium_pentoxide_catalyst",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:sulfur_trioxide",
+      "amount": 25
+    },
+    {
+      "item": "createmadlab:vanadium_pentoxide_catalyst",
+      "count": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

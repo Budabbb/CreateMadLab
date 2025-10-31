@@ -2,10 +2,6 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "fluid": "minecraft:water",
-      "amount": 50
-    },
-    {
       "fluid": "createbb:hydrogen",
       "amount": 25
     },
@@ -17,7 +13,7 @@
   "results": [
     {
       "fluid": "createmadlab:hydrochloric_acid",
-      "amount": 100
+      "amount": 50
     }
   ],
   "heatRequirement": "heated"

@@ -2,8 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createmadlab:ergot_paper",
-      "amount": 1
+      "item": "createmadlab:ergot_paper"
     }
   ],
   "results": [
@@ -17,7 +16,7 @@
     },
     {
       "item": "minecraft:paper",
-      "amount": 1
+      "count": 1
     }
   ],
   "heatRequirement": "heated"

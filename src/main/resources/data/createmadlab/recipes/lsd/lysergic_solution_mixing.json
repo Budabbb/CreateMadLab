@@ -2,8 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "createmadlab:ergotamine_tartrate",
-      "amount": 1
+      "item": "createmadlab:ergotamine_tartrate"
     },
     {
       "fluid": "createmadlab:anhydrous_hydrazine",

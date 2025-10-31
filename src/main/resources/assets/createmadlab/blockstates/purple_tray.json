@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "createmadlab:block/purple_tray",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createmadlab:block/purple_tray"
+    },
+    "facing=south": {
+      "model": "createmadlab:block/purple_tray",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "createmadlab:block/purple_tray",
+      "y": 270
+    }
+  }
+}

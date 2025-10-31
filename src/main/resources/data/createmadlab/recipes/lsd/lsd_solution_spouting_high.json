@@ -5,7 +5,7 @@
       "item": "createmadlab:lsd_paper"
     },
     {
-      "fluid": "createmadlab:liquid_lsd",
+      "fluid": "createmadlab:lsd_solution",
       "amount": 25
     }
   ],

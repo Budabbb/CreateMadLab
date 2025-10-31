@@ -1,0 +1,21 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "fluid": "createmadlab:lsd_solution",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:lsd_paper",
+      "count": 1,
+      "nbt": {
+        "dose": 1.0
+      }
+    }
+  ]
+}

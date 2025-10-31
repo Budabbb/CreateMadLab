@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 public class CreateMadLab {
     public static final String MOD_ID = "createmadlab";
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateMadLab(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
@@ -43,6 +44,19 @@ public class CreateMadLab {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     }
+    public static boolean isShaderpackEnabled() {
+        try {
+            Class<?> irisClass = Class.forName("net.irisshaders.iris.Iris");
+            java.lang.reflect.Method getCurrentPackNameMethod = irisClass.getMethod("getCurrentPackName");
+            String currentPack = (String) getCurrentPackNameMethod.invoke(null);
+
+            return currentPack != null && currentPack.equals("createmadlab_shaders");
+        } catch (Exception e) {
+            LOGGER.debug("Iris shaders not found or error checking shaderpack: {}", e.getMessage());
+            return false;
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
@@ -56,8 +70,8 @@ public class CreateMadLab {
                         (stack, level, entity, seed) -> {
                             if (SyringeItem.hasContent(stack)) {
                                 String content = SyringeItem.getContent(stack);
-                                if ("bliss".equals(content)) {
-                                    return 1.0F; // Bliss texture
+                                if ("morphine".equals(content)|| "bliss".equals(content)) {
+                                    return 1.0F; // Full texture
                                 }
                             }
                             return 0.0F; // Empty texture

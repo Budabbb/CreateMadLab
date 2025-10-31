@@ -1,0 +1,18 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "createmadlab:purple_tray"
+    }
+  ],
+  "results": [
+    {
+      "item": "createbb:tray",
+      "count": 1
+    },
+    {
+      "item": "createmadlab:lsd_crystal",
+      "count": 1
+    }
+  ]
+}

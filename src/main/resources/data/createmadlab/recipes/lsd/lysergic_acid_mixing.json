@@ -13,7 +13,7 @@
   "results": [
     {
       "item": "createmadlab:lysergic_acid",
-      "amount": 1
+      "count": 1
     }
   ],
   "heatRequirement": "heated"

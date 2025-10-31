@@ -6,19 +6,16 @@
       "amount": 25
     },
     {
-      "item": "createmadlab:calcium_hydroxide",
-      "amount": 5
+      "item": "createmadlab:calcium_hydroxide"
     },
     {
-      "item": "createmadlab:ammonium_chloride",
-      "amount": 5
+      "item": "createmadlab:ammonium_chloride"
     }
   ],
   "results": [
     {
       "item": "createmadlab:morphine_base",
-      "amount": 1
+      "count": 1
     }
-  ],
-  "heatRequirement": "heated"
+  ]
 }

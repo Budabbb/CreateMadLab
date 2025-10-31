@@ -6,12 +6,10 @@
       "amount": 25
     },
     {
-      "item": "minecraft:coal",
-      "amount": 1
+      "tag": "minecraft:coals"
     },
     {
-      "item": "minecraft:glowstone_dust",
-      "amount": 1
+      "item": "minecraft:glowstone_dust"
     }
   ],
   "results": [

@@ -2,18 +2,17 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:bone_meal",
-      "amount": 1
+      "item": "create:limestone"
     },
     {
       "fluid": "minecraft:water",
-      "amount": 100
+      "amount": 250
     }
   ],
   "results": [
     {
       "item": "createmadlab:calcium_hydroxide",
-      "amount": 1
+      "count": 1
     }
   ],
   "heatRequirement": "heated"

@@ -14,7 +14,7 @@ uniform int fogMode;
 uniform float frameTimeCounter;
 
 void main() {
-    // Fade timing: 10s fade-in, 150s peak, 20s fade-out (total 180s/3min)
+
     float totalDuration = 180.0;
     float fadeInDuration = 10.0;
     float peakDuration = 150.0;
@@ -32,12 +32,11 @@ void main() {
         effectIntensity = 1.0 - (fadeOutElapsed / fadeOutDuration);
     }
 
-    // Simple blur effect for sky (very subtle)
     vec4 baseColor = texture2D(texture, texcoord.st) * texture2D(lightmap, lmcoord.st) * color;
 
     if (effectIntensity > 0.0) {
-        // Very subtle blur for sky
-        float blurAmount = 0.0004 * effectIntensity; // Reduced blur for sky
+
+        float blurAmount = 0.0004 * effectIntensity; 
         vec4 blurColor = baseColor;
 
         blurColor += texture2D(texture, texcoord.st + vec2(blurAmount, 0.0)) * texture2D(lightmap, lmcoord.st) * color;
@@ -47,19 +46,16 @@ void main() {
 
         blurColor /= 5.0;
 
-        // Less blur for sky (10% at peak)
         baseColor = mix(baseColor, blurColor, effectIntensity * 0.1);
     }
 
     gl_FragData[0] = baseColor;
     gl_FragData[1] = vec4(vec3(gl_FragCoord.z), 1.0);
 
-    // Golden tint for sky (slightly different to look natural)
     if (effectIntensity > 0.0) {
-        vec3 warmTint = vec3(1.4, 1.15, 0.6); // Slightly adjusted for sky
+        vec3 warmTint = vec3(1.4, 1.15, 0.6); 
         gl_FragData[0].rgb *= mix(vec3(1.0), warmTint, effectIntensity * 0.7);
 
-        // Add brightness
         gl_FragData[0].rgb *= mix(1.0, 1.3, effectIntensity * 0.3);
     }
 

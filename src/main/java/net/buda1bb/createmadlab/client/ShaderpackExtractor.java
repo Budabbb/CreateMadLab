@@ -61,6 +61,20 @@ public class ShaderpackExtractor {
         }
     }
 
+    public static void activateMorphineShaders() {
+        Path shaderpacksDir = FMLPaths.GAMEDIR.get().resolve("shaderpacks");
+        Path targetDir = shaderpacksDir.resolve(SHADERPACK_NAME);
+        Path shadersDir = targetDir.resolve("shaders");
+
+        try {
+            Files.createDirectories(shadersDir);
+            deleteShaderFiles();
+            extractEffectShaders("morphine", shadersDir);
+        } catch (IOException e) {
+            // Silent fail
+        }
+    }
+
     public static void deactivateShaders() {
         deleteShaderFiles();
     }

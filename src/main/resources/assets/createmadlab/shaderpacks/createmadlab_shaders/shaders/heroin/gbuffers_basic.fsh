@@ -9,7 +9,7 @@ uniform int fogMode;
 uniform float frameTimeCounter;
 
 void main() {
-    // Fade timing: 10s fade-in, 150s peak, 20s fade-out (total 180s/3min)
+
     float totalDuration = 180.0;
     float fadeInDuration = 10.0;
     float peakDuration = 150.0;
@@ -30,15 +30,12 @@ void main() {
     gl_FragData[0] = color;
     gl_FragData[1] = vec4(vec3(gl_FragCoord.z), 1.0);
 
-    // STRONG golden warm tint
     if (effectIntensity > 0.0) {
-        vec3 warmTint = vec3(1.5, 1.2, 0.5); // Very strong golden
+        vec3 warmTint = vec3(1.5, 1.2, 0.5); 
         gl_FragData[0].rgb *= mix(vec3(1.0), warmTint, effectIntensity * 0.9);
 
-        // Add brightness and warmth
         gl_FragData[0].rgb *= mix(1.0, 1.4, effectIntensity * 0.5);
 
-        // Sepia-like effect for extra warmth
         float luminance = dot(gl_FragData[0].rgb, vec3(0.299, 0.587, 0.114));
         vec3 sepia = vec3(luminance) * vec3(1.3, 1.1, 0.7);
         gl_FragData[0].rgb = mix(gl_FragData[0].rgb, sepia, effectIntensity * 0.4);

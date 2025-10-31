@@ -1,7 +1,7 @@
 #version 120
 
 const float Terrain = 1.; //Terrain distortion level
-const float Hand = 1.; //Hand distortion level
+const float Hand = 1.; 
 const float Offset = 1.; //Camera height offset
 
 const float Amount = .8; //Wave distortion intensity
@@ -44,11 +44,11 @@ vec3 off(vec3 p)
 
 void main()
 {
-    // Standardized fade timer - 6 minutes total: 2m fade in, 3m peak, 1m fade out
-    float totalDuration = 360.0;    // 6 minutes total
-    float fadeInDuration = 120.0;   // 2 minutes fade in
-    float peakDuration = 180.0;     // 3 minutes peak intensity
-    float fadeOutDuration = 60.0;   // 1 minute fade out
+
+    float totalDuration = 360.0;    
+    float fadeInDuration = 120.0;   
+    float peakDuration = 180.0;     
+    float fadeOutDuration = 60.0;   
 
     float elapsed = mod(frameTimeCounter, totalDuration);
     float fadeIntensity = 0.0;
@@ -66,7 +66,6 @@ void main()
     pos = mat3(gbufferModelViewInverse) * pos  + gbufferModelViewInverse[3].xyz;
     model = pos+cameraPosition;
 
-    // Apply vertex distortions with fade intensity
     vec3 distortion = off(pos+cameraPosition) * Hand * fadeIntensity;
     pos += distortion;
     pos.y -= off(cameraPosition-vec3(0,1,0)).y*Offset*Hand * fadeIntensity;
