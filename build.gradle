@@ -164,6 +164,9 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
     runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
 
+    // For the standalone recipe generator
+    implementation 'com.google.code.gson:gson:2.10.1'
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -224,4 +227,21 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+// Custom task to generate lacing recipes for all items in the tag
+task generateRecipes(type: JavaExec) {
+    group = 'execution'
+    description = 'Generate lacing recipe files for all items in laceables tag'
+
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'net.buda1bb.createmadlab.datagen.RecipeGenerator'
+
+    // Set working directory to project root
+    workingDir = projectDir
+}
+
+// Optional: Make the recipe generation run before building the jar
+tasks.named('jar').configure {
+    dependsOn generateRecipes
 }

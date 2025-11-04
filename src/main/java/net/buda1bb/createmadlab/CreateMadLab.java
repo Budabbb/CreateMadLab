@@ -70,8 +70,8 @@ public class CreateMadLab {
                         (stack, level, entity, seed) -> {
                             if (SyringeItem.hasContent(stack)) {
                                 String content = SyringeItem.getContent(stack);
-                                if ("morphine".equals(content)|| "bliss".equals(content)) {
-                                    return 1.0F; // Full texture
+                                if ("morphine".equals(content) || "bliss".equals(content)) {
+                                    return 1.0F; // Full texture for morphine/bliss
                                 }
                             }
                             return 0.0F; // Empty texture

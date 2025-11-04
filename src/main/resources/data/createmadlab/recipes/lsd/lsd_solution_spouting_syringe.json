@@ -5,15 +5,15 @@
       "item": "createmadlab:syringe"
     },
     {
-      "fluid": "createmadlab:morphine_solution",
-      "amount": 100
+      "fluid": "createmadlab:lsd_solution",
+      "amount": 25
     }
   ],
   "results": [
     {
       "item": "createmadlab:syringe",
       "nbt": {
-        "content": "morphine"
+        "content": "bliss"
       }
     }
   ]
