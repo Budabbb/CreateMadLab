@@ -33,7 +33,7 @@ public class RecipeGenerator {
             String[][] fluidTypes = {
                     {"heroin_solution", "bliss", "100"},
                     {"morphine_solution", "morphine", "100"},
-                    {"lsd_solution", "lsd", "50"}  // LSD uses 50 instead of 100
+                    {"lsd_solution", "lsd", "50"}
             };
 
             int generated = 0;
@@ -62,7 +62,7 @@ public class RecipeGenerator {
     private static List<String> readLaceablesTag() {
         List<String> items = new ArrayList<>();
         try {
-            Path tagPath = Paths.get("src/main/resources/data/" + MOD_ID + "/tags/items/laceables.json");
+            Path tagPath = Paths.get("src/main/resources/data/forge/tags/items/laceables.json");
             if (!Files.exists(tagPath)) {
                 System.err.println("Laceables tag not found at: " + tagPath);
                 return items;

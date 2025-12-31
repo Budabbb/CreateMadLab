@@ -1,0 +1,22 @@
+{
+  "parent": "createmadlab:root",
+  "display": {
+    "icon": { "item": "createmadlab:ergot_fungus" },
+    "title": "Fungal Inspiration",
+    "description": "It looks harmless..",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_ergot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["createmadlab:ergot_fungus"] }
+        ]
+      }
+    }
+  }
+}

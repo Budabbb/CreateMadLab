@@ -2,7 +2,6 @@ package net.buda1bb.createmadlab.client;
 
 import net.buda1bb.createmadlab.CreateMadLab;
 import net.minecraftforge.fml.loading.FMLPaths;
-
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;

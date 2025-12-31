@@ -1,0 +1,22 @@
+{
+  "parent": "createmadlab:aquire_syringe",
+  "display": {
+    "icon": { "item": "createmadlab:morphine_base" },
+    "title": "A start of a journey",
+    "description": "Science or curiosity - hard to tell which.",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_morphine_base": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["createmadlab:morphine_base"] }
+        ]
+      }
+    }
+  }
+}

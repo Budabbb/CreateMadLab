@@ -1,7 +1,7 @@
 package net.buda1bb.createmadlab.event;
 
 import net.buda1bb.createmadlab.CreateMadLab;
-import net.buda1bb.createmadlab.client.ShaderFileSwapper;
+import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.buda1bb.createmadlab.effect.BlissEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.buda1bb.createmadlab.item.LSDPaperItem;
@@ -33,7 +33,7 @@ public class LacingEventHandler {
             return;
         }
 
-        if (!CreateMadLab.isShaderpackEnabled()) {
+        if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
             return;
         }
 
@@ -63,13 +63,7 @@ public class LacingEventHandler {
     }
 
     private static void handleBlissConsumption(Player player, Level level) {
-        if (level.isClientSide) {
-            BlissEffectsManager.startBlissEffect(player, level);
-        }
-
-        if (!level.isClientSide) {
-            BlissEffectsManager.applyBlissEffects(player, level);
-        }
+        BlissEffectsManager.startBlissEffect(player, level);
     }
 
     private static void handleMorphineConsumption(Player player, Level level) {
@@ -101,7 +95,7 @@ public class LacingEventHandler {
 
         if (elapsedTicks >= LSD_TOTAL_EFFECT_DURATION) {
             if (isActive && level.isClientSide) {
-                ShaderFileSwapper.deactivateShaders();
+                ShaderUtils.deactivateShaders();
             }
             compoundtag.remove("LsdStartTime");
             compoundtag.remove("LsdDose");
@@ -109,13 +103,13 @@ public class LacingEventHandler {
             persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
         } else if (elapsedTicks >= LSD_EFFECT_DELAY_TICKS && !isActive) {
             if (level.isClientSide) {
-                ShaderFileSwapper.activateLSDShaders(dose);
+                ShaderUtils.activateLSDShaders(dose);
             }
             compoundtag.putBoolean("LsdActive", true);
             persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
         } else if (elapsedTicks < LSD_EFFECT_DELAY_TICKS && isActive) {
             if (level.isClientSide) {
-                ShaderFileSwapper.deactivateShaders();
+                ShaderUtils.deactivateShaders();
             }
             compoundtag.putBoolean("LsdActive", false);
             persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);

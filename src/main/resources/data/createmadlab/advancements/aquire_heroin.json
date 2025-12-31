@@ -1,0 +1,22 @@
+{
+  "parent": "createmadlab:aquire_morphine_base",
+  "display": {
+    "icon": { "item": "createmadlab:heroin" },
+    "title": "A refined temptation",
+    "description": "In it's purest form, waiting to be unleashed.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_heroin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["createmadlab:heroin"] }
+        ]
+      }
+    }
+  }
+}

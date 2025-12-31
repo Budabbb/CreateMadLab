@@ -2,7 +2,6 @@ package net.buda1bb.createmadlab;
 
 import com.tterrag.registrate.Registrate;
 import net.buda1bb.createmadlab.block.ModBlocks;
-import net.buda1bb.createmadlab.client.ShaderpackExtractor;
 import net.buda1bb.createmadlab.fluid.ModFluids;
 import net.buda1bb.createmadlab.item.ModCreativeTabs;
 import net.buda1bb.createmadlab.item.ModItems;
@@ -20,7 +19,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
@@ -43,38 +41,33 @@ public class CreateMadLab {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-    }
-    public static boolean isShaderpackEnabled() {
-        try {
-            Class<?> irisClass = Class.forName("net.irisshaders.iris.Iris");
-            java.lang.reflect.Method getCurrentPackNameMethod = irisClass.getMethod("getCurrentPackName");
-            String currentPack = (String) getCurrentPackNameMethod.invoke(null);
-
-            return currentPack != null && currentPack.equals("createmadlab_shaders");
-        } catch (Exception e) {
-            LOGGER.debug("Iris shaders not found or error checking shaderpack: {}", e.getMessage());
-            return false;
-        }
+        // Server-safe initialization
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            ShaderpackExtractor.extractShaderpackStructure();
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.ERGOT_INFESTED_WHEAT.get(), RenderType.cutout());
+            try {
+                Class<?> extractorClass = Class.forName("net.buda1bb.createmadlab.client.ShaderpackExtractor");
+                java.lang.reflect.Method method = extractorClass.getMethod("extractShaderpackStructure");
+                method.invoke(null);
+            } catch (Exception e) {
+            }
+
             event.enqueueWork(() -> {
-                // Register custom property for syringe content
+                ItemBlockRenderTypes.setRenderLayer(ModBlocks.ERGOT_INFESTED_WHEAT.get(), RenderType.cutout());
+
                 ItemProperties.register(ModItems.SYRINGE.get(),
                         new ResourceLocation(CreateMadLab.MOD_ID, "content"),
                         (stack, level, entity, seed) -> {
                             if (SyringeItem.hasContent(stack)) {
                                 String content = SyringeItem.getContent(stack);
                                 if ("morphine".equals(content) || "bliss".equals(content)) {
-                                    return 1.0F; // Full texture for morphine/bliss
+                                    return 1.0F;
                                 }
                             }
-                            return 0.0F; // Empty texture
+                            return 0.0F;
                         });
             });
         }

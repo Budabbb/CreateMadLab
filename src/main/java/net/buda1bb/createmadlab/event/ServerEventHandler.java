@@ -4,17 +4,18 @@ import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.effect.BlissEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.buda1bb.createmadlab.item.LSDPaperItem;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.DEDICATED_SERVER)
 public class ServerEventHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && event.player != null) {
-            // Handle all drug effects on server side
+            // Handle all drug effects on server side only
             LSDPaperItem.handleLSDEffects(event.player, event.player.level());
             BlissEffectsManager.handleBlissEffects(event.player, event.player.level());
 

@@ -1,6 +1,6 @@
 package net.buda1bb.createmadlab.item;
 
-import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.buda1bb.createmadlab.effect.BlissEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.minecraft.nbt.CompoundTag;
@@ -31,28 +31,24 @@ public class SyringeItem extends Item {
             String content = getContent(stack);
 
             if ("bliss".equals(content) || "morphine".equals(content)) {
-                if (level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
-                    player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
+                // Only check shaders on client side
+                if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
+                    player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' for the effect to work!"), true);
                     return stack;
                 }
 
-                if (!CreateMadLab.isShaderpackEnabled()) {
-                    return stack;
-                }
-
+                // Server should process regardless of shaders
                 if ("bliss".equals(content)) {
-                    if (level.isClientSide) {
-                        BlissEffectsManager.startBlissEffect(player, level);
-                    }
-
+                    BlissEffectsManager.startBlissEffect(player, level);
                     if (!level.isClientSide) {
-                        BlissEffectsManager.applyBlissEffects(player, level);
                         applyBlissCooldowns(player);
                     }
                 }
                 else if ("morphine".equals(content)) {
                     MorphineEffectsManager.startMorphineEffect(player, level);
-                    applyMorphineCooldowns(player);
+                    if (!level.isClientSide) {
+                        applyMorphineCooldowns(player);
+                    }
                 }
 
                 if (!player.getAbilities().instabuild) {
@@ -97,11 +93,10 @@ public class SyringeItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        if (!CreateMadLab.isShaderpackEnabled()) {
-            if (level.isClientSide) {
-                player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
-            }
-            return InteractionResultHolder.fail(stack);
+        // Only check shaders on client side
+        if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
+            player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' for the effect to work!"), true);
+            // Don't fail here - allow use but show warning
         }
 
         player.startUsingItem(hand);
@@ -116,16 +111,16 @@ public class SyringeItem extends Item {
         if ("bliss".equals(content)) {
             tooltip.add(Component.literal("§dFull of Liquid Bliss"));
 
-            if (level != null && level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
+            if (level != null && level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
                 tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
-                tooltip.add(Component.literal("§7Enable 'createmadlab_shaders' for effects"));
+                tooltip.add(Component.literal("§7Enable shaders for effects"));
             }
         } else if ("morphine".equals(content)) {
             tooltip.add(Component.literal("§bFull of Morphine"));
 
-            if (level != null && level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
+            if (level != null && level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
                 tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
-                tooltip.add(Component.literal("§7Enable 'createmadlab_shaders' for effects"));
+                tooltip.add(Component.literal("§7Enable shaders for effects"));
             }
         } else if ("empty".equals(content)) {
             tooltip.add(Component.literal("§7Empty"));

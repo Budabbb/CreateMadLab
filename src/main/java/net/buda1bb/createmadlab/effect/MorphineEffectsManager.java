@@ -1,7 +1,6 @@
 package net.buda1bb.createmadlab.effect;
 
-import net.buda1bb.createmadlab.CreateMadLab;
-import net.buda1bb.createmadlab.client.ShaderFileSwapper;
+import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -22,7 +21,8 @@ public class MorphineEffectsManager {
     private static final float MAX_DAMAGE_BLOCKED = 40.0f;
 
     public static void startMorphineEffect(Player player, Level level) {
-        if (!CreateMadLab.isShaderpackEnabled()) {
+        // Only check shaders on client
+        if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
             return;
         }
 
@@ -34,17 +34,15 @@ public class MorphineEffectsManager {
         compoundtag.putFloat(MORPHINE_DAMAGE_BLOCKED_TAG, 0.0f);
         persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
 
+        // Only activate shaders on client
         if (level.isClientSide) {
-            activateMorphineShaders();
+            ShaderUtils.activateMorphineShaders();
         }
 
+        // Apply effects on server
         if (!level.isClientSide) {
             applyMorphineEffects(player);
         }
-    }
-
-    public static void activateMorphineShaders() {
-        ShaderFileSwapper.activateMorphineShaders();
     }
 
     private static void applyMorphineEffects(Player player) {
@@ -72,8 +70,8 @@ public class MorphineEffectsManager {
     }
 
     private static void endMorphineShaders(Level level) {
-        if (level.isClientSide && ShaderFileSwapper.areMorphineShadersActive()) {
-            ShaderFileSwapper.deactivateShaders();
+        if (level.isClientSide && ShaderUtils.areMorphineShadersActive()) {
+            ShaderUtils.deactivateShaders();
         }
     }
 
@@ -156,8 +154,8 @@ public class MorphineEffectsManager {
                         (effect.getEffect() == MobEffects.MOVEMENT_SLOWDOWN && effect.getAmplifier() == 2) ||
                         (effect.getEffect() == MobEffects.WEAKNESS && effect.getAmplifier() == 1)
         );
-        if (level.isClientSide && ShaderFileSwapper.areMorphineShadersActive()) {
-            ShaderFileSwapper.deactivateShaders();
+        if (level.isClientSide && ShaderUtils.areMorphineShadersActive()) {
+            ShaderUtils.deactivateShaders();
         }
         cleanupMorphineNBTData(player);
     }
@@ -205,6 +203,7 @@ public class MorphineEffectsManager {
     public static int getTotalDuration() {
         return WITHDRAWAL_START + WITHDRAWAL_DURATION;
     }
+
     public static int getCooldownDuration() {
         return COOLDOWN_DURATION;
     }

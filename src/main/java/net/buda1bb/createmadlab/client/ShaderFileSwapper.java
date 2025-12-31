@@ -93,7 +93,7 @@ public class ShaderFileSwapper {
                 MorphineEffectsManager.handleMorphineEffectTicks(event.player, event.player.level(), elapsedTicks);
             }
 
-            // Extra safety: Clean up effects if player is dead but still has data
+            // Clean up effects if player is dead but still has data
             if (event.player.isDeadOrDying()) {
                 if (BlissEffectsManager.isBlissActive(event.player)) {
                     BlissEffectsManager.cleanupBlissEffect(event.player, event.player.level());

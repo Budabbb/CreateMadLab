@@ -1,7 +1,6 @@
 package net.buda1bb.createmadlab.effect;
 
-import net.buda1bb.createmadlab.CreateMadLab;
-import net.buda1bb.createmadlab.client.ShaderFileSwapper;
+import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -23,7 +22,8 @@ public class BlissEffectsManager {
     private static final int WEAKNESS_DURATION = 60 * 20;
 
     public static void startBlissEffect(Player player, Level level) {
-        if (!CreateMadLab.isShaderpackEnabled()) {
+        // Only check shaders on client side
+        if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
             return;
         }
 
@@ -33,10 +33,12 @@ public class BlissEffectsManager {
         compoundtag.putBoolean(BLISS_ACTIVE_TAG, true);
         persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
 
+        // Only activate shaders on client
         if (level.isClientSide) {
-            ShaderFileSwapper.activateHeroinShaders();
+            ShaderUtils.activateHeroinShaders();
         }
 
+        // Apply effects on server side
         if (!level.isClientSide) {
             applyBlissEffects(player, level);
         }
@@ -75,8 +77,8 @@ public class BlissEffectsManager {
     }
 
     public static void endBlissEffect(Player player, Level level) {
-        if (level.isClientSide && ShaderFileSwapper.areHeroinShadersActive()) {
-            ShaderFileSwapper.deactivateShaders();
+        if (level.isClientSide && ShaderUtils.areHeroinShadersActive()) {
+            ShaderUtils.deactivateShaders();
         }
         cleanupBlissNBTData(player, level);
     }
@@ -88,8 +90,8 @@ public class BlissEffectsManager {
         compoundtag.remove(BLISS_ACTIVE_TAG);
         persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
 
-        if (level.isClientSide && ShaderFileSwapper.areHeroinShadersActive()) {
-            ShaderFileSwapper.deactivateShaders();
+        if (level.isClientSide && ShaderUtils.areHeroinShadersActive()) {
+            ShaderUtils.deactivateShaders();
         }
     }
 
@@ -214,6 +216,7 @@ public class BlissEffectsManager {
     public static int getTotalDuration() {
         return TOTAL_DURATION;
     }
+
     public static int getCooldownDuration() {
         return TOTAL_DURATION;
     }

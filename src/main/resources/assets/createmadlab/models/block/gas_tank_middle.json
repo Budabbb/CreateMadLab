@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "createmadlab:block/gas_tank_side",
+    "down": "createmadlab:block/gas_tank_side",
+    "up": "createmadlab:block/gas_tank_side",
+    "north": "createmadlab:block/gas_tank_side",
+    "south": "createmadlab:block/gas_tank_side",
+    "east": "createmadlab:block/gas_tank_side",
+    "west": "createmadlab:block/gas_tank_side"
+  }
+}

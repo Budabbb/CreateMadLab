@@ -1,9 +1,6 @@
 package net.buda1bb.createmadlab.item;
 
-import net.buda1bb.createmadlab.CreateMadLab;
-import net.buda1bb.createmadlab.client.ShaderFileSwapper;
-import net.buda1bb.createmadlab.effect.BlissEffectsManager;
-import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
+import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -39,11 +36,11 @@ public class LSDPaperItem extends Item {
                 return stack;
             }
 
-            if (!CreateMadLab.isShaderpackEnabled()) {
-                if (level.isClientSide) {
-                    player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
+            if (level.isClientSide) {
+                if (!ShaderUtils.isShaderpackEnabled()) {
+                    player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' for the effect to work!"), true);
+                    return stack;
                 }
-                return stack;
             }
 
             double dose = getDose(stack);
@@ -73,11 +70,11 @@ public class LSDPaperItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!CreateMadLab.isShaderpackEnabled()) {
-            if (level.isClientSide) {
-                player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' shaderpack for the effect to work!"), true);
+        if (level.isClientSide) {
+            if (!ShaderUtils.isShaderpackEnabled()) {
+                player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' for the effect to work!"), true);
+                return InteractionResultHolder.fail(stack);
             }
-            return InteractionResultHolder.fail(stack);
         }
 
         if (player.getCooldowns().isOnCooldown(this)) {
@@ -92,9 +89,9 @@ public class LSDPaperItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
 
-        if (level != null && level.isClientSide && !CreateMadLab.isShaderpackEnabled()) {
+        if (level != null && level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
             tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
-            tooltip.add(Component.literal("§7Enable 'createmadlab_shaders' for effects"));
+            tooltip.add(Component.literal("§7Enable shaders for effects"));
         }
     }
 
@@ -123,7 +120,7 @@ public class LSDPaperItem extends Item {
 
         if (elapsedTicks >= TOTAL_EFFECT_DURATION) {
             if (isActive && level.isClientSide) {
-                ShaderFileSwapper.deactivateShaders();
+                ShaderUtils.deactivateShaders();
             }
             compoundtag.remove(LSD_START_TIME_TAG);
             compoundtag.remove(DOSE_TAG);
@@ -131,13 +128,13 @@ public class LSDPaperItem extends Item {
             persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
         } else if (elapsedTicks >= EFFECT_DELAY_TICKS && !isActive) {
             if (level.isClientSide) {
-                ShaderFileSwapper.activateLSDShaders(dose);
+                ShaderUtils.activateLSDShaders(dose);
             }
             compoundtag.putBoolean(LSD_ACTIVE_TAG, true);
             persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
         } else if (elapsedTicks < EFFECT_DELAY_TICKS && isActive) {
             if (level.isClientSide) {
-                ShaderFileSwapper.deactivateShaders();
+                ShaderUtils.deactivateShaders();
             }
             compoundtag.putBoolean(LSD_ACTIVE_TAG, false);
             persistentData.put(Player.PERSISTED_NBT_TAG, compoundtag);
