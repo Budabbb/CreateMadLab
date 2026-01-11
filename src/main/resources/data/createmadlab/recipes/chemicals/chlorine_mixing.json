@@ -3,7 +3,7 @@
   "ingredients": [
     {
       "fluid": "minecraft:water",
-      "amount": 500
+      "amount": 25
     },
     {
       "item": "minecraft:redstone"
@@ -13,10 +13,6 @@
     }
   ],
   "results": [
-    {
-      "fluid": "minecraft:water",
-      "amount": 475
-    },
     {
       "fluid": "createmadlab:chlorine",
       "amount": 25

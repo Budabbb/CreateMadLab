@@ -38,6 +38,7 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.HEROIN.get());
                         pOutput.accept(ModItems.PURPLE_TRAY_ITEM.get());
                         pOutput.accept(ModItems.LSD_CRYSTAL.get());
+                        pOutput.accept(ModItems.FLASK.get());
                         pOutput.accept(ModItems.SYRINGE.get());
 
                         ItemStack morphineSyringe = new ItemStack(ModItems.SYRINGE.get());

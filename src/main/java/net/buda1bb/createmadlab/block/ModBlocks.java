@@ -20,7 +20,7 @@ public class ModBlocks {
             BLOCKS.register("ergot_infested_wheat", () -> new ErgotInfestedWheatBlock());
 
     public static final RegistryObject<Block> PURPLE_TRAY = BLOCKS.register("purple_tray",
-            () -> new TrayBlock.White(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+            () -> new TrayBlock.White(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).destroyTime(1).noOcclusion()));
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> blockSupplier) {

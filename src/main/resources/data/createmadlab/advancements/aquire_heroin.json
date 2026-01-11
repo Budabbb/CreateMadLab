@@ -3,7 +3,7 @@
   "display": {
     "icon": { "item": "createmadlab:heroin" },
     "title": "A refined temptation",
-    "description": "In it's purest form, waiting to be unleashed.",
+    "description": "Get your hands on some Bliss Dust",
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,

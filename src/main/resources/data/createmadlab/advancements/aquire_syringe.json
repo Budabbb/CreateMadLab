@@ -3,7 +3,7 @@
   "display": {
     "icon": { "item": "createmadlab:syringe" },
     "title": "Sterile Equipment",
-    "description": "You now have a syringe. What you do with it is on you.",
+    "description": "Obtain a Syringe",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

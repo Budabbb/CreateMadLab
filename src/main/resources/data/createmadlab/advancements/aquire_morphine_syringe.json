@@ -5,7 +5,7 @@
       "item": "createmadlab:syringe"
     },
     "title": "Pain Management",
-    "description": "Acquire a syringe of morphine.",
+    "description": "Acquire a syringe of morphine",
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,

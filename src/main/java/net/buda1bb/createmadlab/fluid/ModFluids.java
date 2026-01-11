@@ -19,11 +19,9 @@ public class ModFluids {
     public static ResourceLocation still = new ResourceLocation("block/water_still");
     public static ResourceLocation flow = new ResourceLocation("block/water_flow");
 
-    // chloroform
     public static FluidEntry<ForgeFlowingFluid.Flowing> CHLOROFORM;
     public static ItemEntry<BucketItem> CHLOROFORM_BUCKET;
 
-    // new fluids
     public static FluidEntry<ForgeFlowingFluid.Flowing> ANHYDROUS_HYDRAZINE;
     public static ItemEntry<BucketItem> ANHYDROUS_HYDRAZINE_BUCKET;
 

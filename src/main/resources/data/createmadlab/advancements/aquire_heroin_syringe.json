@@ -5,7 +5,7 @@
       "item": "createmadlab:syringe"
     },
     "title": "Chasing the Dragon",
-    "description": "Aquire a syringe of bliss.",
+    "description": "Aquire a syringe of bliss",
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,

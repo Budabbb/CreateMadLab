@@ -16,10 +16,6 @@
     {
       "fluid": "createmadlab:ethanol",
       "amount": 25
-    },
-    {
-      "tag": "forge:mushrooms",
-      "chance": 0.8
     }
   ],
   "heatRequirement": "heated"

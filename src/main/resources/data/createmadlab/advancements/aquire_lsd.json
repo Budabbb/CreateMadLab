@@ -5,7 +5,7 @@
       "item": "createmadlab:lsd_paper"
     },
     "title": "Acid Test",
-    "description": "Office supplies, allegedly.",
+    "description": "Office supplies, allegedly",
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,

@@ -57,6 +57,12 @@ public class ModItems {
                     .properties(p -> p.stacksTo(1))
                     .register();
 
+
+    public static final ItemEntry<FlaskItem> FLASK =
+            REGISTRATE.item("flask", FlaskItem::new)
+                    .properties(p -> p.stacksTo(1))
+                    .register();
+
     public static final RegistryObject<Item> SEA_SALT =
             ITEMS.register("sea_salt", () -> new Item(new Item.Properties().food(ModConsumables.SEA_SALT)));
 

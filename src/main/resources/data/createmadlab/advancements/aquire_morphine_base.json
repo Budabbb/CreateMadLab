@@ -3,7 +3,7 @@
   "display": {
     "icon": { "item": "createmadlab:morphine_base" },
     "title": "A start of a journey",
-    "description": "Science or curiosity - hard to tell which.",
+    "description": "Obtain Morphine Base",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

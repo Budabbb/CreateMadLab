@@ -6,7 +6,7 @@
     },
     {
       "fluid": "createbb:oxygen",
-      "amount": 15
+      "amount": 50
     },
     {
       "item": "createmadlab:vanadium_pentoxide_catalyst",
@@ -16,7 +16,7 @@
   "results": [
     {
       "fluid": "createmadlab:sulfur_trioxide",
-      "amount": 25
+      "amount": 75
     },
     {
       "item": "createmadlab:vanadium_pentoxide_catalyst",

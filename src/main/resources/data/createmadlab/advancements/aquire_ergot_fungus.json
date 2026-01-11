@@ -3,7 +3,7 @@
   "display": {
     "icon": { "item": "createmadlab:ergot_fungus" },
     "title": "Fungal Inspiration",
-    "description": "It looks harmless..",
+    "description": "Obtain Ergot Fungus",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

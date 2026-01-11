@@ -6,14 +6,14 @@
     },
     {
       "fluid": "createbb:acetic_anhydride",
-      "amount": 5
+      "amount": 50
     },
     {
       "item": "createmadlab:sodium_carbonate"
     },
     {
       "fluid": "minecraft:water",
-      "amount": 5
+      "amount": 50
     }
   ],
   "results": [
@@ -23,7 +23,7 @@
     },
     {
       "fluid": "createmadlab:residue",
-      "amount": 10
+      "amount": 100
     }
   ],
   "heatRequirement": "heated"

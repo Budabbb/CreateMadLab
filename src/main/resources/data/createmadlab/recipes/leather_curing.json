@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "createmadlab:calcium_hydroxide"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:leather",
+      "count": 1
+    },
+    {
+      "fluid": "createmadlab:sludge",
+      "amount": 25
+    }
+  ],
+  "heatRequirement": "heated"
+}
