@@ -82,6 +82,9 @@ public class ModFluids {
     public static FluidEntry<ForgeFlowingFluid.Flowing> DIETHYLAMINE;
     public static ItemEntry<BucketItem> DIETHYLAMINE_BUCKET;
 
+    public static FluidEntry<ForgeFlowingFluid.Flowing> HYDROGEN_PEROXIDE;
+    public static ItemEntry<BucketItem> HYDROGEN_PEROXIDE_BUCKET;
+
     public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name) {
         return basicFluid(name, 0xffffffff);
     }
@@ -183,6 +186,10 @@ public class ModFluids {
         var fDieth = basicFluid("diethylamine", 0xfff8f8e0);
         DIETHYLAMINE_BUCKET = getBucket(fDieth);
         DIETHYLAMINE = fDieth.register();
+
+        var HydPer = basicFluid("hydrogen_peroxide", 0xfff8f8e0);
+        HYDROGEN_PEROXIDE_BUCKET = getBucket(HydPer);
+        HYDROGEN_PEROXIDE = HydPer.register();
     }
 
     public static class NoColorFluidAttributes extends AllFluids.TintedFluidType {

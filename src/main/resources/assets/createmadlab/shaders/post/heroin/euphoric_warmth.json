@@ -1,0 +1,123 @@
+{
+  "targets": [
+    "swap",
+    "highlights",
+    "blur_a",
+    "blur_b",
+    "history"
+  ],
+  "passes": [
+    {
+      "name": "createmadlab:heroin/extract_bright",
+      "intarget": "minecraft:main",
+      "outtarget": "highlights",
+      "uniforms": [
+        {
+          "name": "Threshold",
+          "values": [ 0.72 ]
+        },
+        {
+          "name": "Knee",
+          "values": [ 0.18 ]
+        }
+      ]
+    },
+    {
+      "name": "createmadlab:heroin/blur",
+      "intarget": "highlights",
+      "outtarget": "blur_a",
+      "uniforms": [
+        {
+          "name": "BlurDir",
+          "values": [ 1.0, 0.0 ]
+        },
+        {
+          "name": "BlurScale",
+          "values": [ 1.0 ]
+        }
+      ]
+    },
+    {
+      "name": "createmadlab:heroin/blur",
+      "intarget": "blur_a",
+      "outtarget": "blur_b",
+      "uniforms": [
+        {
+          "name": "BlurDir",
+          "values": [ 0.0, 1.0 ]
+        },
+        {
+          "name": "BlurScale",
+          "values": [ 1.0 ]
+        }
+      ]
+    },
+    {
+      "name": "createmadlab:heroin/composite",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "auxtargets": [
+        {
+          "name": "BloomSampler",
+          "id": "blur_b"
+        },
+        {
+          "name": "HistorySampler",
+          "id": "history"
+        }
+      ],
+      "uniforms": [
+        {
+          "name": "EffectTime",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Intensity",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Resolution",
+          "values": [ 1.0, 1.0 ]
+        },
+        {
+          "name": "CameraMotion",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "SedationWave",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Warmth",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "BlurStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "VignetteStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "TrailStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "BloomStrength",
+          "values": [ 0.0 ]
+        }
+      ]
+    },
+    {
+      "name": "minecraft:blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    },
+    {
+      "name": "minecraft:blit",
+      "intarget": "swap",
+      "outtarget": "history"
+    }
+  ]
+}

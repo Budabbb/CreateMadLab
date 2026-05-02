@@ -2,12 +2,15 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "fluid": "minecraft:water",
-      "amount": 200
+      "fluid": "createmadlab:hydrogen_peroxide",
+      "amount": 100
     },
     {
       "fluid": "createbb:ammonia",
-      "amount": 100
+      "amount": 200
+    },
+    {
+      "item": "createmadlab:sodium_hydroxide"
     }
   ],
   "results": [

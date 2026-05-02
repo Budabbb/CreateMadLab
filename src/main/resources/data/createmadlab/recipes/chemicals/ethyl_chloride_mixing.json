@@ -13,7 +13,11 @@
   "results": [
     {
       "fluid": "createmadlab:ethyl_chloride",
-      "amount": 50
+      "amount": 25
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 25
     }
   ]
 }

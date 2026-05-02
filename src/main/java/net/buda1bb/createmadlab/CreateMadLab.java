@@ -6,6 +6,7 @@ import net.buda1bb.createmadlab.fluid.ModFluids;
 import net.buda1bb.createmadlab.item.ModCreativeTabs;
 import net.buda1bb.createmadlab.item.ModItems;
 import net.buda1bb.createmadlab.item.SyringeItem;
+import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.recipes.ModRecipeSerializers;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -41,20 +42,13 @@ public class CreateMadLab {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        // Server-safe initialization
+        event.enqueueWork(ModMessages::register);
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            try {
-                Class<?> extractorClass = Class.forName("net.buda1bb.createmadlab.client.ShaderpackExtractor");
-                java.lang.reflect.Method method = extractorClass.getMethod("extractShaderpackStructure");
-                method.invoke(null);
-            } catch (Exception e) {
-            }
-
             event.enqueueWork(() -> {
                 ItemBlockRenderTypes.setRenderLayer(ModBlocks.ERGOT_INFESTED_WHEAT.get(), RenderType.cutout());
 
@@ -73,3 +67,5 @@ public class CreateMadLab {
         }
     }
 }
+
+// ngl at this point this entire mod is mostly vibecoded

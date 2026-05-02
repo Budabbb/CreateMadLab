@@ -1,0 +1,32 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "createmadlab:common/fullscreen",
+  "fragment": "createmadlab:morphine/composite",
+  "attributes": [ "Position" ],
+  "samplers": [
+    { "name": "DiffuseSampler" },
+    { "name": "BloomSampler" }
+  ],
+  "uniforms": [
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "OutSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "Time", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "Intensity", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "HealthFactor", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "Pulse", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "Resolution", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "Warmth", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "VignetteStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "BlurStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "BloomStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "HazeStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "ContrastStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "RushStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "DebtIntensity", "type": "float", "count": 1, "values": [ 0.0 ] }
+  ]
+}

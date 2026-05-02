@@ -1,0 +1,117 @@
+{
+  "targets": [
+    "swap",
+    "highlights",
+    "blur_a",
+    "blur_b"
+  ],
+  "passes": [
+    {
+      "name": "createmadlab:morphine/extract_bright",
+      "intarget": "minecraft:main",
+      "outtarget": "highlights",
+      "uniforms": [
+        {
+          "name": "Threshold",
+          "values": [ 0.74 ]
+        },
+        {
+          "name": "Knee",
+          "values": [ 0.16 ]
+        }
+      ]
+    },
+    {
+      "name": "createmadlab:morphine/blur",
+      "intarget": "highlights",
+      "outtarget": "blur_a",
+      "uniforms": [
+        {
+          "name": "BlurDir",
+          "values": [ 1.0, 0.0 ]
+        },
+        {
+          "name": "BlurScale",
+          "values": [ 1.0 ]
+        }
+      ]
+    },
+    {
+      "name": "createmadlab:morphine/blur",
+      "intarget": "blur_a",
+      "outtarget": "blur_b",
+      "uniforms": [
+        {
+          "name": "BlurDir",
+          "values": [ 0.0, 1.0 ]
+        },
+        {
+          "name": "BlurScale",
+          "values": [ 1.0 ]
+        }
+      ]
+    },
+    {
+      "name": "createmadlab:morphine/composite",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "auxtargets": [
+        {
+          "name": "BloomSampler",
+          "id": "blur_b"
+        }
+      ],
+      "uniforms": [
+        {
+          "name": "Time",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Intensity",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Pulse",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Resolution",
+          "values": [ 1.0, 1.0 ]
+        },
+        {
+          "name": "Warmth",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "VignetteStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "BlurStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "BloomStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "HazeStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "ContrastStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "RushStrength",
+          "values": [ 0.0 ]
+        }
+      ]
+    },
+    {
+      "name": "minecraft:blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

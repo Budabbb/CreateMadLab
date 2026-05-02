@@ -1,76 +1,126 @@
 package net.buda1bb.createmadlab.util;
 
+import net.buda1bb.createmadlab.effect.LSDEffectsManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class ShaderUtils {
+    public static final int HEROIN_EFFECT_DURATION_TICKS = 185 * 20;
+    public static final int LSD_EFFECT_DURATION_TICKS = 20 * 60 * 5;
 
     public static boolean isShaderpackEnabled() {
-        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
-            return false;
-        }
-
-        try {
-            Class<?> irisClass = Class.forName("net.irisshaders.iris.Iris");
-            java.lang.reflect.Method getCurrentPackNameMethod = irisClass.getMethod("getCurrentPackName");
-            String currentPack = (String) getCurrentPackNameMethod.invoke(null);
-            return currentPack != null && currentPack.equals("createmadlab_shaders");
-        } catch (Exception e) {
-            return false;
-        }
+        return true;
     }
 
     public static void activateHeroinShaders() {
+        activateHeroinShaders(0);
+    }
+
+    public static void activateHeroinShaders(int durationTicks) {
+        deactivateLSDShaders();
+        deactivateMorphineShaders();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("activateHeroinShaders");
-                method.invoke(null);
-            } catch (Exception e) {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.HeroinClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("activate", int.class);
+                method.invoke(null, durationTicks);
+            } catch (Exception ignored) {
             }
         }
     }
 
     public static void activateMorphineShaders() {
+        activateMorphineShaders(0, 0, 0, 0.0F, false, false);
+    }
+
+    public static void activateMorphineShaders(int remainingTicks, int totalTicks) {
+        activateMorphineShaders(remainingTicks, totalTicks, 0, 0.0F, false, false);
+    }
+
+    public static void activateMorphineShaders(int remainingTicks, int totalTicks, int unstableHp) {
+        activateMorphineShaders(remainingTicks, totalTicks, unstableHp, 0.0F, false, false);
+    }
+
+    public static void activateMorphineShaders(int remainingTicks, int totalTicks, int unstableHp, float health, boolean silentDecay, boolean convertedDamage) {
+        deactivateHeroinShaders();
+        deactivateLSDShaders();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("activateMorphineShaders");
-                method.invoke(null);
-            } catch (Exception e) {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.MorphineClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("activate", int.class, int.class, int.class, float.class, boolean.class, boolean.class);
+                method.invoke(null, remainingTicks, totalTicks, unstableHp, health, silentDecay, convertedDamage);
+            } catch (Exception ignored) {
             }
         }
     }
 
     public static void activateLSDShaders(double dose) {
+        activateLSDShaders(LSD_EFFECT_DURATION_TICKS, LSD_EFFECT_DURATION_TICKS, LSDEffectsManager.getStrengthForDose(dose));
+    }
+
+    public static void activateLSDShaders(int durationTicks, float strength) {
+        activateLSDShaders(durationTicks, durationTicks, strength);
+    }
+
+    public static void activateLSDShaders(int remainingTicks, int totalTicks, float strength) {
+        deactivateHeroinShaders();
+        deactivateMorphineShaders();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("activateLSDShaders", double.class);
-                method.invoke(null, dose);
-            } catch (Exception e) {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.LSDClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("activate", int.class, int.class, float.class);
+                method.invoke(null, remainingTicks, totalTicks, strength);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static void deactivateHeroinShaders() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            try {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.HeroinClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("deactivate");
+                method.invoke(null);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static void deactivateMorphineShaders() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            try {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.MorphineClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("deactivate");
+                method.invoke(null);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static void deactivateLSDShaders() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            try {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.LSDClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("deactivate");
+                method.invoke(null);
+            } catch (Exception ignored) {
             }
         }
     }
 
     public static void deactivateShaders() {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("deactivateShaders");
-                method.invoke(null);
-            } catch (Exception e) {
-            }
-        }
+        deactivateHeroinShaders();
+        deactivateMorphineShaders();
+        deactivateLSDShaders();
     }
 
     public static boolean areHeroinShadersActive() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("areHeroinShadersActive");
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.HeroinClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("isActive");
                 return (boolean) method.invoke(null);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
                 return false;
             }
         }
@@ -80,10 +130,10 @@ public class ShaderUtils {
     public static boolean areMorphineShadersActive() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("areMorphineShadersActive");
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.MorphineClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("isActive");
                 return (boolean) method.invoke(null);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
                 return false;
             }
         }
@@ -93,10 +143,10 @@ public class ShaderUtils {
     public static boolean areLSDShadersActive() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("areLSDShadersActive");
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.LSDClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("isActive");
                 return (boolean) method.invoke(null);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
                 return false;
             }
         }
@@ -104,15 +154,6 @@ public class ShaderUtils {
     }
 
     public static boolean areShadersActive() {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            try {
-                Class<?> shaderSwapperClass = Class.forName("net.buda1bb.createmadlab.client.ShaderFileSwapper");
-                java.lang.reflect.Method method = shaderSwapperClass.getMethod("areShadersActive");
-                return (boolean) method.invoke(null);
-            } catch (Exception e) {
-                return false;
-            }
-        }
-        return false;
+        return areHeroinShadersActive() || areMorphineShadersActive() || areLSDShadersActive();
     }
 }

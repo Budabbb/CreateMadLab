@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:ammonium_chloride"
+    },
+    {
+      "item": "createmadlab:sodium_hydroxide"
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:sodium_chloride",
+      "count": 1
+    },
+    {
+      "fluid": "createbb:ammonia",
+      "amount": 100
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 100
+    }
+  ],
+  "heatRequirement": "heated"
+}

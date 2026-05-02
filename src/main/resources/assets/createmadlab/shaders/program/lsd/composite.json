@@ -1,0 +1,28 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "createmadlab:common/fullscreen",
+  "fragment": "createmadlab:lsd/composite",
+  "attributes": [ "Position" ],
+  "samplers": [
+    { "name": "DiffuseSampler" }
+  ],
+  "uniforms": [
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "OutSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "TripTime", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "Intensity", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "DoseStrength", "type": "float", "count": 1, "values": [ 1.0 ] },
+    { "name": "Resolution", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "CameraMotion", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "TripPhase", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "PeakPulse", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "SpikeStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "DistortionStrength", "type": "float", "count": 1, "values": [ 0.0 ] },
+    { "name": "TrailStrength", "type": "float", "count": 1, "values": [ 0.0 ] }
+  ]
+}

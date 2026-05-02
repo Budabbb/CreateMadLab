@@ -1,0 +1,55 @@
+{
+  "targets": [
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "createmadlab:lsd/composite",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
+        {
+          "name": "TripTime",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "Intensity",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "DoseStrength",
+          "values": [ 1.0 ]
+        },
+        {
+          "name": "Resolution",
+          "values": [ 1.0, 1.0 ]
+        },
+        {
+          "name": "CameraMotion",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "TripPhase",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "PeakPulse",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "DistortionStrength",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "TrailStrength",
+          "values": [ 0.0 ]
+        }
+      ]
+    },
+    {
+      "name": "minecraft:blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

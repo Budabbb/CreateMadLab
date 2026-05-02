@@ -63,9 +63,6 @@ public class ModItems {
                     .properties(p -> p.stacksTo(1))
                     .register();
 
-    public static final RegistryObject<Item> SEA_SALT =
-            ITEMS.register("sea_salt", () -> new Item(new Item.Properties().food(ModConsumables.SEA_SALT)));
-
     public static final RegistryObject<Item> CALCIUM_HYDROXIDE =
             ITEMS.register("calcium_hydroxide", () -> new Item(new Item.Properties()));
 
@@ -75,11 +72,20 @@ public class ModItems {
     public static final RegistryObject<Item> CALCIUM_CHLORIDE =
             ITEMS.register("calcium_chloride", () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> CALCIUM_CARBONATE =
+            ITEMS.register("calcium_carbonate", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> SODIUM_CHLORIDE =
+            ITEMS.register("sodium_chloride", () -> new Item(new Item.Properties().food(ModConsumables.SODIUM_CHLORIDE)));
+
     public static final RegistryObject<Item> SODIUM_CARBONATE =
             ITEMS.register("sodium_carbonate", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> SODIUM_SULFATE =
             ITEMS.register("sodium_sulfate", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> SODIUM_HYDROXIDE =
+            ITEMS.register("sodium_hydroxide", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> MORPHINE_BASE =
             ITEMS.register("morphine_base", () -> new Item(new Item.Properties()));

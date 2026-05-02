@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:sodium_hydroxide"
+    },
+    {
+      "fluid": "createbb:oxygen",
+      "amount": 100
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:hydrogen_peroxide",
+      "amount": 100
+    }
+  ],
+  "heatRequirement": "heated"
+}

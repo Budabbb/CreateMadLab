@@ -1,0 +1,14 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "createbb:brine"
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:sodium_chloride",
+      "count": 1
+    }
+  ]
+}

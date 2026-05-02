@@ -3,24 +3,37 @@
 
   "block.createmadlab.ergot_infested_wheat": "Ergot Infested Wheat",
   "block.createmadlab.purple_tray": "Purple Tray",
+  "block.createmadlab.npp_tray": "NPP Hydrochloride Tray",
 
   "item.createmadlab.ergot_fungus": "Ergot Fungus",
   "item.createmadlab.ergot_powder": "Ergot Powder",
 
-  "item.createmadlab.sea_salt": "Sea Salt",
   "item.createmadlab.ergotamine_tartrate": "Ergotamine Tartrate",
   "item.createmadlab.calcium_hydroxide": "Calcium Hydroxide",
+  "item.createmadlab.calcium_carbonate": "Calcium Carbonate",
+  "item.createmadlab.calcium_sulfate": "Calcium Sulfate",
   "item.createmadlab.ammonium_chloride": "Ammonium Chloride",
   "item.createmadlab.calcium_chloride": "Calcium Chloride",
+  "item.createmadlab.sodium_hydroxide": "Sodium Hydroxide",
   "item.createmadlab.sodium_carbonate": "Sodium Carbonate",
   "item.createmadlab.sodium_sulfate": "Sodium Sulfate",
+  "item.createmadlab.sodium_chloride": "Sodium Chloride",
+  "item.createmadlab.hydroxilamine": "Hydroxilamine",
+
+  "item.createmadlab.four_piperidone": "4-Piperidone",
+  "item.createmadlab.npp_hydrochloride": "NPP-Hydrochloride",
 
   "item.createmadlab.morphine_base": "Morphine Base",
   "item.createmadlab.diamorphine": "Diamorphine",
   "item.createmadlab.morphine_sulfate": "Morphine Sulfate",
+  "item.createmadlab.fentanyl_base": "Void Base",
+  "item.createmadlab.fentanyl_citrate": "Void Citrate",
 
   "item.createmadlab.vanadium_pentoxide": "Vanadium Pentoxide",
   "item.createmadlab.vanadium_pentoxide_catalyst": "Vanadium Pentoxide Catalyst",
+
+  "item.createmadlab.iron_sulfate": "Iron Sulfate",
+  "item.createmadlab.iron_sulfate_catalyst": "Iron Sulfate Catalyst",
 
   "item.createmadlab.heroin": "Bliss Dust",
   "item.createmadlab.syringe": "Syringe",
@@ -82,13 +95,17 @@
   "fluid.createmadlab.sulfuric_acid": "Sulfuric Acid",
   "item.createmadlab.sulfuric_acid_bucket": "Sulfuric Acid Bucket",
 
-  "block.createmadlab.diethyl_ether": "Diethyl Ether",
-  "fluid.createmadlab.diethyl_ether": "Diethyl Ether",
-  "item.createmadlab.diethyl_ether_bucket": "Diethyl Ether Bucket",
-
   "block.createmadlab.hydrochloric_acid": "Hydrochloric Acid",
   "fluid.createmadlab.hydrochloric_acid": "Hydrochloric Acid",
   "item.createmadlab.hydrochloric_acid_bucket": "Hydrochloric Acid Bucket",
+
+  "block.createmadlab.citric_acid": "Citric Acid",
+  "fluid.createmadlab.citric_acid": "Citric Acid",
+  "item.createmadlab.citric_acid_bucket": "Citric Acid Bucket",
+
+  "block.createmadlab.diethyl_ether": "Diethyl Ether",
+  "fluid.createmadlab.diethyl_ether": "Diethyl Ether",
+  "item.createmadlab.diethyl_ether_bucket": "Diethyl Ether Bucket",
 
   "block.createmadlab.opium_latex": "Opium Latex",
   "fluid.createmadlab.opium_latex": "Opium Latex",
@@ -116,6 +133,27 @@
 
   "block.createmadlab.diethylamine": "Diethylamine",
   "fluid.createmadlab.diethylamine": "Diethylamine",
-  "item.createmadlab.diethylamine_bucket": "Diethylamine Bucket"
+  "item.createmadlab.diethylamine_bucket": "Diethylamine Bucket",
 
+  "block.createmadlab.phenethylamine": "Phenethylamine",
+  "fluid.createmadlab.phenethylamine": "Phenethylamine",
+  "item.createmadlab.phenethylamine_bucket": "Phenethylamine Bucket",
+
+  "block.createmadlab.four_piperidone": "4-Piperidone",
+  "fluid.createmadlab.four_piperidone": "4-Piperidone",
+  "item.createmadlab.four_piperidone_bucket": "4-Piperidone Bucket",
+
+  "block.createmadlab.npp_hydrochloride_solution": "NPP Hydrochloride Solution",
+  "fluid.createmadlab.npp_hydrochloride_solution": "NPP Hydrochloride Solution",
+  "item.createmadlab.npp_hydrochloride_solution_bucket": "NPP Hydrochloride Solution Bucket",
+
+  "block.createmadlab.hydrogen_peroxide": "Hydrogen Peroxide",
+  "fluid.createmadlab.hydrogen_peroxide": "Hydrogen Peroxide",
+  "item.createmadlab.hydrogen_peroxide_bucket": "Hydrogen Peroxide Bucket",
+
+  "block.createmadlab.fentanyl_solution": "Void Solution",
+  "fluid.createmadlab.fentanyl_solution": "Void Solution",
+  "item.createmadlab.fentanyl_solution_bucket": "Void Solution Bucket",
+
+  "death.attack.createmadlab.morphine_debt": "%1$s was claimed by morphine debt"
 }

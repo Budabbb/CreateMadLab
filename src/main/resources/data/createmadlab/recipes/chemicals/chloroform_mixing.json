@@ -3,7 +3,7 @@
   "ingredients": [
     {
       "fluid": "createmadlab:chlorine",
-      "amount": 50
+      "amount": 75
     },
     {
       "fluid": "createbb:methanol",
@@ -14,6 +14,10 @@
     {
       "fluid": "createmadlab:chloroform",
       "amount": 100
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 50
     }
   ]
 }

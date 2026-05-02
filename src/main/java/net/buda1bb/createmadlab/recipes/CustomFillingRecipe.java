@@ -21,26 +21,38 @@ public class CustomFillingRecipe extends FillingRecipe {
             return false;
         }
         ItemStack container = inv.getItem(0);
-        return isValidInput(container);
+        return isValidInput(container, level);
     }
 
-    private boolean isValidInput(ItemStack container) {
+    private boolean isValidInput(ItemStack container, Level level) {
+        if (container.getItem() instanceof LSDPaperItem) {
+            return isValidLsdPaperInput(container, level);
+        }
+
         if (hasNonEmptyContentNBT(container)) {
-            System.out.println("Item already has non-empty content NBT tag - recipe blocked");
             return false;
         }
 
         if (container.getItem() instanceof SyringeItem) {
-            boolean isEmpty = !SyringeItem.hasContent(container);
-            System.out.println("Syringe validation - isEmpty: " + isEmpty);
-            return isEmpty;
-        }
-        if (container.getItem() instanceof LSDPaperItem) {
-            boolean isValidDose = LSDPaperItem.getDose(container) <= 1.0;
-            System.out.println("LSD Paper validation - isValidDose: " + isValidDose);
-            return isValidDose;
+            return !SyringeItem.hasContent(container);
         }
         return true;
+    }
+
+    private boolean isValidLsdPaperInput(ItemStack container, Level level) {
+        ItemStack result = getResultItem(level.registryAccess());
+        if (!(result.getItem() instanceof LSDPaperItem)) {
+            return false;
+        }
+
+        double targetDose = LSDPaperItem.getDose(result);
+        double currentDose = LSDPaperItem.getDose(container);
+
+        if (targetDose <= 1.0D) {
+            return currentDose <= 1.0D;
+        }
+
+        return Math.abs(currentDose - (targetDose - 1.0D)) < 0.001D;
     }
 
     private boolean hasNonEmptyContentNBT(ItemStack stack) {

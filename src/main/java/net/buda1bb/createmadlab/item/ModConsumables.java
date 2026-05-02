@@ -13,7 +13,7 @@ public class ModConsumables {
             .saturationMod(0.0F)
             .alwaysEat()
             .build();
-    public static final FoodProperties SEA_SALT = new FoodProperties.Builder()
+    public static final FoodProperties SODIUM_CHLORIDE = new FoodProperties.Builder()
             .nutrition(0)
             .saturationMod(0.1F)
             .alwaysEat()

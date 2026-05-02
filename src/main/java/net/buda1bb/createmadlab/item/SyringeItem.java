@@ -1,7 +1,6 @@
 package net.buda1bb.createmadlab.item;
 
-import net.buda1bb.createmadlab.util.ShaderUtils;
-import net.buda1bb.createmadlab.effect.BlissEffectsManager;
+import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,20 +30,12 @@ public class SyringeItem extends Item {
             String content = getContent(stack);
 
             if ("bliss".equals(content) || "morphine".equals(content)) {
-                // Only check shaders on client side
-                if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
-                    player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' for the effect to work!"), true);
-                    return stack;
-                }
-
-                // Server should process regardless of shaders
                 if ("bliss".equals(content)) {
-                    BlissEffectsManager.startBlissEffect(player, level);
+                    HeroinEffectsManager.startHeroinEffect(player, level);
                     if (!level.isClientSide) {
                         applyBlissCooldowns(player);
                     }
-                }
-                else if ("morphine".equals(content)) {
+                } else if ("morphine".equals(content)) {
                     MorphineEffectsManager.startMorphineEffect(player, level);
                     if (!level.isClientSide) {
                         applyMorphineCooldowns(player);
@@ -61,8 +52,7 @@ public class SyringeItem extends Item {
                         player.drop(emptySyringe, false);
                     }
                 }
-            }
-            else {
+            } else {
                 return stack;
             }
         }
@@ -93,12 +83,6 @@ public class SyringeItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        // Only check shaders on client side
-        if (level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
-            player.displayClientMessage(Component.literal("§cPlease enable 'createmadlab_shaders' for the effect to work!"), true);
-            // Don't fail here - allow use but show warning
-        }
-
         player.startUsingItem(hand);
         return InteractionResultHolder.success(stack);
     }
@@ -109,21 +93,11 @@ public class SyringeItem extends Item {
 
         String content = getContent(stack);
         if ("bliss".equals(content)) {
-            tooltip.add(Component.literal("§dFull of Liquid Bliss"));
-
-            if (level != null && level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
-                tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
-                tooltip.add(Component.literal("§7Enable shaders for effects"));
-            }
+            tooltip.add(Component.literal("Full of Liquid Bliss"));
         } else if ("morphine".equals(content)) {
-            tooltip.add(Component.literal("§bFull of Morphine"));
-
-            if (level != null && level.isClientSide && !ShaderUtils.isShaderpackEnabled()) {
-                tooltip.add(Component.literal("§cWarning: Shaderpack not enabled!"));
-                tooltip.add(Component.literal("§7Enable shaders for effects"));
-            }
+            tooltip.add(Component.literal("Full of Morphine"));
         } else if ("empty".equals(content)) {
-            tooltip.add(Component.literal("§7Empty"));
+            tooltip.add(Component.literal("Empty"));
         }
     }
 
@@ -145,30 +119,30 @@ public class SyringeItem extends Item {
     }
 
     private void applyBlissCooldowns(Player player) {
-        player.getCooldowns().addCooldown(this, BlissEffectsManager.getCooldownDuration());
+        player.getCooldowns().addCooldown(this, HeroinEffectsManager.getCooldownDuration());
 
-        Item LSDPaperItem = ModItems.LSD_PAPER.get();
-        if (LSDPaperItem != null) {
-            player.getCooldowns().addCooldown(LSDPaperItem, BlissEffectsManager.getCooldownDuration());
+        Item lsdPaperItem = ModItems.LSD_PAPER.get();
+        if (lsdPaperItem != null) {
+            player.getCooldowns().addCooldown(lsdPaperItem, HeroinEffectsManager.getCooldownDuration());
         }
 
-        Item SyringeItem = ModItems.SYRINGE.get();
-        if (SyringeItem != null) {
-            player.getCooldowns().addCooldown(SyringeItem, BlissEffectsManager.getCooldownDuration());
+        Item syringeItem = ModItems.SYRINGE.get();
+        if (syringeItem != null) {
+            player.getCooldowns().addCooldown(syringeItem, HeroinEffectsManager.getCooldownDuration());
         }
     }
 
     private void applyMorphineCooldowns(Player player) {
         player.getCooldowns().addCooldown(this, MorphineEffectsManager.getCooldownDuration());
 
-        Item LSDPaperItem = ModItems.LSD_PAPER.get();
-        if (LSDPaperItem != null) {
-            player.getCooldowns().addCooldown(LSDPaperItem, MorphineEffectsManager.getCooldownDuration());
+        Item lsdPaperItem = ModItems.LSD_PAPER.get();
+        if (lsdPaperItem != null) {
+            player.getCooldowns().addCooldown(lsdPaperItem, MorphineEffectsManager.getCooldownDuration());
         }
 
-        Item SyringeItem = ModItems.SYRINGE.get();
-        if (SyringeItem != null) {
-            player.getCooldowns().addCooldown(SyringeItem, MorphineEffectsManager.getCooldownDuration());
+        Item syringeItem = ModItems.SYRINGE.get();
+        if (syringeItem != null) {
+            player.getCooldowns().addCooldown(syringeItem, MorphineEffectsManager.getCooldownDuration());
         }
     }
 

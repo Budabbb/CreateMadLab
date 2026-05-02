@@ -2,16 +2,24 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "create:limestone"
+      "item": "createmadlab:calcium_chloride"
+    },
+    {
+      "fluid": "createbb:ammonia",
+      "amount": 100
     },
     {
       "fluid": "minecraft:water",
-      "amount": 250
+      "amount": 200
     }
   ],
   "results": [
     {
       "item": "createmadlab:calcium_hydroxide",
+      "count": 1
+    },
+    {
+      "item": "createmadlab:ammonium_chloride",
       "count": 1
     }
   ],

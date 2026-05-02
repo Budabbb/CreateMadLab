@@ -5,12 +5,11 @@
       "tag": "forge:salts"
     },
     {
-      "fluid": "createbb:ammonia",
-      "amount": 50
+      "item": "createmadlab:calcium_carbonate"
     },
     {
-      "fluid": "createmadlab:chloroform",
-      "amount": 50
+      "fluid": "minecraft:water",
+      "amount": 100
     }
   ],
   "results": [
