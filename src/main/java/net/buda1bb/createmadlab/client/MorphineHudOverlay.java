@@ -10,25 +10,26 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class MorphineHudOverlay {
-    private static final ResourceLocation GUI_ICONS_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation GUI_ICONS_TEXTURE = new ResourceLocation(
             "minecraft",
             "textures/gui/icons.png"
     );
-    private static final ResourceLocation UNSTABLE_HEART_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation UNSTABLE_HEART_TEXTURE = new ResourceLocation(
             CreateMadLab.MOD_ID,
             "textures/gui/hud/unstable_heart.png"
     );
-    private static final ResourceLocation UNSTABLE_HALF_HEART_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation UNSTABLE_HALF_HEART_TEXTURE = new ResourceLocation(
             CreateMadLab.MOD_ID,
             "textures/gui/hud/unstable_heart_half_left.png"
     );
-    private static final ResourceLocation UNSTABLE_HALF_RIGHT_HEART_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation UNSTABLE_HALF_RIGHT_HEART_TEXTURE = new ResourceLocation(
             CreateMadLab.MOD_ID,
             "textures/gui/hud/unstable_heart_half_right.png"
     );
@@ -62,19 +63,27 @@ public final class MorphineHudOverlay {
             return;
         }
 
+        if (!(minecraft.gui instanceof ForgeGui forgeGui)) {
+            return;
+        }
+
+        int screenWidth = event.getWindow().getGuiScaledWidth();
+        int screenHeight = event.getWindow().getGuiScaledHeight();
+        int healthBaseY = screenHeight - forgeGui.leftHeight;
+        forgeGui.setupOverlayRenderState(true, false);
         renderMorphineHealthBar(
                 event.getGuiGraphics(),
                 player,
-                event.getWindow().getGuiScaledWidth(),
-                event.getWindow().getGuiScaledHeight(),
+                screenWidth,
+                healthBaseY,
                 unstableHp
         );
+        reserveHealthOverlayHeight(forgeGui, player);
         event.setCanceled(true);
     }
 
-    private static void renderMorphineHealthBar(GuiGraphics guiGraphics, Player player, int screenWidth, int screenHeight, int unstableHp) {
+    private static void renderMorphineHealthBar(GuiGraphics guiGraphics, Player player, int screenWidth, int healthBaseY, int unstableHp) {
         int left = screenWidth / 2 - 91;
-        int healthBaseY = screenHeight - 39;
         int currentHealth = Mth.ceil(player.getHealth());
         if (currentHealth <= 0) {
             return;
@@ -124,6 +133,19 @@ public final class MorphineHudOverlay {
             }
 
             renderUnstableHeart(guiGraphics, x, y, heartYOffset, normalHeartType, overlayVariant);
+        }
+    }
+
+    private static void reserveHealthOverlayHeight(ForgeGui forgeGui, Player player) {
+        int currentHealth = Mth.ceil(player.getHealth());
+        float maxHealth = Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), (float) currentHealth);
+        int absorption = Mth.ceil(player.getAbsorptionAmount());
+        int healthRows = Mth.ceil((maxHealth + absorption) / 2.0F / 10.0F);
+        int rowHeight = Math.max(10 - (healthRows - 2), 3);
+
+        forgeGui.leftHeight += healthRows * rowHeight;
+        if (rowHeight != 10) {
+            forgeGui.leftHeight += 10 - rowHeight;
         }
     }
 

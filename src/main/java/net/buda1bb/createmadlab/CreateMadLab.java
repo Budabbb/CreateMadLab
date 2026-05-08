@@ -29,6 +29,11 @@ public class CreateMadLab {
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    @SuppressWarnings("removal")
+    public CreateMadLab() {
+        this(FMLJavaModLoadingContext.get());
+    }
+
     public CreateMadLab(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
@@ -55,11 +60,8 @@ public class CreateMadLab {
                 ItemProperties.register(ModItems.SYRINGE.get(),
                         new ResourceLocation(CreateMadLab.MOD_ID, "content"),
                         (stack, level, entity, seed) -> {
-                            if (SyringeItem.hasContent(stack)) {
-                                String content = SyringeItem.getContent(stack);
-                                if ("morphine".equals(content) || "bliss".equals(content)) {
-                                    return 1.0F;
-                                }
+                            if (SyringeItem.usesFilledTexture(stack)) {
+                                return 1.0F;
                             }
                             return 0.0F;
                         });

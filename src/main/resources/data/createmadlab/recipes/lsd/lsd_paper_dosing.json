@@ -9,12 +9,6 @@
       "amount": 25
     }
   ],
-  "results": [
-    {
-      "item": "createmadlab:lsd_paper",
-      "nbt": {
-        "dose": 2.0
-      }
-    }
-  ]
+  "results": [],
+  "dynamic_lsd_paper_dosing": true
 }

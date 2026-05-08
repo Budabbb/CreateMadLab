@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:lime_dye"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 100
+    },
+    {
+      "fluid": "createmadlab:sludge",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:slime_ball",
+      "count": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

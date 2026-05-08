@@ -22,6 +22,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> PURPLE_TRAY = BLOCKS.register("purple_tray",
             () -> new TrayBlock.White(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).destroyTime(1).noOcclusion()));
 
+    public static final RegistryObject<Block> NPP_TRAY = BLOCKS.register("npp_tray",
+            () -> new TrayBlock.White(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).destroyTime(1).noOcclusion()));
+
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> blockSupplier) {
         return BLOCKS.register(name, blockSupplier);

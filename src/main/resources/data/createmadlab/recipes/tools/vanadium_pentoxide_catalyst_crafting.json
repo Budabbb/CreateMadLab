@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "createmadlab:vanadium_pentoxide"
+    }
+  },
+  "result": {
+    "item": "createmadlab:vanadium_pentoxide_catalyst",
+    "count": 1
+  }
+}

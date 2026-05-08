@@ -1,6 +1,7 @@
 package net.buda1bb.createmadlab.event;
 
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
 import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
@@ -43,13 +44,16 @@ public class ServerEventHandler {
             MorphineEffectsManager.syncActiveEffect(serverPlayer);
             HeroinEffectsManager.syncActiveEffect(serverPlayer);
             LSDEffectsManager.syncActiveEffect(serverPlayer);
+            FentanylEffectsManager.syncActiveEffect(serverPlayer);
         } else {
             HeroinEffectsManager.tickActiveEffect(event.player);
             LSDEffectsManager.tickActiveEffect(event.player, event.player.level());
+            FentanylEffectsManager.tickActiveEffect(event.player, event.player.level());
         }
 
         MorphineEffectsManager.updateOngoingGameplayEffects(event.player, event.player.level());
         HeroinEffectsManager.updateOngoingGameplayEffects(event.player, event.player.level());
+        FentanylEffectsManager.updateOngoingGameplayEffects(event.player, event.player.level());
 
         if (!HeroinEffectsManager.isHeroinActive(event.player, event.player.level())) {
             HeroinEffectsManager.clearHeroinEffect(event.player);
@@ -59,12 +63,20 @@ public class ServerEventHandler {
             LSDEffectsManager.clearLsdEffect(event.player);
         }
 
+        if (FentanylEffectsManager.hasFentanylOverdoseState(event.player)
+                && !FentanylEffectsManager.isFentanylOverdoseActive(event.player, event.player.level())) {
+            FentanylEffectsManager.clearFentanylOverdose(event.player);
+        }
+
         if (event.player.isDeadOrDying()) {
             if (MorphineEffectsManager.hasMorphineState(event.player)) {
                 MorphineEffectsManager.cleanupMorphineEffects(event.player, event.player.level());
             }
             if (HeroinEffectsManager.isHeroinActive(event.player, event.player.level())) {
                 HeroinEffectsManager.cleanupHeroinEffect(event.player, event.player.level());
+            }
+            if (FentanylEffectsManager.isFentanylOverdoseActive(event.player, event.player.level())) {
+                FentanylEffectsManager.clearFentanylOverdose(event.player);
             }
         }
     }
@@ -95,6 +107,8 @@ public class ServerEventHandler {
         HeroinEffectsManager.clearHeroinEffect(event.getEntity());
         LSDEffectsManager.clearLsdEffect(event.getOriginal());
         LSDEffectsManager.clearLsdEffect(event.getEntity());
+        FentanylEffectsManager.clearFentanylOverdose(event.getOriginal());
+        FentanylEffectsManager.clearFentanylOverdose(event.getEntity());
         PENDING_EFFECT_SYNC.remove(event.getOriginal().getUUID());
         PENDING_EFFECT_SYNC.remove(event.getEntity().getUUID());
     }
@@ -105,6 +119,7 @@ public class ServerEventHandler {
             MorphineEffectsManager.cleanupMorphineEffects(serverPlayer, serverPlayer.level());
             HeroinEffectsManager.clearHeroinEffect(serverPlayer);
             LSDEffectsManager.clearLsdEffect(serverPlayer);
+            FentanylEffectsManager.clearFentanylOverdose(serverPlayer);
             PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
         }
     }
@@ -117,6 +132,7 @@ public class ServerEventHandler {
             }
             HeroinEffectsManager.cleanupHeroinEffect(serverPlayer, serverPlayer.level());
             LSDEffectsManager.clearLsdEffect(serverPlayer);
+            FentanylEffectsManager.clearFentanylOverdose(serverPlayer);
             PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
             ModMessages.sendToPlayer(new LSDEffectS2CPacket(0, 0, 0.0F), serverPlayer);
         }

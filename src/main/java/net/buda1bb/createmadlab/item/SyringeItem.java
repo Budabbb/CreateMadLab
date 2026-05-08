@@ -1,7 +1,9 @@
 package net.buda1bb.createmadlab.item;
 
+import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
 import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +31,7 @@ public class SyringeItem extends Item {
         if (entity instanceof Player player) {
             String content = getContent(stack);
 
-            if ("bliss".equals(content) || "morphine".equals(content)) {
+            if ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) {
                 if ("bliss".equals(content)) {
                     HeroinEffectsManager.startHeroinEffect(player, level);
                     if (!level.isClientSide) {
@@ -39,6 +41,11 @@ public class SyringeItem extends Item {
                     MorphineEffectsManager.startMorphineEffect(player, level);
                     if (!level.isClientSide) {
                         applyMorphineCooldowns(player);
+                    }
+                } else if ("void".equals(content)) {
+                    FentanylEffectsManager.startFentanylOverdose(player, level);
+                    if (!level.isClientSide) {
+                        applyFentanylCooldowns(player);
                     }
                 }
 
@@ -93,24 +100,26 @@ public class SyringeItem extends Item {
 
         String content = getContent(stack);
         if ("bliss".equals(content)) {
-            tooltip.add(Component.literal("Full of Liquid Bliss"));
+            tooltip.add(Component.literal("Full of Liquid Bliss").withStyle(ChatFormatting.LIGHT_PURPLE));
         } else if ("morphine".equals(content)) {
-            tooltip.add(Component.literal("Full of Morphine"));
+            tooltip.add(Component.literal("Full of Morphine").withStyle(ChatFormatting.AQUA));
+        } else if ("void".equals(content)) {
+            tooltip.add(Component.literal("Full of Void").withStyle(ChatFormatting.DARK_RED));
         } else if ("empty".equals(content)) {
-            tooltip.add(Component.literal("Empty"));
+            tooltip.add(Component.literal("Empty").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 
     @Override
     public int getUseDuration(ItemStack stack) {
         String content = getContent(stack);
-        return ("bliss".equals(content) || "morphine".equals(content)) ? 8 : 0;
+        return ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) ? 8 : 0;
     }
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         String content = getContent(stack);
-        return ("bliss".equals(content) || "morphine".equals(content)) ? UseAnim.DRINK : UseAnim.NONE;
+        return ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) ? UseAnim.DRINK : UseAnim.NONE;
     }
 
     @Override
@@ -146,9 +155,28 @@ public class SyringeItem extends Item {
         }
     }
 
+    private void applyFentanylCooldowns(Player player) {
+        player.getCooldowns().addCooldown(this, FentanylEffectsManager.getCooldownDuration());
+
+        Item lsdPaperItem = ModItems.LSD_PAPER.get();
+        if (lsdPaperItem != null) {
+            player.getCooldowns().addCooldown(lsdPaperItem, FentanylEffectsManager.getCooldownDuration());
+        }
+
+        Item syringeItem = ModItems.SYRINGE.get();
+        if (syringeItem != null) {
+            player.getCooldowns().addCooldown(syringeItem, FentanylEffectsManager.getCooldownDuration());
+        }
+    }
+
     public static boolean hasContent(ItemStack stack) {
         String content = getContent(stack);
         return content != null && !"empty".equals(content);
+    }
+
+    public static boolean usesFilledTexture(ItemStack stack) {
+        String content = getContent(stack);
+        return "bliss".equals(content) || "morphine".equals(content) || "void".equals(content);
     }
 
     public static String getContent(ItemStack stack) {

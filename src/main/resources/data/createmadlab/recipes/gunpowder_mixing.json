@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "minecraft:coals"
+    },
+    {
+      "tag": "forge:salts"
+    },
+    {
+      "fluid": "createmadlab:sulfur_trioxide",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:gunpowder",
+      "count": 1
+    }
+  ]
+}

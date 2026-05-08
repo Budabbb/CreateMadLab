@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:lysergic_acid"
+    },
+    {
+      "fluid": "createmadlab:diethylamine",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:liquid_lsd",
+      "amount": 50
+    }
+  ],
+  "heatRequirement": "heated"
+}

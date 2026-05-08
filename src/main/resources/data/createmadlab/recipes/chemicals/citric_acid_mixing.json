@@ -1,0 +1,25 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:apple"
+    },
+    {
+      "item": "createmadlab:calcium_hydroxide"
+    },
+    {
+      "fluid": "createmadlab:sulfuric_acid",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:citric_acid",
+      "amount": 100
+    },
+    {
+      "item": "createmadlab:calcium_sulfate",
+      "count": 1
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package net.buda1bb.createmadlab.network;
 
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.network.packet.FentanylEffectS2CPacket;
 import net.buda1bb.createmadlab.network.packet.HeroinEffectS2CPacket;
 import net.buda1bb.createmadlab.network.packet.LSDEffectS2CPacket;
 import net.buda1bb.createmadlab.network.packet.MorphineEffectS2CPacket;
@@ -41,6 +42,11 @@ public final class ModMessages {
                 .encoder(MorphineEffectS2CPacket::encode)
                 .decoder(MorphineEffectS2CPacket::decode)
                 .consumerMainThread(MorphineEffectS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(FentanylEffectS2CPacket.class, nextId(), NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(FentanylEffectS2CPacket::encode)
+                .decoder(FentanylEffectS2CPacket::decode)
+                .consumerMainThread(FentanylEffectS2CPacket::handle)
                 .add();
     }
 

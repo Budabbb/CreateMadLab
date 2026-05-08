@@ -58,6 +58,9 @@ public class ModFluids {
     public static FluidEntry<ForgeFlowingFluid.Flowing> HYDROCHLORIC_ACID;
     public static ItemEntry<BucketItem> HYDROCHLORIC_ACID_BUCKET;
 
+    public static FluidEntry<ForgeFlowingFluid.Flowing> CITRIC_ACID;
+    public static ItemEntry<BucketItem> CITRIC_ACID_BUCKET;
+
     public static FluidEntry<ForgeFlowingFluid.Flowing> OPIUM_LATEX;
     public static ItemEntry<BucketItem> OPIUM_LATEX_BUCKET;
 
@@ -66,6 +69,9 @@ public class ModFluids {
 
     public static FluidEntry<ForgeFlowingFluid.Flowing> MORPHINE_SOLUTION;
     public static ItemEntry<BucketItem> MORPHINE_SOLUTION_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> FENTANYL_SOLUTION;
+    public static ItemEntry<BucketItem> FENTANYL_SOLUTION_BUCKET;
 
     public static FluidEntry<ForgeFlowingFluid.Flowing> SULFUR_TRIOXIDE;
     public static ItemEntry<BucketItem> SULFUR_TRIOXIDE_BUCKET;
@@ -81,6 +87,15 @@ public class ModFluids {
 
     public static FluidEntry<ForgeFlowingFluid.Flowing> DIETHYLAMINE;
     public static ItemEntry<BucketItem> DIETHYLAMINE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> PHENETHYLAMINE;
+    public static ItemEntry<BucketItem> PHENETHYLAMINE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> FOUR_PIPERIDONE;
+    public static ItemEntry<BucketItem> FOUR_PIPERIDONE_BUCKET;
+
+    public static FluidEntry<ForgeFlowingFluid.Flowing> NPP_HYDROCHLORIDE_SOLUTION;
+    public static ItemEntry<BucketItem> NPP_HYDROCHLORIDE_SOLUTION_BUCKET;
 
     public static FluidEntry<ForgeFlowingFluid.Flowing> HYDROGEN_PEROXIDE;
     public static ItemEntry<BucketItem> HYDROGEN_PEROXIDE_BUCKET;
@@ -155,6 +170,10 @@ public class ModFluids {
         HYDROCHLORIC_ACID_BUCKET = getBucket(fHydA);
         HYDROCHLORIC_ACID = fHydA.register();
 
+        var fCitricA = basicFluid("citric_acid", 0xfffff3bf);
+        CITRIC_ACID_BUCKET = getBucket(fCitricA);
+        CITRIC_ACID = fCitricA.register();
+
         var fOpLatex = basicFluid("opium_latex", 0xff6b4a2b);
         OPIUM_LATEX_BUCKET = getBucket(fOpLatex);
         OPIUM_LATEX = fOpLatex.register();
@@ -166,6 +185,10 @@ public class ModFluids {
         var fMorSol = basicFluid("morphine_solution", 0xffffffff);
         MORPHINE_SOLUTION_BUCKET = getBucket(fMorSol);
         MORPHINE_SOLUTION = fMorSol.register();
+
+        var fFentSol = basicFluid("fentanyl_solution", 0xffe6e8ff);
+        FENTANYL_SOLUTION_BUCKET = getBucket(fFentSol);
+        FENTANYL_SOLUTION = fFentSol.register();
 
         var fSulfTri = basicFluid("sulfur_trioxide", 0xfff2db5a);
         SULFUR_TRIOXIDE_BUCKET = getBucket(fSulfTri);
@@ -186,6 +209,18 @@ public class ModFluids {
         var fDieth = basicFluid("diethylamine", 0xfff8f8e0);
         DIETHYLAMINE_BUCKET = getBucket(fDieth);
         DIETHYLAMINE = fDieth.register();
+
+        var fPhenethylamine = basicFluid("phenethylamine", 0xfff5efd7);
+        PHENETHYLAMINE_BUCKET = getBucket(fPhenethylamine);
+        PHENETHYLAMINE = fPhenethylamine.register();
+
+        var fFourPiperidone = basicFluid("four_piperidone", 0xffe8e0d7);
+        FOUR_PIPERIDONE_BUCKET = getBucket(fFourPiperidone);
+        FOUR_PIPERIDONE = fFourPiperidone.register();
+
+        var fNppHydrochlorideSol = basicFluid("npp_hydrochloride_solution", 0xffd7d3ef);
+        NPP_HYDROCHLORIDE_SOLUTION_BUCKET = getBucket(fNppHydrochlorideSol);
+        NPP_HYDROCHLORIDE_SOLUTION = fNppHydrochlorideSol.register();
 
         var HydPer = basicFluid("hydrogen_peroxide", 0xfff8f8e0);
         HYDROGEN_PEROXIDE_BUCKET = getBucket(HydPer);

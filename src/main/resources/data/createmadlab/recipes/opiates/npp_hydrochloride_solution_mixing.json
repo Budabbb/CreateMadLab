@@ -1,0 +1,27 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:four_piperidone",
+      "amount": 50
+    },
+    {
+      "fluid": "createmadlab:phenethylamine",
+      "amount": 50
+    },
+    {
+      "item": "createmadlab:calcium_chloride"
+    },
+    {
+      "fluid": "createmadlab:diethyl_ether",
+      "amount": 50
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:npp_hydrochloride_solution",
+      "amount": 50
+    }
+  ],
+  "heatRequirement": "heated"
+}

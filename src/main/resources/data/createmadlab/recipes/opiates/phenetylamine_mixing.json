@@ -1,0 +1,29 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createbb:phenylacetone",
+      "amount": 100
+    },
+    {
+      "item": "createmadlab:hydroxilamine"
+    },
+    {
+      "item": "createmadlab:vanadium_pentoxide_catalyst"
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:phenethylamine",
+      "amount": 100
+    },
+    {
+      "fluid": "createmadlab:residue",
+      "amount": 50
+    },
+    {
+      "item": "createmadlab:vanadium_pentoxide_catalyst",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:diethylamine",
+      "amount": 50
+    },
+    {
+      "fluid": "createmadlab:acetone",
+      "amount": 50
+    },
+    {
+      "fluid": "createmadlab:sulfuric_acid",
+      "amount": 10
+    },
+    {
+      "item": "createmadlab:sodium_carbonate"
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:four_piperidone",
+      "amount": 50
+    }
+  ],
+  "heatRequirement": "heated"
+}

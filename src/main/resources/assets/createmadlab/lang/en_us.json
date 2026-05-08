@@ -153,7 +153,5 @@
 
   "block.createmadlab.fentanyl_solution": "Void Solution",
   "fluid.createmadlab.fentanyl_solution": "Void Solution",
-  "item.createmadlab.fentanyl_solution_bucket": "Void Solution Bucket",
-
-  "death.attack.createmadlab.morphine_debt": "%1$s was claimed by morphine debt"
+  "item.createmadlab.fentanyl_solution_bucket": "Void Solution Bucket"
 }

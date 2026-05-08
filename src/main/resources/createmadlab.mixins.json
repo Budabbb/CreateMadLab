@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.buda1bb.createmadlab.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "createmadlab.refmap.json",
+  "client": [
+    "SignEditScreenMixin",
+    "AnvilEditScreenMixin",
+    "BookEditScreenMixin",
+    "ClientPacketListenerMixin",
+    "FontMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

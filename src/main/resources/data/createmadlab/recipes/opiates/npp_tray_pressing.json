@@ -1,0 +1,18 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "createmadlab:npp_tray"
+    }
+  ],
+  "results": [
+    {
+      "item": "createbb:tray",
+      "count": 1
+    },
+    {
+      "item": "createmadlab:npp_hydrochloride",
+      "count": 1
+    }
+  ]
+}

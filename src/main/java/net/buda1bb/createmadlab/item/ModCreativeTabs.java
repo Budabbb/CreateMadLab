@@ -37,16 +37,24 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.AMMONIUM_CHLORIDE.get());
                         pOutput.accept(ModItems.CALCIUM_CHLORIDE.get());
                         pOutput.accept(ModItems.CALCIUM_CARBONATE.get());
+                        pOutput.accept(ModItems.CALCIUM_SULFATE.get());
                         pOutput.accept(ModItems.SODIUM_CHLORIDE.get());
                         pOutput.accept(ModItems.SODIUM_CARBONATE.get());
                         pOutput.accept(ModItems.SODIUM_SULFATE.get());
                         pOutput.accept(ModItems.SODIUM_HYDROXIDE.get());
+                        pOutput.accept(ModItems.HYDROXILAMINE.get());
+                        pOutput.accept(ModItems.NPP_TRAY_ITEM.get());
+                        pOutput.accept(ModItems.NPP_HYDROCHLORIDE.get());
                         pOutput.accept(ModItems.MORPHINE_BASE.get());
                         pOutput.accept(ModItems.DIAMORPHINE.get());
                         pOutput.accept(ModItems.HEROIN.get());
+                        pOutput.accept(ModItems.FENTANYL_BASE.get());
+                        pOutput.accept(ModItems.FENTANYL_CITRATE.get());
                         pOutput.accept(ModItems.MORPHINE_SULFATE.get());
                         pOutput.accept(ModItems.VANADIUM_PENTOXIDE.get());
                         pOutput.accept(ModItems.VANADIUM_PENTOXIDE_CATALYST.get());
+                        pOutput.accept(ModItems.IRON_SULFATE.get());
+                        pOutput.accept(ModItems.IRON_SULFATE_CATALYST.get());
 
                         ItemStack morphineSyringe = new ItemStack(ModItems.SYRINGE.get());
                         SyringeItem.setContent(morphineSyringe, "morphine");
@@ -54,6 +62,9 @@ public class ModCreativeTabs {
                         ItemStack blissSyringe = new ItemStack(ModItems.SYRINGE.get());
                         SyringeItem.setContent(blissSyringe, "bliss");
                         pOutput.accept(blissSyringe);
+                        ItemStack voidSyringe = new ItemStack(ModItems.SYRINGE.get());
+                        SyringeItem.setContent(voidSyringe, "void");
+                        pOutput.accept(voidSyringe);
 
                         pOutput.accept(ModFluids.PURIFIED_ERGOT_SOLUTION_BUCKET.get());
                         pOutput.accept(ModFluids.LYSERGIC_SOLUTION_BUCKET.get());
@@ -69,14 +80,19 @@ public class ModCreativeTabs {
                         pOutput.accept(ModFluids.RESIDUE_BUCKET.get());
                         pOutput.accept(ModFluids.DIETHYL_ETHER_BUCKET.get());
                         pOutput.accept(ModFluids.HYDROCHLORIC_ACID_BUCKET.get());
+                        pOutput.accept(ModFluids.CITRIC_ACID_BUCKET.get());
                         pOutput.accept(ModFluids.OPIUM_LATEX_BUCKET.get());
                         pOutput.accept(ModFluids.HEROIN_SOLUTION_BUCKET.get());
                         pOutput.accept(ModFluids.MORPHINE_SOLUTION_BUCKET.get());
+                        pOutput.accept(ModFluids.FENTANYL_SOLUTION_BUCKET.get());
                         pOutput.accept(ModFluids.SULFUR_TRIOXIDE_BUCKET.get());
                         pOutput.accept(ModFluids.SULFURIC_ACID_BUCKET.get());
                         pOutput.accept(ModFluids.ETHANOL_BUCKET.get());
                         pOutput.accept(ModFluids.ETHYL_CHLORIDE_BUCKET.get());
                         pOutput.accept(ModFluids.DIETHYLAMINE_BUCKET.get());
+                        pOutput.accept(ModFluids.PHENETHYLAMINE_BUCKET.get());
+                        pOutput.accept(ModFluids.FOUR_PIPERIDONE_BUCKET.get());
+                        pOutput.accept(ModFluids.NPP_HYDROCHLORIDE_SOLUTION_BUCKET.get());
                     })
                     .build());
 

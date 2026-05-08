@@ -44,6 +44,9 @@ public class ModItems {
     public static final RegistryObject<Item> PURPLE_TRAY_ITEM = ITEMS.register("purple_tray",
             () -> new BlockItem(ModBlocks.PURPLE_TRAY.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> NPP_TRAY_ITEM = ITEMS.register("npp_tray",
+            () -> new BlockItem(ModBlocks.NPP_TRAY.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> ERGOT_PAPER =
             ITEMS.register("ergot_paper", () -> new Item(new Item.Properties()));
 
@@ -75,6 +78,9 @@ public class ModItems {
     public static final RegistryObject<Item> CALCIUM_CARBONATE =
             ITEMS.register("calcium_carbonate", () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> CALCIUM_SULFATE =
+            ITEMS.register("calcium_sulfate", () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> SODIUM_CHLORIDE =
             ITEMS.register("sodium_chloride", () -> new Item(new Item.Properties().food(ModConsumables.SODIUM_CHLORIDE)));
 
@@ -87,6 +93,12 @@ public class ModItems {
     public static final RegistryObject<Item> SODIUM_HYDROXIDE =
             ITEMS.register("sodium_hydroxide", () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> HYDROXILAMINE =
+            ITEMS.register("hydroxilamine", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> NPP_HYDROCHLORIDE =
+            ITEMS.register("npp_hydrochloride", () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> MORPHINE_BASE =
             ITEMS.register("morphine_base", () -> new Item(new Item.Properties()));
 
@@ -96,6 +108,12 @@ public class ModItems {
     public static final RegistryObject<Item> HEROIN =
             ITEMS.register("heroin", () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> FENTANYL_BASE =
+            ITEMS.register("fentanyl_base", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> FENTANYL_CITRATE =
+            ITEMS.register("fentanyl_citrate", () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> MORPHINE_SULFATE =
             ITEMS.register("morphine_sulfate", () -> new Item(new Item.Properties()));
 
@@ -104,6 +122,18 @@ public class ModItems {
 
     public static final RegistryObject<Item> VANADIUM_PENTOXIDE_CATALYST =
             ITEMS.register("vanadium_pentoxide_catalyst", () -> new Item(new Item.Properties()) {
+                @Override
+                public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+                    tooltip.add(Component.literal("Not consumed on use.").withStyle(ChatFormatting.DARK_GRAY));
+                    super.appendHoverText(stack, level, tooltip, flag);
+                }
+            });
+
+    public static final RegistryObject<Item> IRON_SULFATE =
+            ITEMS.register("iron_sulfate", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> IRON_SULFATE_CATALYST =
+            ITEMS.register("iron_sulfate_catalyst", () -> new Item(new Item.Properties()) {
                 @Override
                 public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
                     tooltip.add(Component.literal("Not consumed on use.").withStyle(ChatFormatting.DARK_GRAY));

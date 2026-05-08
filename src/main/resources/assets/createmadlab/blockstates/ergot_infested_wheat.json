@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "age=0": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=1": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=2": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=3": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=4": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=5": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=6": { "model": "createmadlab:block/ergot_infested_wheat" },
+    "age=7": { "model": "createmadlab:block/ergot_infested_wheat" }
+  }
+}

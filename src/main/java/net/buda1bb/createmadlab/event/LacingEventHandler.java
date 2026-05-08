@@ -1,6 +1,7 @@
 package net.buda1bb.createmadlab.event;
 
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
 import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LacingEventHandler {
     private static final String CONTENT_TAG = "content";
+    private static final String DOSE_TAG = "dose";
 
     @SubscribeEvent
     public static void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
@@ -48,8 +50,12 @@ public class LacingEventHandler {
                 applyMorphineCooldowns(player);
             }
             case "lsd" -> {
-                handleLSDConsumption(player, level);
+                handleLSDConsumption(player, level, event.getItem());
                 applyLSDCooldowns(player);
+            }
+            case "void" -> {
+                handleVoidConsumption(player, level);
+                applyVoidCooldowns(player);
             }
             default -> {
             }
@@ -64,8 +70,12 @@ public class LacingEventHandler {
         MorphineEffectsManager.startMorphineEffect(player, level);
     }
 
-    private static void handleLSDConsumption(Player player, Level level) {
-        LSDEffectsManager.startLsdEffect(player, level, 2.0D);
+    private static void handleLSDConsumption(Player player, Level level, ItemStack stack) {
+        LSDEffectsManager.startLsdEffect(player, level, getDose(stack));
+    }
+
+    private static void handleVoidConsumption(Player player, Level level) {
+        FentanylEffectsManager.startFentanylOverdose(player, level);
     }
 
     private static void applyBlissCooldowns(Player player) {
@@ -84,10 +94,23 @@ public class LacingEventHandler {
         player.getCooldowns().addCooldown(ModItems.LSD_PAPER.get(), cooldownDuration);
     }
 
+    private static void applyVoidCooldowns(Player player) {
+        int cooldownDuration = FentanylEffectsManager.getCooldownDuration();
+        player.getCooldowns().addCooldown(ModItems.SYRINGE.get(), cooldownDuration);
+        player.getCooldowns().addCooldown(ModItems.LSD_PAPER.get(), cooldownDuration);
+    }
+
     private static String getContent(ItemStack stack) {
         if (stack.hasTag() && stack.getTag().contains(CONTENT_TAG)) {
             return stack.getTag().getString(CONTENT_TAG);
         }
         return null;
+    }
+
+    private static double getDose(ItemStack stack) {
+        if (stack.hasTag() && stack.getTag().contains(DOSE_TAG)) {
+            return stack.getTag().getDouble(DOSE_TAG);
+        }
+        return 1.0D;
     }
 }

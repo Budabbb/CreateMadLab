@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "createmadlab:item/syringe_empty"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "createmadlab:content": 1
+      },
+      "model": "createmadlab:item/syringe_bliss"
+    }
+  ]
+}

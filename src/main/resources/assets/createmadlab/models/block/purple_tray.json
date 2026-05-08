@@ -1,0 +1,7 @@
+{
+  "parent": "createbb:block/tray",
+  "textures": {
+    "0": "createmadlab:block/purple_tray",
+    "particle": "createmadlab:block/purple_tray"
+  }
+}

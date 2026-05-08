@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:lsd_crystal"
+    },
+    {
+      "fluid": "createmadlab:acetone",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:lsd_solution",
+      "amount": 25
+    }
+  ]
+}

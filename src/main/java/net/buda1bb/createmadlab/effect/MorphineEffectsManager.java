@@ -1,17 +1,12 @@
 package net.buda1bb.createmadlab.effect;
 
-import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.MorphineEffectS2CPacket;
 import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -22,10 +17,6 @@ import net.minecraft.world.level.Level;
 import java.util.UUID;
 
 public final class MorphineEffectsManager {
-    private static final ResourceKey<DamageType> MORPHINE_DEBT_DAMAGE_TYPE = ResourceKey.create(
-            Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "morphine_debt")
-    );
     private static final String MORPHINE_START_TIME_TAG = "MorphineStartTime";
     private static final String MORPHINE_ACTIVE_TAG = "MorphineActive";
     private static final String MORPHINE_UNSTABLE_HP_TAG = "MorphineUnstableHp";
@@ -367,7 +358,6 @@ public final class MorphineEffectsManager {
 
         return !source.is(DamageTypes.FELL_OUT_OF_WORLD)
                 && !source.is(DamageTypes.GENERIC_KILL)
-                && !source.is(MORPHINE_DEBT_DAMAGE_TYPE)
                 && !source.isCreativePlayer();
     }
 
@@ -381,7 +371,6 @@ public final class MorphineEffectsManager {
                 && !player.getAbilities().invulnerable
                 && !source.is(DamageTypes.FELL_OUT_OF_WORLD)
                 && !source.is(DamageTypes.GENERIC_KILL)
-                && !source.is(MORPHINE_DEBT_DAMAGE_TYPE)
                 && !source.isCreativePlayer();
     }
 
@@ -420,7 +409,7 @@ public final class MorphineEffectsManager {
                 player.setHealth(remainingHealth);
             } else {
                 player.setHealth(0.0F);
-                player.die(createMorphineDebtDamageSource(player));
+                player.die(player.damageSources().generic());
             }
         } finally {
             APPLYING_UNSTABLE_DRAIN.set(false);
@@ -478,14 +467,6 @@ public final class MorphineEffectsManager {
                 silentDecay,
                 convertedDamage
         ), player);
-    }
-
-    private static DamageSource createMorphineDebtDamageSource(ServerPlayer player) {
-        return new DamageSource(
-                player.level().registryAccess()
-                        .registryOrThrow(Registries.DAMAGE_TYPE)
-                        .getHolderOrThrow(MORPHINE_DEBT_DAMAGE_TYPE)
-        );
     }
 
     private static void ensureModifier(AttributeInstance attribute, UUID id, String name, double amount, AttributeModifier.Operation operation) {

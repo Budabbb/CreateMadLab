@@ -1,0 +1,25 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "minecraft:water",
+      "amount": 25
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "tag": "forge:salts"
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:chlorine",
+      "amount": 25
+    },
+    {
+      "fluid": "createbb:hydrogen",
+      "amount": 25
+    }
+  ]
+}

@@ -264,7 +264,7 @@ public final class HeroinClientEffectManager {
         float bloomGate = smoothstep(0.52F, 0.90F, intensity);
         float fullWaveGate = smoothstep(0.68F, 1.0F, intensity);
         float warmth = warmGate * (0.18F + 0.24F * intensity) * (0.96F + 0.18F * fullWaveGate * sedationWave);
-        float blurStrength = blurGate * (0.34F + 0.54F * intensity + 0.28F * fullWaveGate * sedationWave);
+        float blurStrength = blurGate * (0.48F + 0.72F * intensity + 0.38F * fullWaveGate * sedationWave);
         float vignetteStrength = vignetteGate * (0.40F + 0.42F * intensity + 0.16F * fullWaveGate * sedationWave);
         float trailStrength = historyPrimed
                 ? trailGate * (0.45F + 0.75F * fullWaveGate * (0.5F + 0.5F * sedationWave))
@@ -272,7 +272,7 @@ public final class HeroinClientEffectManager {
         float bloomStrength = bloomGate * (0.16F + 0.28F * intensity + 0.12F * fullWaveGate * sedationWave);
         float bloomThreshold = Mth.lerp(bloomGate, 0.68F, 0.50F);
         float bloomKnee = Mth.lerp(bloomGate, 0.20F, 0.34F);
-        float bloomBlurScale = 1.0F + bloomGate * (1.05F + 0.95F * fullWaveGate * sedationWave);
+        float bloomBlurScale = 1.0F + bloomGate * (1.25F + 1.15F * fullWaveGate * sedationWave);
         float resolutionX = minecraft.getWindow().getWidth();
         float resolutionY = minecraft.getWindow().getHeight();
 

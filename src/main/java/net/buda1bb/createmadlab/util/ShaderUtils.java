@@ -19,6 +19,7 @@ public class ShaderUtils {
     public static void activateHeroinShaders(int durationTicks) {
         deactivateLSDShaders();
         deactivateMorphineShaders();
+        deactivateFentanylOverdoseShaders();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
                 Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.HeroinClientEffectManager");
@@ -44,6 +45,7 @@ public class ShaderUtils {
     public static void activateMorphineShaders(int remainingTicks, int totalTicks, int unstableHp, float health, boolean silentDecay, boolean convertedDamage) {
         deactivateHeroinShaders();
         deactivateLSDShaders();
+        deactivateFentanylOverdoseShaders();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
                 Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.MorphineClientEffectManager");
@@ -65,11 +67,26 @@ public class ShaderUtils {
     public static void activateLSDShaders(int remainingTicks, int totalTicks, float strength) {
         deactivateHeroinShaders();
         deactivateMorphineShaders();
+        deactivateFentanylOverdoseShaders();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try {
                 Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.LSDClientEffectManager");
                 java.lang.reflect.Method method = managerClass.getMethod("activate", int.class, int.class, float.class);
                 method.invoke(null, remainingTicks, totalTicks, strength);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static void activateFentanylOverdoseShaders(int remainingTicks, int totalTicks) {
+        deactivateHeroinShaders();
+        deactivateMorphineShaders();
+        deactivateLSDShaders();
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            try {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.FentanylClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("activate", int.class, int.class);
+                method.invoke(null, remainingTicks, totalTicks);
             } catch (Exception ignored) {
             }
         }
@@ -108,10 +125,22 @@ public class ShaderUtils {
         }
     }
 
+    public static void deactivateFentanylOverdoseShaders() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            try {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.FentanylClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("deactivate");
+                method.invoke(null);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
     public static void deactivateShaders() {
         deactivateHeroinShaders();
         deactivateMorphineShaders();
         deactivateLSDShaders();
+        deactivateFentanylOverdoseShaders();
     }
 
     public static boolean areHeroinShadersActive() {
@@ -153,7 +182,23 @@ public class ShaderUtils {
         return false;
     }
 
+    public static boolean areFentanylOverdoseShadersActive() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            try {
+                Class<?> managerClass = Class.forName("net.buda1bb.createmadlab.client.FentanylClientEffectManager");
+                java.lang.reflect.Method method = managerClass.getMethod("isActive");
+                return (boolean) method.invoke(null);
+            } catch (Exception ignored) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     public static boolean areShadersActive() {
-        return areHeroinShadersActive() || areMorphineShadersActive() || areLSDShadersActive();
+        return areHeroinShadersActive()
+                || areMorphineShadersActive()
+                || areLSDShadersActive()
+                || areFentanylOverdoseShadersActive();
     }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:morphine_base"
+    },
+    {
+      "fluid": "createmadlab:sulfuric_acid",
+      "amount": 50
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:morphine_sulfate",
+      "count": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

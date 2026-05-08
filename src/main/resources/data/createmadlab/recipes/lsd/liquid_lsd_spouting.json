@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "createbb:tray"
+    },
+    {
+      "fluid": "createmadlab:liquid_lsd",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:purple_tray",
+      "count": 1
+    }
+  ]
+}

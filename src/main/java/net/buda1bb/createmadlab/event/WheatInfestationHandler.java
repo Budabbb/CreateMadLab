@@ -4,11 +4,13 @@ import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.block.ErgotInfestedWheatBlock;
 import net.buda1bb.createmadlab.block.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +21,8 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class WheatInfestationHandler {
+
+    private static final int MATURE_WHEAT_AGE = 7;
 
     // Base chance
     private static final float BASE_CHANCE = 0.001f; // 0.1%
@@ -47,6 +51,7 @@ public class WheatInfestationHandler {
             5.0f    // 16+ infections
     };
     private static final int[] INFECTION_THRESHOLDS = {0, 1, 3, 6, 11, 16};
+    private static final int MAX_COUNTED_INFECTIONS = 16;
 
     // Track rain end time per dimension
     private static final Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, Long> rainEndTimes = new HashMap<>();
@@ -55,25 +60,32 @@ public class WheatInfestationHandler {
     private static final Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, Boolean> wasRaining = new HashMap<>();
 
     @SubscribeEvent
+    public static void onLevelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (event.level instanceof ServerLevel serverLevel) {
+            updateRainTracking(serverLevel);
+        }
+    }
+
+    @SubscribeEvent
     public static void onBlockGrow(BlockEvent.CropGrowEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel serverLevel)) return;
 
         BlockPos pos = event.getPos();
         BlockState state = event.getState();
+        BlockState originalState = event.getOriginalState();
 
-        if (state.getBlock() == Blocks.WHEAT && state.hasProperty(CropBlock.AGE)) {
+        if (state.getBlock() == Blocks.WHEAT && state.hasProperty(CropBlock.AGE) && originalState.hasProperty(CropBlock.AGE)) {
             int age = state.getValue(CropBlock.AGE);
+            int originalAge = originalState.getValue(CropBlock.AGE);
 
-            if (age == 7) {
-                updateRainTracking(serverLevel);
-
-                // Calculate infection chance
+            if (age == MATURE_WHEAT_AGE && originalAge < MATURE_WHEAT_AGE) {
                 float infectionChance = calculateInfectionChance(serverLevel, pos);
 
                 if (serverLevel.random.nextFloat() < infectionChance) {
                     serverLevel.setBlock(pos, ModBlocks.ERGOT_INFESTED_WHEAT.get()
                             .defaultBlockState()
-                            .setValue(ErgotInfestedWheatBlock.AGE, 7),3);
+                            .setValue(ErgotInfestedWheatBlock.AGE, MATURE_WHEAT_AGE), 3);
                 }
             }
         }
@@ -115,7 +127,7 @@ public class WheatInfestationHandler {
     private static float getWeatherModifier(ServerLevel level, BlockPos pos) {
         float modifier = 0.0f;
 
-        if (level.isRaining() && level.canSeeSky(pos.above())) {
+        if (level.isRainingAt(pos.above())) {
             modifier += RAINING_BONUS;
         }
 
@@ -144,6 +156,10 @@ public class WheatInfestationHandler {
     }
 
     private static float getInfectionSpreadMultiplier(ServerLevel level, BlockPos pos) {
+        if (!isSearchAreaLoaded(level, pos)) {
+            return 1.0f;
+        }
+
         int infectionCount = countNearbyInfections(level, pos);
 
         for (int i = INFECTION_THRESHOLDS.length - 1; i >= 0; i--) {
@@ -155,19 +171,40 @@ public class WheatInfestationHandler {
         return 1.0f;
     }
 
+    private static boolean isSearchAreaLoaded(ServerLevel level, BlockPos center) {
+        int minChunkX = SectionPos.blockToSectionCoord(center.getX() - SEARCH_RADIUS);
+        int maxChunkX = SectionPos.blockToSectionCoord(center.getX() + SEARCH_RADIUS);
+        int minChunkZ = SectionPos.blockToSectionCoord(center.getZ() - SEARCH_RADIUS);
+        int maxChunkZ = SectionPos.blockToSectionCoord(center.getZ() + SEARCH_RADIUS);
+
+        for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
+            for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
+                if (!level.hasChunk(chunkX, chunkZ)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private static int countNearbyInfections(ServerLevel level, BlockPos center) {
         int count = 0;
+        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
 
-        // Search in a 5x5x3 area (centered on the wheat, checking 1 block above and below)
+        // Search in an 11x11x3 area, centered on the wheat and checking 1 block above and below.
         for (int dx = -SEARCH_RADIUS; dx <= SEARCH_RADIUS; dx++) {
             for (int dz = -SEARCH_RADIUS; dz <= SEARCH_RADIUS; dz++) {
                 for (int dy = -1; dy <= 1; dy++) {
-                    BlockPos checkPos = center.offset(dx, dy, dz);
+                    checkPos.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
 
                     if (checkPos.equals(center)) continue;
 
                     if (level.getBlockState(checkPos).getBlock() == ModBlocks.ERGOT_INFESTED_WHEAT.get()) {
                         count++;
+                        if (count >= MAX_COUNTED_INFECTIONS) {
+                            return count;
+                        }
                     }
                 }
             }

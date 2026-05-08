@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:ethyl_chloride",
+      "amount": 50
+    },
+    {
+      "fluid": "createbb:ammonia",
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:diethylamine",
+      "amount": 50
+    },
+    {
+      "fluid": "createmadlab:chlorine",
+      "amount": 25
+    }
+  ]
+}

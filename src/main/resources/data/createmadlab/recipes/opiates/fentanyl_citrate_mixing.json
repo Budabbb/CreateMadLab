@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:fentanyl_base"
+    },
+    {
+      "fluid": "createmadlab:citric_acid",
+      "amount": 50
+    },
+    {
+      "fluid": "createmadlab:ethanol",
+      "amount": 50
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:fentanyl_citrate",
+      "count": 1
+    }
+  ]
+}

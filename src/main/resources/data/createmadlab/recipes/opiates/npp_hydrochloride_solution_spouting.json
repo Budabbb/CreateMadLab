@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "createbb:tray"
+    },
+    {
+      "fluid": "createmadlab:npp_hydrochloride_solution",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:npp_tray",
+      "count": 1
+    }
+  ]
+}

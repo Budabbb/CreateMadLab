@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "createmadlab:sludge",
+      "amount": 25
+    },
+    {
+     "fluid": "minecraft:water",
+      "amount": 50
+    },
+    {
+      "item": "minecraft:dirt"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:clay_ball",
+      "count": 8
+    }
+  ]
+}
