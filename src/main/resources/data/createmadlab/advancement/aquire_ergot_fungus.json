@@ -1,0 +1,28 @@
+{
+    "parent":  "createmadlab:root",
+    "display":  {
+                    "icon":  {
+                                 "id":  "createmadlab:ergot_fungus"
+                             },
+                    "title":  "Fungal Inspiration",
+                    "description":  "Obtain Ergot Fungus",
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_ergot":  {
+                                       "trigger":  "minecraft:inventory_changed",
+                                       "conditions":  {
+                                                          "items":  [
+                                                                        {
+                                                                            "items":  [
+                                                                                          "createmadlab:ergot_fungus"
+                                                                                      ]
+                                                                        }
+                                                                    ]
+                                                      }
+                                   }
+                 }
+}

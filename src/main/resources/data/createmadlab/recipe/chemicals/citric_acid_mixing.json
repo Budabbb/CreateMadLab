@@ -1,0 +1,26 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:apple"
+                        },
+                        {
+                            "item":  "createmadlab:calcium_hydroxide"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:sulfuric_acid",
+                            "amount":  100
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:citric_acid",
+                        "amount":  100
+                    },
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:calcium_sulfate"
+                    }
+                ]
+}

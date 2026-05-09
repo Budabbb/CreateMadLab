@@ -1,0 +1,19 @@
+﻿{
+    "type":  "createmadlab:custom_filling",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:lsd_paper"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:lsd_solution",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:lsd_paper"
+                    }
+                ],
+    "dynamic_lsd_paper_dosing":  true
+}

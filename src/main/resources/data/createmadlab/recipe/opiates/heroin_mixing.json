@@ -1,0 +1,25 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:diamorphine"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:diethyl_ether",
+                            "amount":  25
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:hydrochloric_acid",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:heroin"
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

@@ -1,0 +1,20 @@
+﻿{
+    "type":  "create:crushing",
+    "ingredients":  [
+                        {
+                            "item":  "create:limestone"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:calcium_carbonate"
+                    },
+                    {
+                        "count":  1,
+                        "chance":  0.3,
+                        "id":  "createmadlab:calcium_carbonate"
+                    }
+                ],
+    "processing_time":  50
+}

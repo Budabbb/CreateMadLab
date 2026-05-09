@@ -1,0 +1,20 @@
+{
+    "type":  "minecraft:crafting_shaped",
+    "pattern":  [
+                    "   ",
+                    " G ",
+                    " N "
+                ],
+    "key":  {
+                "G":  {
+                          "item":  "minecraft:glass_bottle"
+                      },
+                "N":  {
+                          "item":  "minecraft:iron_nugget"
+                      }
+            },
+    "result":  {
+                   "count":  1,
+                   "id":  "createmadlab:flask"
+               }
+}

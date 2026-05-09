@@ -1,0 +1,19 @@
+﻿{
+    "type":  "create:filling",
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:paper"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:ergot_extract_solution",
+                            "amount":  100
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:ergot_paper"
+                    }
+                ]
+}

@@ -1,0 +1,19 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:lsd_crystal"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:acetone",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:lsd_solution",
+                        "amount":  25
+                    }
+                ]
+}

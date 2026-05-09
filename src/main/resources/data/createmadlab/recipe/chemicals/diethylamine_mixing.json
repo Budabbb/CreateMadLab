@@ -1,0 +1,25 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:ethyl_chloride",
+                            "amount":  50
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:ammonia",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:diethylamine",
+                        "amount":  50
+                    },
+                    {
+                        "id":  "createmadlab:chlorine",
+                        "amount":  25
+                    }
+                ]
+}

@@ -1,0 +1,21 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:ammonia",
+                            "amount":  25
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:hydrochloric_acid",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:ammonium_chloride"
+                    }
+                ]
+}

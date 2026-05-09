@@ -1,0 +1,23 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:methanol",
+                            "amount":  25
+                        },
+                        {
+                            "tag":  "minecraft:coals"
+                        },
+                        {
+                            "item":  "minecraft:glowstone_dust"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:diethyl_ether",
+                        "amount":  50
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

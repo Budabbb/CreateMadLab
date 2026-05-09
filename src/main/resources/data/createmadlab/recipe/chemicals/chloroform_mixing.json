@@ -1,0 +1,25 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:chlorine",
+                            "amount":  75
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:methanol",
+                            "amount":  50
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:chloroform",
+                        "amount":  100
+                    },
+                    {
+                        "id":  "minecraft:water",
+                        "amount":  50
+                    }
+                ]
+}

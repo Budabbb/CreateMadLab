@@ -1,0 +1,23 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  50
+                        },
+                        {
+                            "tag":  "c:mushrooms"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:ethanol",
+                        "amount":  25
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

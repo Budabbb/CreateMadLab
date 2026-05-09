@@ -1,0 +1,16 @@
+﻿{
+    "type":  "create:crushing",
+    "ingredients":  [
+                        {
+                            "item":  "create:scoria"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "chance":  0.3,
+                        "id":  "createmadlab:vanadium_pentoxide"
+                    }
+                ],
+    "processing_time":  50
+}

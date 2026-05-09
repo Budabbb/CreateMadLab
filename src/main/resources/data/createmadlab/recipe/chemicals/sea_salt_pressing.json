@@ -1,0 +1,14 @@
+﻿{
+    "type":  "create:pressing",
+    "ingredients":  [
+                        {
+                            "item":  "createbb:brine"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:sea_salt"
+                    }
+                ]
+}

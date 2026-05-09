@@ -1,0 +1,22 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:npp_hydrochloride"
+                        },
+                        {
+                            "item":  "createmadlab:sodium_hydroxide"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:diethyl_ether",
+                            "amount":  50
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:fentanyl_base"
+                    }
+                ]
+}

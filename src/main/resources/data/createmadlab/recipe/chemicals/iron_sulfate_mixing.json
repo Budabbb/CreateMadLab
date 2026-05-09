@@ -1,0 +1,23 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:iron_ingot"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:sulfuric_acid",
+                            "amount":  50
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:iron_sulfate"
+                    },
+                    {
+                        "id":  "createbb:hydrogen",
+                        "amount":  50
+                    }
+                ]
+}

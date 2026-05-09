@@ -1,0 +1,23 @@
+﻿{
+    "type":  "createmadlab:custom_filling",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:syringe"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:fentanyl_solution",
+                            "amount":  100
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:syringe",
+                        "components":  {
+                                           "minecraft:custom_data":  {
+                                                                         "content":  "void"
+                                                                     }
+                                       }
+                    }
+                ]
+}

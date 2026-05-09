@@ -1,0 +1,21 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  25
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:sulfur_trioxide",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:sulfuric_acid",
+                        "amount":  50
+                    }
+                ]
+}

@@ -1,0 +1,28 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:ammonia",
+                            "amount":  50
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:hydrogen_peroxide",
+                            "amount":  50
+                        },
+                        {
+                            "item":  "createmadlab:iron_sulfate_catalyst"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:hydroxilamine"
+                    },
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:iron_sulfate_catalyst"
+                    }
+                ]
+}

@@ -1,0 +1,19 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:fentanyl_citrate"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  100
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:fentanyl_solution",
+                        "amount":  100
+                    }
+                ]
+}

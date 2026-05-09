@@ -1,0 +1,25 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:lime_dye"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  100
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:sludge",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "minecraft:slime_ball"
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

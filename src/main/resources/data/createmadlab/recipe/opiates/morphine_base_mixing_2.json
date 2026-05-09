@@ -1,0 +1,25 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:opium_latex",
+                            "amount":  15
+                        },
+                        {
+                            "item":  "createmadlab:calcium_hydroxide"
+                        },
+                        {
+                            "item":  "createmadlab:ammonium_chloride"
+                        },
+                        {
+                            "item":  "createmadlab:sodium_sulfate"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:morphine_base"
+                    }
+                ]
+}

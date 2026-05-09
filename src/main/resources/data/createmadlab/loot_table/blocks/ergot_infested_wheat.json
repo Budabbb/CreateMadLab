@@ -1,0 +1,56 @@
+{
+    "type":  "minecraft:block",
+    "pools":  [
+                  {
+                      "rolls":  1,
+                      "entries":  [
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "minecraft:wheat"
+                                      }
+                                  ]
+                  },
+                  {
+                      "rolls":  {
+                                    "type":  "minecraft:uniform",
+                                    "min":  0.0,
+                                    "max":  3.0
+                                },
+                      "entries":  [
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "minecraft:wheat_seeds",
+                                          "functions":  [
+                                                            {
+                                                                "function":  "minecraft:set_count",
+                                                                "count":  {
+                                                                              "type":  "minecraft:uniform",
+                                                                              "min":  0,
+                                                                              "max":  3
+                                                                          }
+                                                            }
+                                                        ]
+                                      }
+                                  ]
+                  },
+                  {
+                      "rolls":  1,
+                      "entries":  [
+                                      {
+                                          "type":  "minecraft:item",
+                                          "name":  "createmadlab:ergot_fungus",
+                                          "functions":  [
+                                                            {
+                                                                "function":  "minecraft:set_count",
+                                                                "count":  {
+                                                                              "type":  "minecraft:uniform",
+                                                                              "min":  1,
+                                                                              "max":  2
+                                                                          }
+                                                            }
+                                                        ]
+                                      }
+                                  ]
+                  }
+              ]
+}

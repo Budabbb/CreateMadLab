@@ -1,0 +1,28 @@
+{
+    "parent":  "createmadlab:root",
+    "display":  {
+                    "icon":  {
+                                 "id":  "createmadlab:syringe"
+                             },
+                    "title":  "Sterile Equipment",
+                    "description":  "Obtain a Syringe",
+                    "frame":  "task",
+                    "show_toast":  true,
+                    "announce_to_chat":  true,
+                    "hidden":  false
+                },
+    "criteria":  {
+                     "get_empty_syringe":  {
+                                               "trigger":  "minecraft:inventory_changed",
+                                               "conditions":  {
+                                                                  "items":  [
+                                                                                {
+                                                                                    "items":  [
+                                                                                                  "createmadlab:syringe"
+                                                                                              ]
+                                                                                }
+                                                                            ]
+                                                              }
+                                           }
+                 }
+}

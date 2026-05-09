@@ -1,0 +1,22 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:hydrogen",
+                            "amount":  25
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:chlorine",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:hydrochloric_acid",
+                        "amount":  100
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

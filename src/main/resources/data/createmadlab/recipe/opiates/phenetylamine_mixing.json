@@ -1,0 +1,30 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:phenylacetone",
+                            "amount":  100
+                        },
+                        {
+                            "item":  "createmadlab:hydroxilamine"
+                        },
+                        {
+                            "item":  "createmadlab:vanadium_pentoxide_catalyst"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:phenethylamine",
+                        "amount":  100
+                    },
+                    {
+                        "id":  "createmadlab:residue",
+                        "amount":  50
+                    },
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:vanadium_pentoxide_catalyst"
+                    }
+                ]
+}

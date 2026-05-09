@@ -1,0 +1,33 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:methanol",
+                            "amount":  75
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createbb:oxygen",
+                            "amount":  25
+                        },
+                        {
+                            "item":  "createbb:copper_zinc_catalyst"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:acetone",
+                        "amount":  50
+                    },
+                    {
+                        "count":  1,
+                        "id":  "createbb:copper_zinc_catalyst"
+                    },
+                    {
+                        "id":  "minecraft:water",
+                        "amount":  50
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

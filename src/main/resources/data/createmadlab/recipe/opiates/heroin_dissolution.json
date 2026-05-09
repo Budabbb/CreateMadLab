@@ -1,0 +1,19 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:heroin"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  10
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:heroin_solution",
+                        "amount":  50
+                    }
+                ]
+}

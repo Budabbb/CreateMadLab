@@ -1,0 +1,24 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:sugar_cane",
+                            "amount":  1
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:hydrochloric_acid",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  3,
+                        "id":  "minecraft:sugar"
+                    },
+                    {
+                        "id":  "createmadlab:sludge",
+                        "amount":  10
+                    }
+                ]
+}

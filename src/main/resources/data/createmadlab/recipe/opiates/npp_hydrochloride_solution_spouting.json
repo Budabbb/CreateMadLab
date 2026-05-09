@@ -1,0 +1,19 @@
+﻿{
+    "type":  "create:filling",
+    "ingredients":  [
+                        {
+                            "item":  "createbb:tray"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:npp_hydrochloride_solution",
+                            "amount":  100
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:npp_tray"
+                    }
+                ]
+}

@@ -1,0 +1,26 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  25
+                        },
+                        {
+                            "item":  "minecraft:redstone"
+                        },
+                        {
+                            "tag":  "c:salts"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:chlorine",
+                        "amount":  25
+                    },
+                    {
+                        "id":  "createbb:hydrogen",
+                        "amount":  25
+                    }
+                ]
+}

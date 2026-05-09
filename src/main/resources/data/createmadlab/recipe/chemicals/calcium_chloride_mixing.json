@@ -1,0 +1,23 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:calcium_carbonate"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:hydrochloric_acid",
+                            "amount":  100
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:calcium_chloride"
+                    },
+                    {
+                        "id":  "minecraft:water",
+                        "amount":  50
+                    }
+                ]
+}

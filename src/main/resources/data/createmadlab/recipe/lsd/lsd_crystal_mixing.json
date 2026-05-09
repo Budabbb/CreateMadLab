@@ -1,0 +1,20 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:lysergic_acid"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "createmadlab:diethylamine",
+                            "amount":  25
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:liquid_lsd",
+                        "amount":  50
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

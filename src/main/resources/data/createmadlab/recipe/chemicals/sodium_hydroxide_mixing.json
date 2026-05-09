@@ -1,0 +1,26 @@
+﻿{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:sodium_carbonate"
+                        },
+                        {
+                            "item":  "createmadlab:calcium_hydroxide"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "fluid":  "minecraft:water",
+                            "amount":  200
+                        }
+                    ],
+    "results":  [
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:sodium_hydroxide"
+                    },
+                    {
+                        "count":  1,
+                        "id":  "createmadlab:calcium_carbonate"
+                    }
+                ]
+}
