@@ -11,22 +11,23 @@ import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID, value = Dist.CLIENT)
 public final class FentanylClientEffectManager {
     public static final float BASE_DIM_STRENGTH = 0.12F;
     public static final float MAX_DIM_STRENGTH = 0.86F;
@@ -100,8 +101,8 @@ public final class FentanylClientEffectManager {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !FentanylTripState.isActive()) {
+    public static void onClientTick(ClientTickEvent.Post event) {
+        if (!FentanylTripState.isActive()) {
             return;
         }
 
@@ -137,7 +138,7 @@ public final class FentanylClientEffectManager {
             return;
         }
 
-        float partialTick = event.getPartialTick();
+        float partialTick = ClientRenderTime.partialTick(event.getPartialTick());
         updateUniforms(minecraft, partialTick);
         extractPass.process(partialTick);
         blurHorizontalPass.process(partialTick);
@@ -155,7 +156,7 @@ public final class FentanylClientEffectManager {
             return;
         }
 
-        float alpha = FentanylTripState.getBlackoutAlpha(event.getPartialTick());
+        float alpha = FentanylTripState.getBlackoutAlpha(ClientRenderTime.partialTick(event.getPartialTick()));
         if (alpha <= 0.01F) {
             return;
         }
@@ -165,8 +166,8 @@ public final class FentanylClientEffectManager {
                 RenderType.guiOverlay(),
                 0,
                 0,
-                event.getWindow().getGuiScaledWidth(),
-                event.getWindow().getGuiScaledHeight(),
+                event.getGuiGraphics().guiWidth(),
+                event.getGuiGraphics().guiHeight(),
                 1000,
                 packedAlpha << 24
         );
@@ -248,14 +249,14 @@ public final class FentanylClientEffectManager {
             blurTargetB = createCompatibleTarget(mainTarget);
             historyTarget = createCompatibleTarget(mainTarget);
 
-            extractPass = new PostPass(minecraft.getResourceManager(), FENTANYL_EXTRACT_PROGRAM_NAME, mainTarget, highlightsTarget);
-            blurHorizontalPass = new PostPass(minecraft.getResourceManager(), FENTANYL_BLUR_PROGRAM_NAME, highlightsTarget, blurTargetA);
-            blurVerticalPass = new PostPass(minecraft.getResourceManager(), FENTANYL_BLUR_PROGRAM_NAME, blurTargetA, blurTargetB);
-            compositePass = new PostPass(minecraft.getResourceManager(), FENTANYL_COMPOSITE_PROGRAM_NAME, mainTarget, swapTarget);
+            extractPass = new PostPass(minecraft.getResourceManager(), FENTANYL_EXTRACT_PROGRAM_NAME, mainTarget, highlightsTarget, false);
+            blurHorizontalPass = new PostPass(minecraft.getResourceManager(), FENTANYL_BLUR_PROGRAM_NAME, highlightsTarget, blurTargetA, false);
+            blurVerticalPass = new PostPass(minecraft.getResourceManager(), FENTANYL_BLUR_PROGRAM_NAME, blurTargetA, blurTargetB, false);
+            compositePass = new PostPass(minecraft.getResourceManager(), FENTANYL_COMPOSITE_PROGRAM_NAME, mainTarget, swapTarget, false);
             compositePass.addAuxAsset("BloomSampler", blurTargetB::getColorTextureId, blurTargetB.width, blurTargetB.height);
             compositePass.addAuxAsset("HistorySampler", historyTarget::getColorTextureId, historyTarget.width, historyTarget.height);
-            blitPass = new PostPass(minecraft.getResourceManager(), BLIT_PROGRAM_NAME, swapTarget, mainTarget);
-            historyCopyPass = new PostPass(minecraft.getResourceManager(), BLIT_PROGRAM_NAME, swapTarget, historyTarget);
+            blitPass = new PostPass(minecraft.getResourceManager(), BLIT_PROGRAM_NAME, swapTarget, mainTarget, false);
+            historyCopyPass = new PostPass(minecraft.getResourceManager(), BLIT_PROGRAM_NAME, swapTarget, historyTarget, false);
 
             Matrix4f orthoMatrix = new Matrix4f().setOrtho(0.0F, (float) mainTarget.width, 0.0F, (float) mainTarget.height, 0.1F, 1000.0F);
             extractPass.setOrthoMatrix(orthoMatrix);

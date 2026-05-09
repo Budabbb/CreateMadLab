@@ -7,19 +7,20 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.buda1bb.createmadlab.util.ItemDataUtils;
+import net.buda1bb.createmadlab.util.ModDataComponents;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class FlaskItem extends Item {
     private static final int CAPACITY = 100;
     private static final int BAR_WIDTH = 13;
-    private static final String FLUID_TAG = FluidHandlerItemStack.FLUID_NBT_KEY;
     private static final String DAMAGE_TAG = "Damage";
 
     public FlaskItem(Properties properties) {
@@ -47,15 +48,15 @@ public class FlaskItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level,
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context,
                                 List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+        super.appendHoverText(stack, context, tooltip, flag);
 
         FluidStack fluid = getFluid(stack);
         if (!fluid.isEmpty()) {
             tooltip.add(Component.literal("Fluid: ")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(fluid.getDisplayName().copy().withStyle(ChatFormatting.WHITE)));
+                    .append(fluid.getHoverName().copy().withStyle(ChatFormatting.WHITE)));
             tooltip.add(Component.literal("Amount: " + fluid.getAmount() + " / " + CAPACITY + " mB")
                     .withStyle(ChatFormatting.DARK_GRAY));
         } else {
@@ -63,17 +64,12 @@ public class FlaskItem extends Item {
         }
     }
 
-    @Nullable
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new FlaskFluidHandler(stack);
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) -> new FlaskFluidHandler(stack), ModItems.FLASK.get());
     }
 
     private FluidStack getFluid(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(FLUID_TAG)) {
-            return normalizeFluid(FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound(FLUID_TAG)));
-        }
-        return FluidStack.EMPTY;
+        return normalizeFluid(stack.getOrDefault(ModDataComponents.FLASK_FLUID.get(), SimpleFluidContent.EMPTY).copy());
     }
 
     public static FluidStack normalizeFluid(FluidStack fluid) {
@@ -81,35 +77,20 @@ public class FlaskItem extends Item {
             return FluidStack.EMPTY;
         }
 
-        FluidStack normalized = fluid.copy();
-        normalizeFluidTag(normalized);
-        return normalized;
+        return fluid.copy();
     }
 
     public static boolean fluidTagsMatchIgnoringEmpty(FluidStack first, FluidStack second) {
-        CompoundTag firstTag = normalizeFluidTag(first.getTag());
-        CompoundTag secondTag = normalizeFluidTag(second.getTag());
-        return firstTag == null ? secondTag == null : firstTag.equals(secondTag);
+        return FluidStack.isSameFluidSameComponents(first, second);
     }
 
     public static void copyFluidTag(FluidStack from, FluidStack to) {
-        CompoundTag tag = from.getTag();
-        to.setTag(tag == null ? null : tag.copy());
-    }
-
-    private static void normalizeFluidTag(FluidStack fluid) {
-        if (fluid.hasTag() && fluid.getTag().isEmpty()) {
-            fluid.setTag(null);
-        }
-    }
-
-    private static CompoundTag normalizeFluidTag(@Nullable CompoundTag tag) {
-        return tag == null || tag.isEmpty() ? null : tag;
+        to.applyComponents(from.getComponentsPatch());
     }
 
     private static class FlaskFluidHandler extends FluidHandlerItemStack {
         private FlaskFluidHandler(ItemStack container) {
-            super(container, CAPACITY);
+            super(ModDataComponents.FLASK_FLUID, container, CAPACITY);
         }
 
         @NotNull
@@ -178,7 +159,6 @@ public class FlaskItem extends Item {
             int drainAmount = Math.min(contained.getAmount(), maxDrain);
             FluidStack drained = contained.copy();
             drained.setAmount(drainAmount);
-            normalizeFluidTag(drained);
 
             if (action.execute()) {
                 contained.shrink(drainAmount);
@@ -205,7 +185,6 @@ public class FlaskItem extends Item {
                 setContainerToEmpty();
                 return;
             }
-            normalizeFluidTag(stored);
             super.setFluid(stored);
             cleanupLegacyDamageTag();
         }
@@ -217,14 +196,15 @@ public class FlaskItem extends Item {
         }
 
         private void cleanupLegacyDamageTag() {
-            CompoundTag tag = container.getTag();
+            CompoundTag tag = ItemDataUtils.getTagCopy(container);
             if (tag == null) {
                 return;
             }
 
             tag.remove(DAMAGE_TAG);
-            if (tag.isEmpty()) {
-                container.setTag(null);
+            container.remove(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+            if (!tag.isEmpty()) {
+                ItemDataUtils.update(container, customData -> customData.merge(tag));
             }
         }
     }

@@ -1,31 +1,30 @@
 package net.buda1bb.createmadlab.network.packet;
 
+import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.util.ShaderUtils;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record HeroinEffectS2CPacket(boolean active, int durationTicks) implements CustomPacketPayload {
+    public static final Type<HeroinEffectS2CPacket> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "heroin_effect"));
 
-public class HeroinEffectS2CPacket {
-    private final boolean active;
-    private final int durationTicks;
+    public static final StreamCodec<RegistryFriendlyByteBuf, HeroinEffectS2CPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL, HeroinEffectS2CPacket::active,
+            ByteBufCodecs.VAR_INT, HeroinEffectS2CPacket::durationTicks,
+            HeroinEffectS2CPacket::new
+    );
 
-    public HeroinEffectS2CPacket(boolean active, int durationTicks) {
-        this.active = active;
-        this.durationTicks = durationTicks;
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void encode(HeroinEffectS2CPacket packet, FriendlyByteBuf buffer) {
-        buffer.writeBoolean(packet.active);
-        buffer.writeVarInt(packet.durationTicks);
-    }
-
-    public static HeroinEffectS2CPacket decode(FriendlyByteBuf buffer) {
-        return new HeroinEffectS2CPacket(buffer.readBoolean(), buffer.readVarInt());
-    }
-
-    public static void handle(HeroinEffectS2CPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
+    public static void handle(HeroinEffectS2CPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (packet.active) {
                 ShaderUtils.activateHeroinShaders(packet.durationTicks);
@@ -33,6 +32,5 @@ public class HeroinEffectS2CPacket {
                 ShaderUtils.deactivateHeroinShaders();
             }
         });
-        context.setPacketHandled(true);
     }
 }

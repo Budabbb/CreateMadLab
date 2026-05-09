@@ -1,9 +1,11 @@
 package net.buda1bb.createmadlab.effect;
 
+import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.FentanylEffectS2CPacket;
 import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -11,8 +13,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import java.util.UUID;
 
 public final class FentanylEffectsManager {
     public static final int TOTAL_DURATION_TICKS = 1900;
@@ -40,7 +40,8 @@ public final class FentanylEffectsManager {
 
     private static final String FENTANYL_ACTIVE_TAG = "FentanylOverdoseActive";
     private static final String FENTANYL_ELAPSED_TICKS_TAG = "FentanylOverdoseElapsedTicks";
-    private static final UUID MOVEMENT_SPEED_MODIFIER_ID = UUID.fromString("4d104311-8bc7-48b0-9d3e-efd4f784d6af");
+    private static final ResourceLocation MOVEMENT_SPEED_MODIFIER_ID =
+            ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "fentanyl_sedation_movement");
 
     private FentanylEffectsManager() {
     }
@@ -293,7 +294,7 @@ public final class FentanylEffectsManager {
         }
 
         AttributeModifier existing = attribute.getModifier(MOVEMENT_SPEED_MODIFIER_ID);
-        if (existing != null && existing.getAmount() == amount) {
+        if (existing != null && existing.amount() == amount) {
             return;
         }
 
@@ -303,9 +304,8 @@ public final class FentanylEffectsManager {
 
         attribute.addTransientModifier(new AttributeModifier(
                 MOVEMENT_SPEED_MODIFIER_ID,
-                "fentanyl_sedation_movement",
                 amount,
-                AttributeModifier.Operation.MULTIPLY_TOTAL
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         ));
     }
 

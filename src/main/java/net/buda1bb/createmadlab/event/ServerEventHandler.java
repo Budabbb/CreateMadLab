@@ -8,75 +8,77 @@ import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.LSDEffectS2CPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID)
 public class ServerEventHandler {
     private static final Set<UUID> PENDING_EFFECT_SYNC = ConcurrentHashMap.newKeySet();
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.player == null || event.player.level().isClientSide) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        if (player == null || player.level().isClientSide) {
             return;
         }
 
-        if (MorphineEffectsManager.hasActiveMorphineWindow(event.player)) {
-            long startTime = MorphineEffectsManager.getMorphineStartTime(event.player);
-            long currentTime = event.player.level().getGameTime();
+        if (MorphineEffectsManager.hasActiveMorphineWindow(player)) {
+            long startTime = MorphineEffectsManager.getMorphineStartTime(player);
+            long currentTime = player.level().getGameTime();
             long elapsedTicks = currentTime - startTime;
 
-            MorphineEffectsManager.handleMorphineEffectTicks(event.player, event.player.level(), elapsedTicks);
+            MorphineEffectsManager.handleMorphineEffectTicks(player, player.level(), elapsedTicks);
         }
 
-        MorphineEffectsManager.tickUnstableHp(event.player, event.player.level());
+        MorphineEffectsManager.tickUnstableHp(player, player.level());
 
-        boolean shouldSyncEffects = event.player instanceof ServerPlayer serverPlayer
+        boolean shouldSyncEffects = player instanceof ServerPlayer serverPlayer
                 && PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
-        if (shouldSyncEffects && event.player instanceof ServerPlayer serverPlayer) {
+        if (shouldSyncEffects && player instanceof ServerPlayer serverPlayer) {
             MorphineEffectsManager.syncActiveEffect(serverPlayer);
             HeroinEffectsManager.syncActiveEffect(serverPlayer);
             LSDEffectsManager.syncActiveEffect(serverPlayer);
             FentanylEffectsManager.syncActiveEffect(serverPlayer);
         } else {
-            HeroinEffectsManager.tickActiveEffect(event.player);
-            LSDEffectsManager.tickActiveEffect(event.player, event.player.level());
-            FentanylEffectsManager.tickActiveEffect(event.player, event.player.level());
+            HeroinEffectsManager.tickActiveEffect(player);
+            LSDEffectsManager.tickActiveEffect(player, player.level());
+            FentanylEffectsManager.tickActiveEffect(player, player.level());
         }
 
-        MorphineEffectsManager.updateOngoingGameplayEffects(event.player, event.player.level());
-        HeroinEffectsManager.updateOngoingGameplayEffects(event.player, event.player.level());
-        FentanylEffectsManager.updateOngoingGameplayEffects(event.player, event.player.level());
+        MorphineEffectsManager.updateOngoingGameplayEffects(player, player.level());
+        HeroinEffectsManager.updateOngoingGameplayEffects(player, player.level());
+        FentanylEffectsManager.updateOngoingGameplayEffects(player, player.level());
 
-        if (!HeroinEffectsManager.isHeroinActive(event.player, event.player.level())) {
-            HeroinEffectsManager.clearHeroinEffect(event.player);
+        if (!HeroinEffectsManager.isHeroinActive(player, player.level())) {
+            HeroinEffectsManager.clearHeroinEffect(player);
         }
 
-        if (!LSDEffectsManager.isLsdActive(event.player, event.player.level())) {
-            LSDEffectsManager.clearLsdEffect(event.player);
+        if (!LSDEffectsManager.isLsdActive(player, player.level())) {
+            LSDEffectsManager.clearLsdEffect(player);
         }
 
-        if (FentanylEffectsManager.hasFentanylOverdoseState(event.player)
-                && !FentanylEffectsManager.isFentanylOverdoseActive(event.player, event.player.level())) {
-            FentanylEffectsManager.clearFentanylOverdose(event.player);
+        if (FentanylEffectsManager.hasFentanylOverdoseState(player)
+                && !FentanylEffectsManager.isFentanylOverdoseActive(player, player.level())) {
+            FentanylEffectsManager.clearFentanylOverdose(player);
         }
 
-        if (event.player.isDeadOrDying()) {
-            if (MorphineEffectsManager.hasMorphineState(event.player)) {
-                MorphineEffectsManager.cleanupMorphineEffects(event.player, event.player.level());
+        if (player.isDeadOrDying()) {
+            if (MorphineEffectsManager.hasMorphineState(player)) {
+                MorphineEffectsManager.cleanupMorphineEffects(player, player.level());
             }
-            if (HeroinEffectsManager.isHeroinActive(event.player, event.player.level())) {
-                HeroinEffectsManager.cleanupHeroinEffect(event.player, event.player.level());
+            if (HeroinEffectsManager.isHeroinActive(player, player.level())) {
+                HeroinEffectsManager.cleanupHeroinEffect(player, player.level());
             }
-            if (FentanylEffectsManager.isFentanylOverdoseActive(event.player, event.player.level())) {
-                FentanylEffectsManager.clearFentanylOverdose(event.player);
+            if (FentanylEffectsManager.isFentanylOverdoseActive(player, player.level())) {
+                FentanylEffectsManager.clearFentanylOverdose(player);
             }
         }
     }

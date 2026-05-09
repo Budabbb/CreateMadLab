@@ -1,18 +1,23 @@
 package net.buda1bb.createmadlab.recipes;
 
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.buda1bb.createmadlab.item.SyringeItem;
 import net.buda1bb.createmadlab.item.LSDPaperItem;
-import net.minecraft.network.FriendlyByteBuf;
+import net.buda1bb.createmadlab.util.ItemDataUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -28,12 +33,18 @@ public class CustomFillingRecipe extends FillingRecipe {
     private boolean dynamicLsdPaperDosing = false;
     private ItemStack dynamicResult = ItemStack.EMPTY;
 
-    public CustomFillingRecipe(ProcessingRecipeBuilder.ProcessingRecipeParams params) {
+    public CustomFillingRecipe(ProcessingRecipeParams params) {
+        this(params, "", false);
+    }
+
+    public CustomFillingRecipe(ProcessingRecipeParams params, String dynamicLacingContent, boolean dynamicLsdPaperDosing) {
         super(params);
+        this.dynamicLacingContent = dynamicLacingContent == null ? "" : dynamicLacingContent;
+        this.dynamicLsdPaperDosing = dynamicLsdPaperDosing;
     }
 
     @Override
-    public boolean matches(RecipeWrapper inv, Level level) {
+    public boolean matches(SingleRecipeInput inv, Level level) {
         ItemStack container = inv.getItem(0);
         dynamicResult = ItemStack.EMPTY;
 
@@ -62,40 +73,12 @@ public class CustomFillingRecipe extends FillingRecipe {
     }
 
     @Override
-    public List<ItemStack> rollResults() {
+    public List<ItemStack> rollResults(RandomSource randomSource) {
         if (!dynamicResult.isEmpty()) {
             return List.of(dynamicResult.copy());
         }
 
-        return super.rollResults();
-    }
-
-    @Override
-    public void readAdditional(JsonObject json) {
-        dynamicLacingContent = GsonHelper.getAsString(json, DYNAMIC_LACING_CONTENT, "");
-        dynamicLsdPaperDosing = GsonHelper.getAsBoolean(json, DYNAMIC_LSD_PAPER_DOSING, false);
-    }
-
-    @Override
-    public void readAdditional(FriendlyByteBuf buffer) {
-        dynamicLacingContent = buffer.readUtf();
-        dynamicLsdPaperDosing = buffer.readBoolean();
-    }
-
-    @Override
-    public void writeAdditional(JsonObject json) {
-        if (isDynamicLacingRecipe()) {
-            json.addProperty(DYNAMIC_LACING_CONTENT, dynamicLacingContent);
-        }
-        if (isDynamicLsdPaperDosingRecipe()) {
-            json.addProperty(DYNAMIC_LSD_PAPER_DOSING, true);
-        }
-    }
-
-    @Override
-    public void writeAdditional(FriendlyByteBuf buffer) {
-        buffer.writeUtf(dynamicLacingContent);
-        buffer.writeBoolean(dynamicLsdPaperDosing);
+        return super.rollResults(randomSource);
     }
 
     private boolean isValidInput(ItemStack container, Level level) {
@@ -126,7 +109,7 @@ public class CustomFillingRecipe extends FillingRecipe {
     }
 
     private boolean isValidDynamicLacingInput(ItemStack container) {
-        if (container.isEmpty() || !container.isEdible()) {
+        if (container.isEmpty() || !container.has(DataComponents.FOOD)) {
             return false;
         }
 
@@ -155,13 +138,14 @@ public class CustomFillingRecipe extends FillingRecipe {
     private ItemStack createDynamicLacedCopy(ItemStack input) {
         ItemStack result = input.copy();
         result.setCount(1);
-        CompoundTag tag = result.getOrCreateTag();
-        tag.putString(CONTENT_TAG, dynamicLacingContent);
+        ItemDataUtils.update(result, tag -> {
+            tag.putString(CONTENT_TAG, dynamicLacingContent);
 
-        if (LSD_CONTENT.equals(dynamicLacingContent)) {
-            double currentDose = LSD_CONTENT.equals(getContent(input)) ? getDose(input, 1.0D) : 0.0D;
-            tag.putDouble(DOSE_TAG, Math.min(MAX_LSD_DOSE, currentDose + 1.0D));
-        }
+            if (LSD_CONTENT.equals(dynamicLacingContent)) {
+                double currentDose = LSD_CONTENT.equals(getContent(input)) ? getDose(input, 1.0D) : 0.0D;
+                tag.putDouble(DOSE_TAG, Math.min(MAX_LSD_DOSE, currentDose + 1.0D));
+            }
+        });
 
         return result;
     }
@@ -169,7 +153,7 @@ public class CustomFillingRecipe extends FillingRecipe {
     private ItemStack createDynamicLsdPaperCopy(ItemStack input) {
         ItemStack result = input.copy();
         result.setCount(1);
-        result.getOrCreateTag().putDouble(DOSE_TAG, Math.min(MAX_LSD_DOSE, getDose(input, 1.0D) + 1.0D));
+        ItemDataUtils.update(result, tag -> tag.putDouble(DOSE_TAG, Math.min(MAX_LSD_DOSE, getDose(input, 1.0D) + 1.0D)));
         return result;
     }
 
@@ -190,25 +174,25 @@ public class CustomFillingRecipe extends FillingRecipe {
     }
 
     private String getContent(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(CONTENT_TAG)) {
-            return stack.getTag().getString(CONTENT_TAG);
+        if (ItemDataUtils.contains(stack, CONTENT_TAG)) {
+            return ItemDataUtils.getTagCopy(stack).getString(CONTENT_TAG);
         }
         return null;
     }
 
     private double getDose(ItemStack stack, double defaultDose) {
-        if (stack.hasTag() && stack.getTag().contains(DOSE_TAG)) {
-            return stack.getTag().getDouble(DOSE_TAG);
+        if (ItemDataUtils.contains(stack, DOSE_TAG)) {
+            return ItemDataUtils.getTagCopy(stack).getDouble(DOSE_TAG);
         }
         return defaultDose;
     }
 
     private boolean hasNonEmptyContentNBT(ItemStack stack) {
-        if (stack.isEmpty() || !stack.hasTag()) {
+        if (stack.isEmpty() || !ItemDataUtils.hasCustomData(stack)) {
             return false;
         }
 
-        CompoundTag nbt = stack.getTag();
+        CompoundTag nbt = ItemDataUtils.getTagCopy(stack);
         if (nbt.contains(CONTENT_TAG)) {
             String content = nbt.getString(CONTENT_TAG);
             if (!content.equals("empty")) {
@@ -227,5 +211,36 @@ public class CustomFillingRecipe extends FillingRecipe {
         }
 
         return false;
+    }
+
+    public static class Serializer implements RecipeSerializer<CustomFillingRecipe> {
+        private final MapCodec<CustomFillingRecipe> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                ProcessingRecipeParams.CODEC.forGetter(CustomFillingRecipe::getParams),
+                Codec.STRING.optionalFieldOf(DYNAMIC_LACING_CONTENT, "").forGetter(recipe -> recipe.dynamicLacingContent),
+                Codec.BOOL.optionalFieldOf(DYNAMIC_LSD_PAPER_DOSING, false).forGetter(recipe -> recipe.dynamicLsdPaperDosing)
+        ).apply(instance, CustomFillingRecipe::new));
+
+        private final StreamCodec<RegistryFriendlyByteBuf, CustomFillingRecipe> streamCodec = StreamCodec.of(
+                (buffer, recipe) -> {
+                    ProcessingRecipeParams.STREAM_CODEC.encode(buffer, recipe.getParams());
+                    buffer.writeUtf(recipe.dynamicLacingContent);
+                    buffer.writeBoolean(recipe.dynamicLsdPaperDosing);
+                },
+                buffer -> new CustomFillingRecipe(
+                        ProcessingRecipeParams.STREAM_CODEC.decode(buffer),
+                        buffer.readUtf(),
+                        buffer.readBoolean()
+                )
+        );
+
+        @Override
+        public MapCodec<CustomFillingRecipe> codec() {
+            return codec;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, CustomFillingRecipe> streamCodec() {
+            return streamCodec;
+        }
     }
 }

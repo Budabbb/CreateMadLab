@@ -1,9 +1,11 @@
 package net.buda1bb.createmadlab.effect;
 
+import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.MorphineEffectS2CPacket;
 import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,8 +15,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import java.util.UUID;
 
 public final class MorphineEffectsManager {
     private static final String MORPHINE_START_TIME_TAG = "MorphineStartTime";
@@ -36,8 +36,10 @@ public final class MorphineEffectsManager {
     private static final double SEVERE_DEBT_MOVEMENT_PENALTY = -0.28D;
     private static final double MILD_DEBT_ATTACK_DAMAGE_PENALTY = -2.0D;
     private static final double SEVERE_DEBT_ATTACK_DAMAGE_PENALTY = -5.0D;
-    private static final UUID DEBT_MOVEMENT_SPEED_MODIFIER_ID = UUID.fromString("4ef40de9-8032-4300-8ff1-e9c88bfb8af0");
-    private static final UUID DEBT_ATTACK_DAMAGE_MODIFIER_ID = UUID.fromString("c1686f2f-3dbb-4463-9ea9-87e31df68fb6");
+    private static final ResourceLocation DEBT_MOVEMENT_SPEED_MODIFIER_ID =
+            ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "morphine_unstable_speed");
+    private static final ResourceLocation DEBT_ATTACK_DAMAGE_MODIFIER_ID =
+            ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "morphine_unstable_weakness");
     private static final ThreadLocal<Boolean> APPLYING_UNSTABLE_DRAIN = ThreadLocal.withInitial(() -> false);
 
     private MorphineEffectsManager() {
@@ -164,9 +166,9 @@ public final class MorphineEffectsManager {
 
     private static void applyDebtModifiers(Player player, double movementPenalty, double attackPenalty) {
         ensureModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), DEBT_MOVEMENT_SPEED_MODIFIER_ID,
-                "morphine_unstable_speed", movementPenalty, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                movementPenalty, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         ensureModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), DEBT_ATTACK_DAMAGE_MODIFIER_ID,
-                "morphine_unstable_weakness", attackPenalty, AttributeModifier.Operation.ADDITION);
+                attackPenalty, AttributeModifier.Operation.ADD_VALUE);
     }
 
     private static void removeAllModifiers(Player player) {
@@ -469,13 +471,13 @@ public final class MorphineEffectsManager {
         ), player);
     }
 
-    private static void ensureModifier(AttributeInstance attribute, UUID id, String name, double amount, AttributeModifier.Operation operation) {
+    private static void ensureModifier(AttributeInstance attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {
         if (attribute == null) {
             return;
         }
 
         AttributeModifier existing = attribute.getModifier(id);
-        if (existing != null && existing.getAmount() == amount && existing.getOperation() == operation) {
+        if (existing != null && existing.amount() == amount && existing.operation() == operation) {
             return;
         }
 
@@ -483,10 +485,10 @@ public final class MorphineEffectsManager {
             attribute.removeModifier(existing);
         }
 
-        attribute.addTransientModifier(new AttributeModifier(id, name, amount, operation));
+        attribute.addTransientModifier(new AttributeModifier(id, amount, operation));
     }
 
-    private static void removeModifier(AttributeInstance attribute, UUID id) {
+    private static void removeModifier(AttributeInstance attribute, ResourceLocation id) {
         if (attribute == null) {
             return;
         }

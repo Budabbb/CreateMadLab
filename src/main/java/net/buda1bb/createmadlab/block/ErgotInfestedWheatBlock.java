@@ -17,7 +17,7 @@ public class ErgotInfestedWheatBlock extends CropBlock {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_7;
 
     public ErgotInfestedWheatBlock() {
-        super(Properties.copy(Blocks.WHEAT)
+        super(Properties.ofFullCopy(Blocks.WHEAT)
                 .noOcclusion()
                 .noCollission()
                 .instabreak()
@@ -68,7 +68,7 @@ public class ErgotInfestedWheatBlock extends CropBlock {
 
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return false;
     }
 

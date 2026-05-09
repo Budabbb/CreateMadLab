@@ -1,6 +1,7 @@
 package net.buda1bb.createmadlab.item;
 
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
+import net.buda1bb.createmadlab.util.ItemDataUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -54,8 +54,8 @@ public class LSDPaperItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class LSDPaperItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 32;
     }
 
@@ -79,13 +79,13 @@ public class LSDPaperItem extends Item {
     }
 
     public static double getDose(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(DOSE_TAG)) {
-            return stack.getTag().getDouble(DOSE_TAG);
+        if (ItemDataUtils.contains(stack, DOSE_TAG)) {
+            return ItemDataUtils.getTagCopy(stack).getDouble(DOSE_TAG);
         }
         return 1.0;
     }
 
     public static void setDose(ItemStack stack, double dose) {
-        stack.getOrCreateTag().putDouble(DOSE_TAG, dose);
+        ItemDataUtils.update(stack, tag -> tag.putDouble(DOSE_TAG, dose));
     }
 }

@@ -3,54 +3,52 @@ package net.buda1bb.createmadlab;
 import com.tterrag.registrate.Registrate;
 import net.buda1bb.createmadlab.block.ModBlocks;
 import net.buda1bb.createmadlab.fluid.ModFluids;
+import net.buda1bb.createmadlab.item.FlaskItem;
 import net.buda1bb.createmadlab.item.ModCreativeTabs;
 import net.buda1bb.createmadlab.item.ModItems;
 import net.buda1bb.createmadlab.item.SyringeItem;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.recipes.ModRecipeSerializers;
+import net.buda1bb.createmadlab.util.ModDataComponents;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
 @Mod(CreateMadLab.MOD_ID)
 public class CreateMadLab {
     public static final String MOD_ID = "createmadlab";
-    public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
+    public static final Registrate REGISTRATE = Registrate.create(MOD_ID)
+            .defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    @SuppressWarnings("removal")
-    public CreateMadLab() {
-        this(FMLJavaModLoadingContext.get());
-    }
-
-    public CreateMadLab(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
-
+    public CreateMadLab(IEventBus modEventBus) {
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
+        ModDataComponents.DATA_COMPONENTS.register(modEventBus);
         ModFluids.register(REGISTRATE);
         modEventBus.addListener(this::commonSetup);
-        MinecraftForge.EVENT_BUS.register(this);
+        modEventBus.addListener(ModMessages::register);
+        modEventBus.addListener(FlaskItem::registerCapabilities);
         ModRecipeSerializers.SERIALIZERS.register(modEventBus);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(ModMessages::register);
     }
 
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
@@ -58,7 +56,7 @@ public class CreateMadLab {
                 ItemBlockRenderTypes.setRenderLayer(ModBlocks.ERGOT_INFESTED_WHEAT.get(), RenderType.cutout());
 
                 ItemProperties.register(ModItems.SYRINGE.get(),
-                        new ResourceLocation(CreateMadLab.MOD_ID, "content"),
+                        ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "content"),
                         (stack, level, entity, seed) -> {
                             if (SyringeItem.usesFilledTexture(stack)) {
                                 return 1.0F;

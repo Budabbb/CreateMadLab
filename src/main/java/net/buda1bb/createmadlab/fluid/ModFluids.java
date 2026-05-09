@@ -10,108 +10,108 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public class ModFluids {
     public static Registrate REGISTRATE;
 
-    public static ResourceLocation still = new ResourceLocation("block/water_still");
-    public static ResourceLocation flow = new ResourceLocation("block/water_flow");
+    public static ResourceLocation still = ResourceLocation.withDefaultNamespace("block/water_still");
+    public static ResourceLocation flow = ResourceLocation.withDefaultNamespace("block/water_flow");
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> CHLOROFORM;
+    public static FluidEntry<BaseFlowingFluid.Flowing> CHLOROFORM;
     public static ItemEntry<BucketItem> CHLOROFORM_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> ANHYDROUS_HYDRAZINE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> ANHYDROUS_HYDRAZINE;
     public static ItemEntry<BucketItem> ANHYDROUS_HYDRAZINE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> ACETONE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> ACETONE;
     public static ItemEntry<BucketItem> ACETONE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> PURIFIED_ERGOT_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> PURIFIED_ERGOT_SOLUTION;
     public static ItemEntry<BucketItem> PURIFIED_ERGOT_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> LYSERGIC_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> LYSERGIC_SOLUTION;
     public static ItemEntry<BucketItem> LYSERGIC_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_LSD;
+    public static FluidEntry<BaseFlowingFluid.Flowing> LIQUID_LSD;
     public static ItemEntry<BucketItem> LIQUID_LSD_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> LSD_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> LSD_SOLUTION;
     public static ItemEntry<BucketItem> LSD_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> ERGOT_EXTRACT_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> ERGOT_EXTRACT_SOLUTION;
     public static ItemEntry<BucketItem> ERGOT_EXTRACT_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> SLUDGE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> SLUDGE;
     public static ItemEntry<BucketItem> SLUDGE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> RESIDUE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> RESIDUE;
     public static ItemEntry<BucketItem> RESIDUE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> CHLORINE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> CHLORINE;
     public static ItemEntry<BucketItem> CHLORINE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> DIETHYL_ETHER;
+    public static FluidEntry<BaseFlowingFluid.Flowing> DIETHYL_ETHER;
     public static ItemEntry<BucketItem> DIETHYL_ETHER_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> HYDROCHLORIC_ACID;
+    public static FluidEntry<BaseFlowingFluid.Flowing> HYDROCHLORIC_ACID;
     public static ItemEntry<BucketItem> HYDROCHLORIC_ACID_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> CITRIC_ACID;
+    public static FluidEntry<BaseFlowingFluid.Flowing> CITRIC_ACID;
     public static ItemEntry<BucketItem> CITRIC_ACID_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> OPIUM_LATEX;
+    public static FluidEntry<BaseFlowingFluid.Flowing> OPIUM_LATEX;
     public static ItemEntry<BucketItem> OPIUM_LATEX_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> HEROIN_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> HEROIN_SOLUTION;
     public static ItemEntry<BucketItem> HEROIN_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> MORPHINE_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> MORPHINE_SOLUTION;
     public static ItemEntry<BucketItem> MORPHINE_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> FENTANYL_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> FENTANYL_SOLUTION;
     public static ItemEntry<BucketItem> FENTANYL_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> SULFUR_TRIOXIDE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> SULFUR_TRIOXIDE;
     public static ItemEntry<BucketItem> SULFUR_TRIOXIDE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> SULFURIC_ACID;
+    public static FluidEntry<BaseFlowingFluid.Flowing> SULFURIC_ACID;
     public static ItemEntry<BucketItem> SULFURIC_ACID_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> ETHANOL;
+    public static FluidEntry<BaseFlowingFluid.Flowing> ETHANOL;
     public static ItemEntry<BucketItem> ETHANOL_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> ETHYL_CHLORIDE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> ETHYL_CHLORIDE;
     public static ItemEntry<BucketItem> ETHYL_CHLORIDE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> DIETHYLAMINE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> DIETHYLAMINE;
     public static ItemEntry<BucketItem> DIETHYLAMINE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> PHENETHYLAMINE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> PHENETHYLAMINE;
     public static ItemEntry<BucketItem> PHENETHYLAMINE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> FOUR_PIPERIDONE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> FOUR_PIPERIDONE;
     public static ItemEntry<BucketItem> FOUR_PIPERIDONE_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> NPP_HYDROCHLORIDE_SOLUTION;
+    public static FluidEntry<BaseFlowingFluid.Flowing> NPP_HYDROCHLORIDE_SOLUTION;
     public static ItemEntry<BucketItem> NPP_HYDROCHLORIDE_SOLUTION_BUCKET;
 
-    public static FluidEntry<ForgeFlowingFluid.Flowing> HYDROGEN_PEROXIDE;
+    public static FluidEntry<BaseFlowingFluid.Flowing> HYDROGEN_PEROXIDE;
     public static ItemEntry<BucketItem> HYDROGEN_PEROXIDE_BUCKET;
 
-    public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name) {
+    public static FluidBuilder<BaseFlowingFluid.Flowing, Registrate> basicFluid(String name) {
         return basicFluid(name, 0xffffffff);
     }
 
-    public static FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> basicFluid(String name, int color) {
+    public static FluidBuilder<BaseFlowingFluid.Flowing, Registrate> basicFluid(String name, int color) {
         return REGISTRATE.fluid(name, still, flow, (p, r1, r2) -> new NoColorFluidAttributes(p, color))
                 .properties(p -> p.viscosity(500).density(500))
                 .fluidProperties(p -> p.tickRate(5).slopeFindDistance(6).explosionResistance(100f))
-                .source(ForgeFlowingFluid.Source::new);
+                .source(BaseFlowingFluid.Source::new);
     }
 
-    public static ItemEntry<BucketItem> getBucket(FluidBuilder<ForgeFlowingFluid.Flowing, Registrate> fluid) {
+    public static ItemEntry<BucketItem> getBucket(FluidBuilder<BaseFlowingFluid.Flowing, Registrate> fluid) {
         return fluid.bucket().properties(p -> p.stacksTo(1)).register();
     }
 

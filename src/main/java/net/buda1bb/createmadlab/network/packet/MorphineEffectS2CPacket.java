@@ -1,50 +1,41 @@
 package net.buda1bb.createmadlab.network.packet;
 
+import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.util.ShaderUtils;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record MorphineEffectS2CPacket(
+        int remainingTicks,
+        int totalTicks,
+        int unstableHp,
+        float health,
+        boolean silentDecay,
+        boolean convertedDamage
+) implements CustomPacketPayload {
+    public static final Type<MorphineEffectS2CPacket> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "morphine_effect"));
 
-public class MorphineEffectS2CPacket {
-    private final int remainingTicks;
-    private final int totalTicks;
-    private final int unstableHp;
-    private final float health;
-    private final boolean silentDecay;
-    private final boolean convertedDamage;
+    public static final StreamCodec<RegistryFriendlyByteBuf, MorphineEffectS2CPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, MorphineEffectS2CPacket::remainingTicks,
+            ByteBufCodecs.VAR_INT, MorphineEffectS2CPacket::totalTicks,
+            ByteBufCodecs.VAR_INT, MorphineEffectS2CPacket::unstableHp,
+            ByteBufCodecs.FLOAT, MorphineEffectS2CPacket::health,
+            ByteBufCodecs.BOOL, MorphineEffectS2CPacket::silentDecay,
+            ByteBufCodecs.BOOL, MorphineEffectS2CPacket::convertedDamage,
+            MorphineEffectS2CPacket::new
+    );
 
-    public MorphineEffectS2CPacket(int remainingTicks, int totalTicks, int unstableHp, float health, boolean silentDecay, boolean convertedDamage) {
-        this.remainingTicks = remainingTicks;
-        this.totalTicks = totalTicks;
-        this.unstableHp = unstableHp;
-        this.health = health;
-        this.silentDecay = silentDecay;
-        this.convertedDamage = convertedDamage;
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void encode(MorphineEffectS2CPacket packet, FriendlyByteBuf buffer) {
-        buffer.writeVarInt(packet.remainingTicks);
-        buffer.writeVarInt(packet.totalTicks);
-        buffer.writeVarInt(packet.unstableHp);
-        buffer.writeFloat(packet.health);
-        buffer.writeBoolean(packet.silentDecay);
-        buffer.writeBoolean(packet.convertedDamage);
-    }
-
-    public static MorphineEffectS2CPacket decode(FriendlyByteBuf buffer) {
-        return new MorphineEffectS2CPacket(
-                buffer.readVarInt(),
-                buffer.readVarInt(),
-                buffer.readVarInt(),
-                buffer.readFloat(),
-                buffer.readBoolean(),
-                buffer.readBoolean()
-        );
-    }
-
-    public static void handle(MorphineEffectS2CPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
+    public static void handle(MorphineEffectS2CPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (packet.remainingTicks <= 0 && packet.unstableHp <= 0) {
                 ShaderUtils.deactivateMorphineShaders();
@@ -60,6 +51,5 @@ public class MorphineEffectS2CPacket {
                     packet.convertedDamage
             );
         });
-        context.setPacketHandled(true);
     }
 }

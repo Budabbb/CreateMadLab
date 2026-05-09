@@ -10,16 +10,18 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.block.CropGrowEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID)
 public class WheatInfestationHandler {
 
     private static final int MATURE_WHEAT_AGE = 7;
@@ -60,15 +62,14 @@ public class WheatInfestationHandler {
     private static final Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, Boolean> wasRaining = new HashMap<>();
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (event.level instanceof ServerLevel serverLevel) {
+    public static void onLevelTick(LevelTickEvent.Post event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
             updateRainTracking(serverLevel);
         }
     }
 
     @SubscribeEvent
-    public static void onBlockGrow(BlockEvent.CropGrowEvent.Post event) {
+    public static void onBlockGrow(CropGrowEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel serverLevel)) return;
 
         BlockPos pos = event.getPos();

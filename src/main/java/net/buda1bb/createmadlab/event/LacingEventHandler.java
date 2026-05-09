@@ -8,15 +8,17 @@ import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
 import net.buda1bb.createmadlab.item.LSDPaperItem;
 import net.buda1bb.createmadlab.item.ModItems;
 import net.buda1bb.createmadlab.item.SyringeItem;
+import net.buda1bb.createmadlab.util.ItemDataUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID)
 public class LacingEventHandler {
     private static final String CONTENT_TAG = "content";
     private static final String DOSE_TAG = "dose";
@@ -101,15 +103,15 @@ public class LacingEventHandler {
     }
 
     private static String getContent(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(CONTENT_TAG)) {
-            return stack.getTag().getString(CONTENT_TAG);
+        if (ItemDataUtils.contains(stack, CONTENT_TAG)) {
+            return ItemDataUtils.getTagCopy(stack).getString(CONTENT_TAG);
         }
         return null;
     }
 
     private static double getDose(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(DOSE_TAG)) {
-            return stack.getTag().getDouble(DOSE_TAG);
+        if (ItemDataUtils.contains(stack, DOSE_TAG)) {
+            return ItemDataUtils.getTagCopy(stack).getDouble(DOSE_TAG);
         }
         return 1.0D;
     }

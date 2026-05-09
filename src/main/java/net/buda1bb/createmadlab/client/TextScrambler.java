@@ -68,7 +68,7 @@ public final class TextScrambler {
 
     public static float getScrambleStrength() {
         Minecraft minecraft = Minecraft.getInstance();
-        float partialTick = minecraft == null ? 1.0F : minecraft.getFrameTime();
+        float partialTick = ClientRenderTime.partialTick(minecraft);
         float strength = 0.0F;
 
         if (HeroinTripState.isActive()) {

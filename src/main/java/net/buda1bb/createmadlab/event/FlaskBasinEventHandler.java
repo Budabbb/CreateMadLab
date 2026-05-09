@@ -10,21 +10,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID)
 public final class FlaskBasinEventHandler {
     private FlaskBasinEventHandler() {
     }
@@ -68,8 +68,7 @@ public final class FlaskBasinEventHandler {
             return;
         }
 
-        LazyOptional<? extends IFluidHandler> capability = behaviour.getCapability();
-        IFluidHandler handler = capability.orElse(null);
+        IFluidHandler handler = behaviour.getCapability();
         if (handler != null) {
             targets.add(new TankTarget(handler, forceFill));
         }
@@ -78,9 +77,7 @@ public final class FlaskBasinEventHandler {
     private static boolean tryPourFlaskIntoBasin(Level level, Player player, InteractionHand hand,
                                                 ItemStack flaskStack, List<TankTarget> targets,
                                                 BasinBlockEntity basin) {
-        LazyOptional<IFluidHandlerItem> flaskCapability =
-                flaskStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-        IFluidHandlerItem flaskHandler = flaskCapability.orElse(null);
+        IFluidHandlerItem flaskHandler = flaskStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (flaskHandler == null) {
             return false;
         }

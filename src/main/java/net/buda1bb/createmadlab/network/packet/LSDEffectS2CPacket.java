@@ -1,34 +1,31 @@
 package net.buda1bb.createmadlab.network.packet;
 
+import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.util.ShaderUtils;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record LSDEffectS2CPacket(int remainingTicks, int totalTicks, float strength) implements CustomPacketPayload {
+    public static final Type<LSDEffectS2CPacket> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "lsd_effect"));
 
-public class LSDEffectS2CPacket {
-    private final int remainingTicks;
-    private final int totalTicks;
-    private final float strength;
+    public static final StreamCodec<RegistryFriendlyByteBuf, LSDEffectS2CPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, LSDEffectS2CPacket::remainingTicks,
+            ByteBufCodecs.VAR_INT, LSDEffectS2CPacket::totalTicks,
+            ByteBufCodecs.FLOAT, LSDEffectS2CPacket::strength,
+            LSDEffectS2CPacket::new
+    );
 
-    public LSDEffectS2CPacket(int remainingTicks, int totalTicks, float strength) {
-        this.remainingTicks = remainingTicks;
-        this.totalTicks = totalTicks;
-        this.strength = strength;
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void encode(LSDEffectS2CPacket packet, FriendlyByteBuf buffer) {
-        buffer.writeVarInt(packet.remainingTicks);
-        buffer.writeVarInt(packet.totalTicks);
-        buffer.writeFloat(packet.strength);
-    }
-
-    public static LSDEffectS2CPacket decode(FriendlyByteBuf buffer) {
-        return new LSDEffectS2CPacket(buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
-    }
-
-    public static void handle(LSDEffectS2CPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
+    public static void handle(LSDEffectS2CPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (packet.remainingTicks <= 0 || packet.totalTicks <= 0) {
                 ShaderUtils.deactivateLSDShaders();
@@ -36,6 +33,5 @@ public class LSDEffectS2CPacket {
             }
             ShaderUtils.activateLSDShaders(packet.remainingTicks, packet.totalTicks, packet.strength);
         });
-        context.setPacketHandled(true);
     }
 }

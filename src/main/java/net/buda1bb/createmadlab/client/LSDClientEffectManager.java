@@ -9,21 +9,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID, value = Dist.CLIENT)
 public final class LSDClientEffectManager {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String LSD_PROGRAM_NAME = CreateMadLab.MOD_ID + ":lsd/composite";
@@ -66,8 +67,8 @@ public final class LSDClientEffectManager {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !LsdTripState.isActive()) {
+    public static void onClientTick(ClientTickEvent.Post event) {
+        if (!LsdTripState.isActive()) {
             return;
         }
 
@@ -107,7 +108,7 @@ public final class LSDClientEffectManager {
             return;
         }
 
-        float partialTick = event.getPartialTick();
+        float partialTick = ClientRenderTime.partialTick(event.getPartialTick());
         updateUniforms(minecraft, partialTick);
         lsdPass.process(partialTick);
         blitPass.process(partialTick);
@@ -144,7 +145,7 @@ public final class LSDClientEffectManager {
             return;
         }
 
-        float partialTick = minecraft.getFrameTime();
+        float partialTick = (float) event.getPartialTick();
         float intensity = LsdTripState.getSmoothedIntensity(partialTick);
         if (intensity < 0.10F) {
             return;
@@ -225,8 +226,8 @@ public final class LSDClientEffectManager {
                 swapTarget.enableStencil();
             }
 
-            lsdPass = new PostPass(minecraft.getResourceManager(), LSD_PROGRAM_NAME, mainTarget, swapTarget);
-            blitPass = new PostPass(minecraft.getResourceManager(), BLIT_PROGRAM_NAME, swapTarget, mainTarget);
+            lsdPass = new PostPass(minecraft.getResourceManager(), LSD_PROGRAM_NAME, mainTarget, swapTarget, false);
+            blitPass = new PostPass(minecraft.getResourceManager(), BLIT_PROGRAM_NAME, swapTarget, mainTarget, false);
 
             Matrix4f orthoMatrix = new Matrix4f().setOrtho(0.0F, (float) mainTarget.width, 0.0F, (float) mainTarget.height, 0.1F, 1000.0F);
             lsdPass.setOrthoMatrix(orthoMatrix);

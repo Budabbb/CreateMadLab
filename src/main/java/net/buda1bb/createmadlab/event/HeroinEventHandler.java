@@ -8,14 +8,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = CreateMadLab.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = CreateMadLab.MOD_ID)
 public final class HeroinEventHandler {
     private static final String HEROIN_PROVOKED_PLAYER_TAG = CreateMadLab.MOD_ID + ".heroinProvokedPlayer";
     private static final String HEROIN_PROVOKED_UNTIL_TAG = CreateMadLab.MOD_ID + ".heroinProvokedUntil";
@@ -24,7 +26,7 @@ public final class HeroinEventHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide || event.getAmount() <= 0.0F) {
             return;
         }
@@ -72,7 +74,7 @@ public final class HeroinEventHandler {
     }
 
     @SubscribeEvent
-    public static void onMobTick(LivingEvent.LivingTickEvent event) {
+    public static void onMobTick(EntityTickEvent.Post event) {
         if (event.getEntity().level().isClientSide || !(event.getEntity() instanceof Mob mob) || !(mob instanceof Enemy)) {
             return;
         }
@@ -93,13 +95,13 @@ public final class HeroinEventHandler {
             return;
         }
 
-        LivingEntity newTarget = event.getNewTarget();
+        LivingEntity newTarget = event.getNewAboutToBeSetTarget();
         if (!(newTarget instanceof Player player) || !HeroinEffectsManager.isHeroinActive(player, player.level())) {
             return;
         }
 
         if (!wasProvokedByPlayer(mob, player)) {
-            event.setNewTarget(null);
+            event.setNewAboutToBeSetTarget(null);
         }
     }
 

@@ -3,8 +3,8 @@ package net.buda1bb.createmadlab.item;
 import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
 import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
+import net.buda1bb.createmadlab.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class SyringeItem extends Item {
 
     @Override
     public void onCraftedBy(ItemStack stack, Level level, Player player) {
-        if (!stack.hasTag()) {
+        if (!ItemDataUtils.hasCustomData(stack)) {
             setContent(stack, "empty");
         }
         super.onCraftedBy(stack, level, player);
@@ -95,8 +94,8 @@ public class SyringeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
 
         String content = getContent(stack);
         if ("bliss".equals(content)) {
@@ -111,7 +110,7 @@ public class SyringeItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         String content = getContent(stack);
         return ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) ? 8 : 0;
     }
@@ -120,11 +119,6 @@ public class SyringeItem extends Item {
     public UseAnim getUseAnimation(ItemStack stack) {
         String content = getContent(stack);
         return ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) ? UseAnim.DRINK : UseAnim.NONE;
-    }
-
-    @Override
-    public boolean isEdible() {
-        return false;
     }
 
     private void applyBlissCooldowns(Player player) {
@@ -180,14 +174,13 @@ public class SyringeItem extends Item {
     }
 
     public static String getContent(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(CONTENT_TAG)) {
-            return stack.getTag().getString(CONTENT_TAG);
+        if (ItemDataUtils.contains(stack, CONTENT_TAG)) {
+            return ItemDataUtils.getTagCopy(stack).getString(CONTENT_TAG);
         }
         return "empty";
     }
 
     public static void setContent(ItemStack stack, String content) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putString(CONTENT_TAG, content);
+        ItemDataUtils.update(stack, tag -> tag.putString(CONTENT_TAG, content));
     }
 }

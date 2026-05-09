@@ -1,8 +1,8 @@
 package net.buda1bb.createmadlab.util;
 
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 public class ShaderUtils {
     public static final int HEROIN_EFFECT_DURATION_TICKS = 185 * 20;

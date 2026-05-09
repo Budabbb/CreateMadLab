@@ -1,9 +1,11 @@
 package net.buda1bb.createmadlab.effect;
 
+import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.HeroinEffectS2CPacket;
 import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -11,8 +13,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import java.util.UUID;
 
 public final class HeroinEffectsManager {
     private static final String HEROIN_REMAINING_TICKS_TAG = "HeroinRemainingTicks";
@@ -31,8 +31,10 @@ public final class HeroinEffectsManager {
     private static final int COMFORT_HEAL_INTERVAL_TICKS = 80;
     private static final float COMFORT_HEAL_AMOUNT = 0.5F;
     private static final float COMFORT_MIN_INTENSITY = 0.35F;
-    private static final UUID MOVEMENT_SPEED_MODIFIER_ID = UUID.fromString("8eec8b5d-250c-4f52-b1c4-a0b4a7c4bf5d");
-    private static final UUID ATTACK_SPEED_MODIFIER_ID = UUID.fromString("3d979a18-5177-4a40-bd41-cff16f35ba50");
+    private static final ResourceLocation MOVEMENT_SPEED_MODIFIER_ID =
+            ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "heroin_sedation_movement");
+    private static final ResourceLocation ATTACK_SPEED_MODIFIER_ID =
+            ResourceLocation.fromNamespaceAndPath(CreateMadLab.MOD_ID, "heroin_sedation_attack");
 
     private HeroinEffectsManager() {
     }
@@ -239,9 +241,9 @@ public final class HeroinEffectsManager {
 
     private static void applyPenaltyModifiers(Player player) {
         ensureModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), MOVEMENT_SPEED_MODIFIER_ID,
-                "heroin_sedation_movement", MOVEMENT_SPEED_PENALTY);
+                MOVEMENT_SPEED_PENALTY);
         ensureModifier(player.getAttribute(Attributes.ATTACK_SPEED), ATTACK_SPEED_MODIFIER_ID,
-                "heroin_sedation_attack", ATTACK_SPEED_PENALTY);
+                ATTACK_SPEED_PENALTY);
     }
 
     private static void removePenaltyModifiers(Player player) {
@@ -249,7 +251,7 @@ public final class HeroinEffectsManager {
         removeModifier(player.getAttribute(Attributes.ATTACK_SPEED), ATTACK_SPEED_MODIFIER_ID);
     }
 
-    private static void ensureModifier(AttributeInstance attribute, UUID id, String name, double amount) {
+    private static void ensureModifier(AttributeInstance attribute, ResourceLocation id, double amount) {
         if (attribute == null) {
             return;
         }
@@ -259,10 +261,10 @@ public final class HeroinEffectsManager {
             return;
         }
 
-        attribute.addTransientModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attribute.addTransientModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
-    private static void removeModifier(AttributeInstance attribute, UUID id) {
+    private static void removeModifier(AttributeInstance attribute, ResourceLocation id) {
         if (attribute == null) {
             return;
         }
