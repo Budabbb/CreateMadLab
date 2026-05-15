@@ -6,6 +6,7 @@ import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.logging.LogUtils;
 import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
+import net.buda1bb.createmadlab.effect.UniversalOverdoseHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.client.renderer.PostPass;
@@ -43,6 +44,7 @@ public final class FentanylClientEffectManager {
     private static final String FENTANYL_BLUR_PROGRAM_NAME = CreateMadLab.MOD_ID + ":fentanyl/blur";
     private static final String FENTANYL_COMPOSITE_PROGRAM_NAME = CreateMadLab.MOD_ID + ":fentanyl/composite";
     private static final String BLIT_PROGRAM_NAME = "minecraft:blit";
+    private static final String SMOOTH_CAMERA_OWNER = "fentanyl";
 
     private static TextureTarget swapTarget;
     private static TextureTarget highlightsTarget;
@@ -62,11 +64,21 @@ public final class FentanylClientEffectManager {
     private static boolean historyPrimed;
     private static boolean previousSmoothCamera;
     private static boolean smoothCameraStateCaptured;
+    private static boolean cinematicCameraEnabled;
 
     private FentanylClientEffectManager() {
     }
 
     public static void activate(int remainingTicks, int totalTicks) {
+        activateOverdose(remainingTicks, totalTicks, false, 0.0F, 0.0F);
+    }
+
+    public static void activate(int remainingTicks, int totalTicks, boolean fadeOut, float startIntensity, float startBlackoutAlpha) {
+        activateOverdose(remainingTicks, totalTicks, fadeOut, startIntensity, startBlackoutAlpha);
+    }
+
+    public static void activateFentanyl(int remainingTicks, int totalTicks, boolean fadeOut,
+                                        float startIntensity, float startBlackoutAlpha, float visualStrength) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft == null) {
             return;
@@ -74,19 +86,58 @@ public final class FentanylClientEffectManager {
 
         int safeTotalTicks = totalTicks > 0 ? totalTicks : FentanylEffectsManager.TOTAL_DURATION_TICKS;
         int safeRemainingTicks = Mth.clamp(remainingTicks, 0, safeTotalTicks);
-        FentanylTripState.sync(safeTotalTicks, safeRemainingTicks);
-        enableSmoothCamera(minecraft);
-        lastWindowWidth = minecraft.getWindow().getWidth();
-        lastWindowHeight = minecraft.getWindow().getHeight();
-        lastTargetWidth = minecraft.getMainRenderTarget().width;
-        lastTargetHeight = minecraft.getMainRenderTarget().height;
-        historyPrimed = false;
-        clearHistoryTarget();
+        if (fadeOut) {
+            FentanylTripState.syncFadeOut(safeTotalTicks, safeRemainingTicks, startIntensity, startBlackoutAlpha, visualStrength);
+        } else {
+            FentanylTripState.sync(safeTotalTicks, safeRemainingTicks, visualStrength);
+        }
+        cinematicCameraEnabled = !fadeOut;
+        if (cinematicCameraEnabled) {
+            enableSmoothCamera(minecraft);
+        } else {
+            restoreSmoothCamera(minecraft);
+        }
+        captureRenderTargetState(minecraft);
+    }
+
+    public static void activateOverdose(int remainingTicks, int totalTicks, boolean fadeOut,
+                                        float startIntensity, float startBlackoutAlpha) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft == null) {
+            return;
+        }
+
+        int safeTotalTicks = totalTicks > 0 ? totalTicks : UniversalOverdoseHandler.TOTAL_DURATION_TICKS;
+        int safeRemainingTicks = Mth.clamp(remainingTicks, 0, safeTotalTicks);
+        if (fadeOut) {
+            OpioidOverdoseTripState.syncFadeOut(safeTotalTicks, safeRemainingTicks, startIntensity, startBlackoutAlpha);
+        } else {
+            OpioidOverdoseTripState.sync(safeTotalTicks, safeRemainingTicks);
+        }
+        captureRenderTargetState(minecraft);
     }
 
     public static void deactivate() {
+        deactivateFentanyl();
+        deactivateOverdose();
+    }
+
+    public static void deactivateFentanyl() {
         restoreSmoothCamera(Minecraft.getInstance());
+        cinematicCameraEnabled = false;
         FentanylTripState.deactivate();
+        closeProcessorIfInactive();
+    }
+
+    public static void deactivateOverdose() {
+        OpioidOverdoseTripState.deactivate();
+        closeProcessorIfInactive();
+    }
+
+    private static void closeProcessorIfInactive() {
+        if (FentanylTripState.isActive() || OpioidOverdoseTripState.isActive()) {
+            return;
+        }
         closeProcessor();
         lastWindowWidth = -1;
         lastWindowHeight = -1;
@@ -96,16 +147,34 @@ public final class FentanylClientEffectManager {
     }
 
     public static boolean isActive() {
-        return FentanylTripState.isActive();
+        return isFentanylActive() || isOverdoseActive();
+    }
+
+    public static boolean isFentanylActive() {
+        return ClientDrugVisualAuthority.isFentanylAllowed() && FentanylTripState.isActive();
+    }
+
+    public static boolean isOverdoseActive() {
+        return ClientDrugVisualAuthority.isOpioidOverdoseAllowed() && OpioidOverdoseTripState.isActive();
     }
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !FentanylTripState.isActive()) {
+        if (event.phase != TickEvent.Phase.END || (!FentanylTripState.isActive() && !OpioidOverdoseTripState.isActive())) {
             return;
         }
 
         Minecraft minecraft = Minecraft.getInstance();
+        if (FentanylTripState.isActive() && !ClientDrugVisualAuthority.isFentanylAllowed()) {
+            deactivateFentanyl();
+        }
+        if (OpioidOverdoseTripState.isActive() && !ClientDrugVisualAuthority.isOpioidOverdoseAllowed()) {
+            deactivateOverdose();
+        }
+        if (!FentanylTripState.isActive() && !OpioidOverdoseTripState.isActive()) {
+            return;
+        }
+
         if (minecraft == null || minecraft.player == null || minecraft.level == null) {
             closeProcessor();
             return;
@@ -116,15 +185,25 @@ public final class FentanylClientEffectManager {
             return;
         }
 
-        enableSmoothCamera(minecraft);
+        if (cinematicCameraEnabled && FentanylTripState.isActive()) {
+            enableSmoothCamera(minecraft);
+        } else {
+            restoreSmoothCamera(minecraft);
+        }
         if (!minecraft.isPaused()) {
-            FentanylTripState.tick(minecraft);
+            if (FentanylTripState.isActive()) {
+                FentanylTripState.tick(minecraft);
+            }
+            if (OpioidOverdoseTripState.isActive()) {
+                OpioidOverdoseTripState.tick();
+            }
         }
     }
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (!FentanylTripState.isActive() || event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL
+                || !shouldRenderPostEffect()) {
             return;
         }
 
@@ -151,11 +230,11 @@ public final class FentanylClientEffectManager {
 
     @SubscribeEvent
     public static void onRenderGuiPost(RenderGuiEvent.Post event) {
-        if (!FentanylTripState.isActive()) {
+        if (!ClientDrugVisualAuthority.isOpioidOverdoseAllowed() || !OpioidOverdoseTripState.isActive()) {
             return;
         }
 
-        float alpha = FentanylTripState.getBlackoutAlpha(event.getPartialTick());
+        float alpha = OpioidOverdoseTripState.getBlackoutAlpha(event.getPartialTick());
         if (alpha <= 0.01F) {
             return;
         }
@@ -174,7 +253,9 @@ public final class FentanylClientEffectManager {
 
     @SubscribeEvent
     public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
-        if (!FentanylTripState.isActive()) {
+        if (!ClientDrugVisualAuthority.isFentanylAllowed()
+                || !FentanylTripState.isActive()
+                || FentanylTripState.isFadeOutMode()) {
             return;
         }
 
@@ -183,9 +264,9 @@ public final class FentanylClientEffectManager {
         float seconds = FentanylTripState.getTimeSeconds(partialTick);
         float intensity = FentanylTripState.getSmoothedIntensity(partialTick);
         float finalFade = FentanylTripState.getFinalFade(partialTick);
-        float driftGate = smoothstep(80.0F, FentanylEffectsManager.FINAL_FADE_START_TICKS - 180.0F, elapsedTicks) * (1.0F - 0.86F * finalFade);
-        float swayGate = smoothstep(180.0F, FentanylEffectsManager.FINAL_FADE_START_TICKS - 240.0F, elapsedTicks) * (1.0F - 0.90F * finalFade);
-        float droopGate = smoothstep(240.0F, FentanylEffectsManager.FINAL_FADE_START_TICKS, elapsedTicks);
+        float driftGate = smoothstep(80.0F, FentanylEffectsManager.TOTAL_DURATION_TICKS - 280.0F, elapsedTicks) * (1.0F - 0.86F * finalFade);
+        float swayGate = smoothstep(180.0F, FentanylEffectsManager.TOTAL_DURATION_TICKS - 340.0F, elapsedTicks) * (1.0F - 0.90F * finalFade);
+        float droopGate = smoothstep(240.0F, FentanylEffectsManager.TOTAL_DURATION_TICKS, elapsedTicks);
         float lagYaw = FentanylTripState.getLagYawOffset(partialTick) * CAMERA_INERTIA_STRENGTH;
         float lagPitch = FentanylTripState.getLagPitchOffset(partialTick) * CAMERA_INERTIA_STRENGTH;
         float yawDrift = CAMERA_DRIFT_STRENGTH * driftGate
@@ -279,6 +360,20 @@ public final class FentanylClientEffectManager {
         }
     }
 
+    private static boolean shouldRenderPostEffect() {
+        return (ClientDrugVisualAuthority.isFentanylAllowed() && FentanylTripState.isActive())
+                || (ClientDrugVisualAuthority.isOpioidOverdoseAllowed() && OpioidOverdoseTripState.isActive());
+    }
+
+    private static void captureRenderTargetState(Minecraft minecraft) {
+        lastWindowWidth = minecraft.getWindow().getWidth();
+        lastWindowHeight = minecraft.getWindow().getHeight();
+        lastTargetWidth = minecraft.getMainRenderTarget().width;
+        lastTargetHeight = minecraft.getMainRenderTarget().height;
+        historyPrimed = false;
+        clearHistoryTarget();
+    }
+
     private static TextureTarget createCompatibleTarget(RenderTarget mainTarget) {
         TextureTarget target = new TextureTarget(mainTarget.width, mainTarget.height, true, Minecraft.ON_OSX);
         target.setClearColor(0.0F, 0.0F, 0.0F, 0.0F);
@@ -289,25 +384,43 @@ public final class FentanylClientEffectManager {
     }
 
     private static void updateUniforms(Minecraft minecraft, float partialTick) {
-        float elapsedTicks = FentanylTripState.getElapsedTicks(partialTick);
-        float seconds = FentanylTripState.getTimeSeconds(partialTick);
-        float intensity = FentanylTripState.getSmoothedIntensity(partialTick);
-        float finalFade = FentanylTripState.getFinalFade(partialTick);
-        float blackout = FentanylTripState.getBlackoutAlpha(partialTick);
-        float cameraMotion = FentanylTripState.getCameraMotion(partialTick);
-        float fadeIn = FentanylEffectsManager.computeEffectFadeIn(elapsedTicks);
-        float fadedIntensity = intensity * fadeIn;
-        float stageTwo = smoothstep(200.0F, 700.0F, elapsedTicks);
-        float stageThree = smoothstep(700.0F, FentanylEffectsManager.FINAL_FADE_START_TICKS, elapsedTicks);
-        float dimStrength = fadeIn * Mth.clamp(BASE_DIM_STRENGTH + (MAX_DIM_STRENGTH - BASE_DIM_STRENGTH)
-                * Mth.clamp(fadedIntensity * 0.86F + finalFade * 0.24F, 0.0F, 1.0F), 0.0F, 1.0F);
-        float tintStrength = fadeIn * Mth.clamp(GREEN_AQUA_TINT_STRENGTH * (0.12F + 0.66F * fadedIntensity), 0.0F, 0.76F);
-        float desaturation = fadeIn * Mth.clamp(0.10F + 0.48F * fadedIntensity + 0.16F * stageThree + 0.12F * finalFade, 0.0F, 0.88F);
-        float vignetteStrength = fadeIn * Mth.clamp(VIGNETTE_STRENGTH * (0.32F + 0.66F * fadedIntensity + 0.34F * stageThree + 0.40F * finalFade), 0.0F, 1.85F);
-        float blurStrength = fadeIn * Mth.clamp(BLUR_STRENGTH * (0.10F + 0.50F * fadedIntensity + 0.25F * stageTwo + 0.28F * stageThree), 0.0F, 1.78F);
-        float bloomStrength = fadeIn * Mth.clamp(BLOOM_HAZE_STRENGTH * (0.10F + 0.36F * fadedIntensity + 0.14F * stageThree) * (1.0F - 0.38F * finalFade), 0.0F, 0.78F);
-        float hazeStrength = fadeIn * Mth.clamp(0.12F + 0.48F * fadedIntensity + 0.22F * stageThree, 0.0F, 0.92F) * (1.0F - 0.28F * finalFade);
-        float distortionStrength = fadeIn * Mth.clamp(0.04F + 0.14F * fadedIntensity + 0.08F * cameraMotion, 0.0F, 0.22F) * (1.0F - 0.72F * finalFade);
+        boolean fentanylActive = ClientDrugVisualAuthority.isFentanylAllowed() && FentanylTripState.isActive();
+        boolean overdoseActive = ClientDrugVisualAuthority.isOpioidOverdoseAllowed() && OpioidOverdoseTripState.isActive();
+        float fentanylElapsedTicks = fentanylActive ? FentanylTripState.getElapsedTicks(partialTick) : 0.0F;
+        float overdoseElapsedTicks = overdoseActive ? OpioidOverdoseTripState.getElapsedTicks(partialTick) : 0.0F;
+        float seconds = (fentanylActive ? FentanylTripState.getTimeSeconds(partialTick) : 0.0F)
+                + (overdoseActive ? OpioidOverdoseTripState.getTimeSeconds(partialTick) : 0.0F);
+        float fentanylIntensity = fentanylActive ? FentanylTripState.getSmoothedIntensity(partialTick) : 0.0F;
+        float overdoseIntensity = overdoseActive ? OpioidOverdoseTripState.getSmoothedIntensity(partialTick) : 0.0F;
+        float overdoseFinalFade = overdoseActive ? OpioidOverdoseTripState.getFinalFade(partialTick) : 0.0F;
+        float overdoseBlackout = overdoseActive ? OpioidOverdoseTripState.getBlackoutAlpha(partialTick) : 0.0F;
+        float fentanylFadeIn = fentanylActive && !FentanylTripState.isFadeOutMode()
+                ? FentanylEffectsManager.computeEffectFadeIn(fentanylElapsedTicks)
+                : (fentanylActive ? 1.0F : 0.0F);
+        float overdoseFadeIn = overdoseActive && !OpioidOverdoseTripState.isFadeOutMode()
+                ? UniversalOverdoseHandler.computeEffectFadeIn(overdoseElapsedTicks)
+                : (overdoseActive ? 1.0F : 0.0F);
+        float fadedFentanylIntensity = fentanylIntensity * fentanylFadeIn;
+        float fadedOverdoseIntensity = overdoseIntensity * overdoseFadeIn;
+        float cameraMotion = fentanylActive ? FentanylTripState.getCameraMotion(partialTick) : 0.0F;
+        float stageTwo = fentanylActive ? smoothstep(200.0F, 700.0F, fentanylElapsedTicks) : 0.0F;
+        float stageThree = fentanylActive ? smoothstep(700.0F, FentanylEffectsManager.TOTAL_DURATION_TICKS, fentanylElapsedTicks) : 0.0F;
+        float dimStrength = fentanylFadeIn * Mth.clamp(BASE_DIM_STRENGTH + (MAX_DIM_STRENGTH - BASE_DIM_STRENGTH)
+                * Mth.clamp(fadedFentanylIntensity * 0.86F, 0.0F, 1.0F), 0.0F, 1.0F);
+        dimStrength = Math.max(dimStrength, overdoseFadeIn * Mth.clamp(0.10F + 0.28F * fadedOverdoseIntensity + 0.42F * overdoseFinalFade, 0.0F, 0.76F));
+        float tintStrength = fentanylFadeIn * Mth.clamp(GREEN_AQUA_TINT_STRENGTH * (0.12F + 0.66F * fadedFentanylIntensity), 0.0F, 0.76F);
+        float desaturation = fentanylFadeIn * Mth.clamp(0.10F + 0.48F * fadedFentanylIntensity + 0.16F * stageThree, 0.0F, 0.88F);
+        float breathing = 0.5F + 0.5F * Mth.sin(seconds * 0.82F + Mth.sin(seconds * 0.18F) * 0.55F);
+        float vignetteStrength = Mth.clamp(
+                fentanylFadeIn * VIGNETTE_STRENGTH * (0.32F + 0.66F * fadedFentanylIntensity + 0.34F * stageThree)
+                        + overdoseFadeIn * (0.52F + fadedOverdoseIntensity * 0.78F + overdoseFinalFade * 1.15F + breathing * 0.16F),
+                0.0F,
+                2.45F
+        );
+        float blurStrength = fentanylFadeIn * Mth.clamp(BLUR_STRENGTH * (0.10F + 0.50F * fadedFentanylIntensity + 0.25F * stageTwo + 0.28F * stageThree), 0.0F, 1.78F);
+        float bloomStrength = fentanylFadeIn * Mth.clamp(BLOOM_HAZE_STRENGTH * (0.10F + 0.36F * fadedFentanylIntensity + 0.14F * stageThree), 0.0F, 0.78F);
+        float hazeStrength = fentanylFadeIn * Mth.clamp(0.12F + 0.48F * fadedFentanylIntensity + 0.22F * stageThree, 0.0F, 0.92F);
+        float distortionStrength = fentanylFadeIn * Mth.clamp(0.04F + 0.14F * fadedFentanylIntensity + 0.08F * cameraMotion, 0.0F, 0.22F);
         float bloomDriver = Mth.clamp(bloomStrength + hazeStrength * 0.18F, 0.0F, 1.0F);
         float bloomThreshold = Mth.lerp(bloomDriver, 0.72F, 0.48F);
         float bloomKnee = Mth.lerp(bloomDriver, 0.16F, 0.34F);
@@ -325,7 +438,7 @@ public final class FentanylClientEffectManager {
 
         EffectInstance composite = compositePass.getEffect();
         setUniform(composite, "Time", seconds);
-        setUniform(composite, "Intensity", fadedIntensity);
+        setUniform(composite, "Intensity", Mth.clamp(fadedFentanylIntensity, 0.0F, 1.0F));
         setUniform(composite, "Resolution", resolutionX, resolutionY);
         setUniform(composite, "CameraMotion", cameraMotion);
         setUniform(composite, "TintStrength", tintStrength);
@@ -336,9 +449,9 @@ public final class FentanylClientEffectManager {
         setUniform(composite, "BloomStrength", bloomStrength);
         setUniform(composite, "HazeStrength", hazeStrength);
         setUniform(composite, "DistortionStrength", distortionStrength);
-        setUniform(composite, "BlackoutStrength", blackout);
-        setUniform(composite, "FinalFade", finalFade);
-        setUniform(composite, "HistoryStrength", historyPrimed ? fadeIn * Mth.clamp((0.05F + 0.18F * fadedIntensity) * (1.0F - 0.55F * finalFade), 0.0F, 0.24F) : 0.0F);
+        setUniform(composite, "BlackoutStrength", overdoseBlackout);
+        setUniform(composite, "FinalFade", 0.0F);
+        setUniform(composite, "HistoryStrength", historyPrimed ? fentanylFadeIn * Mth.clamp((0.05F + 0.18F * fadedFentanylIntensity) * (1.0F - 0.55F * overdoseFinalFade), 0.0F, 0.24F) : 0.0F);
     }
 
     private static void clearHistoryTarget() {
@@ -399,24 +512,11 @@ public final class FentanylClientEffectManager {
     }
 
     private static void enableSmoothCamera(Minecraft minecraft) {
-        if (minecraft == null) {
-            return;
-        }
-
-        if (!smoothCameraStateCaptured) {
-            previousSmoothCamera = minecraft.options.smoothCamera;
-            smoothCameraStateCaptured = true;
-        }
-
-        minecraft.options.smoothCamera = true;
+        DrugSmoothCameraManager.enable(minecraft, SMOOTH_CAMERA_OWNER);
     }
 
     private static void restoreSmoothCamera(Minecraft minecraft) {
-        if (minecraft != null && smoothCameraStateCaptured) {
-            minecraft.options.smoothCamera = previousSmoothCamera;
-        }
-
-        smoothCameraStateCaptured = false;
+        DrugSmoothCameraManager.disable(minecraft, SMOOTH_CAMERA_OWNER);
     }
 
     private static void setUniform(EffectInstance effect, String name, float value) {

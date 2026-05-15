@@ -46,6 +46,8 @@ public class ModCreativeTabs {
                         pOutput.accept(ModItems.NPP_TRAY_ITEM.get());
                         pOutput.accept(ModItems.NPP_HYDROCHLORIDE.get());
                         pOutput.accept(ModItems.MORPHINE_BASE.get());
+                        pOutput.accept(ModItems.OXYMORPHONE.get());
+                        pOutput.accept(ModItems.NALOXONE_BASE.get());
                         pOutput.accept(ModItems.DIAMORPHINE.get());
                         pOutput.accept(ModItems.HEROIN.get());
                         pOutput.accept(ModItems.FENTANYL_BASE.get());
@@ -65,6 +67,9 @@ public class ModCreativeTabs {
                         ItemStack voidSyringe = new ItemStack(ModItems.SYRINGE.get());
                         SyringeItem.setContent(voidSyringe, "void");
                         pOutput.accept(voidSyringe);
+                        ItemStack naloxoneSyringe = new ItemStack(ModItems.SYRINGE.get());
+                        SyringeItem.setContent(naloxoneSyringe, "naloxone");
+                        pOutput.accept(naloxoneSyringe);
 
                         pOutput.accept(ModFluids.PURIFIED_ERGOT_SOLUTION_BUCKET.get());
                         pOutput.accept(ModFluids.LYSERGIC_SOLUTION_BUCKET.get());
@@ -89,10 +94,12 @@ public class ModCreativeTabs {
                         pOutput.accept(ModFluids.SULFURIC_ACID_BUCKET.get());
                         pOutput.accept(ModFluids.ETHANOL_BUCKET.get());
                         pOutput.accept(ModFluids.ETHYL_CHLORIDE_BUCKET.get());
+                        pOutput.accept(ModFluids.ALLYL_CHLORIDE_BUCKET.get());
                         pOutput.accept(ModFluids.DIETHYLAMINE_BUCKET.get());
                         pOutput.accept(ModFluids.PHENETHYLAMINE_BUCKET.get());
                         pOutput.accept(ModFluids.FOUR_PIPERIDONE_BUCKET.get());
                         pOutput.accept(ModFluids.NPP_HYDROCHLORIDE_SOLUTION_BUCKET.get());
+                        pOutput.accept(ModFluids.NALOXONE_SOLUTION_BUCKET.get());
                     })
                     .build());
 

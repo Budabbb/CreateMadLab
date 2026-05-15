@@ -5,8 +5,11 @@ import net.buda1bb.createmadlab.block.ErgotInfestedWheatBlock;
 import net.buda1bb.createmadlab.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,10 +57,10 @@ public class WheatInfestationHandler {
     private static final int MAX_COUNTED_INFECTIONS = 16;
 
     // Track rain end time per dimension
-    private static final Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, Long> rainEndTimes = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Long> rainEndTimes = new HashMap<>();
 
     // Track previous rain state per dimension
-    private static final Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, Boolean> wasRaining = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Boolean> wasRaining = new HashMap<>();
 
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
@@ -92,16 +95,13 @@ public class WheatInfestationHandler {
     }
 
     private static void updateRainTracking(ServerLevel level) {
-        net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension = level.dimension();
+        ResourceKey<Level> dimension = level.dimension();
         boolean isCurrentlyRaining = level.isRaining();
 
-        Boolean previouslyRaining = wasRaining.get(dimension);
-
-        if (previouslyRaining != null && previouslyRaining && !isCurrentlyRaining) {
+        Boolean previouslyRaining = wasRaining.put(dimension, isCurrentlyRaining);
+        if (Boolean.TRUE.equals(previouslyRaining) && !isCurrentlyRaining) {
             rainEndTimes.put(dimension, level.getGameTime());
         }
-
-        wasRaining.put(dimension, isCurrentlyRaining);
     }
 
     private static float calculateInfectionChance(ServerLevel level, BlockPos pos) {
@@ -190,17 +190,22 @@ public class WheatInfestationHandler {
 
     private static int countNearbyInfections(ServerLevel level, BlockPos center) {
         int count = 0;
+        int centerX = center.getX();
+        int centerY = center.getY();
+        int centerZ = center.getZ();
+        Block infestedWheat = ModBlocks.ERGOT_INFESTED_WHEAT.get();
         BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
 
         // Search in an 11x11x3 area, centered on the wheat and checking 1 block above and below.
         for (int dx = -SEARCH_RADIUS; dx <= SEARCH_RADIUS; dx++) {
             for (int dz = -SEARCH_RADIUS; dz <= SEARCH_RADIUS; dz++) {
                 for (int dy = -1; dy <= 1; dy++) {
-                    checkPos.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
+                    if (dx == 0 && dy == 0 && dz == 0) {
+                        continue;
+                    }
 
-                    if (checkPos.equals(center)) continue;
-
-                    if (level.getBlockState(checkPos).getBlock() == ModBlocks.ERGOT_INFESTED_WHEAT.get()) {
+                    checkPos.set(centerX + dx, centerY + dy, centerZ + dz);
+                    if (level.getBlockState(checkPos).getBlock() == infestedWheat) {
                         count++;
                         if (count >= MAX_COUNTED_INFECTIONS) {
                             return count;
@@ -216,7 +221,7 @@ public class WheatInfestationHandler {
     @SubscribeEvent
     public static void onLevelUnload(LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
-            net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension = serverLevel.dimension();
+            ResourceKey<Level> dimension = serverLevel.dimension();
             rainEndTimes.remove(dimension);
             wasRaining.remove(dimension);
         }

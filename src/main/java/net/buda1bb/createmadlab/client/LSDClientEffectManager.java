@@ -49,7 +49,11 @@ public final class LSDClientEffectManager {
             return;
         }
 
-        LsdTripState.resume(totalTicks, remainingTicks, strength);
+        if (LsdTripState.isActive()) {
+            LsdTripState.extend(totalTicks, remainingTicks, strength);
+        } else {
+            LsdTripState.resume(totalTicks, remainingTicks, strength);
+        }
         lastWindowWidth = minecraft.getWindow().getWidth();
         lastWindowHeight = minecraft.getWindow().getHeight();
     }

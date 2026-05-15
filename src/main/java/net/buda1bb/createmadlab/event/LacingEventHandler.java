@@ -1,10 +1,12 @@
 package net.buda1bb.createmadlab.event;
 
 import net.buda1bb.createmadlab.CreateMadLab;
-import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
+import net.buda1bb.createmadlab.drug.DrugStateManager;
+import net.buda1bb.createmadlab.drug.DrugType;
 import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
+import net.buda1bb.createmadlab.effect.UniversalOverdoseHandler;
 import net.buda1bb.createmadlab.item.LSDPaperItem;
 import net.buda1bb.createmadlab.item.ModItems;
 import net.buda1bb.createmadlab.item.SyringeItem;
@@ -23,7 +25,7 @@ public class LacingEventHandler {
 
     @SubscribeEvent
     public static void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
-        ItemStack stack = event.getResultStack();
+        ItemStack usedStack = event.getItem();
         LivingEntity entity = event.getEntity();
         Level level = entity.level();
 
@@ -31,11 +33,15 @@ public class LacingEventHandler {
             return;
         }
 
-        if (stack.getItem() instanceof SyringeItem || stack.getItem() instanceof LSDPaperItem) {
+        if (level.isClientSide) {
             return;
         }
 
-        String content = getContent(event.getItem());
+        if (usedStack.getItem() instanceof SyringeItem || usedStack.getItem() instanceof LSDPaperItem) {
+            return;
+        }
+
+        String content = getContent(usedStack);
         if (content == null || "empty".equals(content)) {
             return;
         }
@@ -50,7 +56,7 @@ public class LacingEventHandler {
                 applyMorphineCooldowns(player);
             }
             case "lsd" -> {
-                handleLSDConsumption(player, level, event.getItem());
+                handleLSDConsumption(player, level, usedStack);
                 applyLSDCooldowns(player);
             }
             case "void" -> {
@@ -63,40 +69,36 @@ public class LacingEventHandler {
     }
 
     private static void handleBlissConsumption(Player player, Level level) {
-        HeroinEffectsManager.startHeroinEffect(player, level);
+        DrugStateManager.addDrug(player, DrugType.HEROIN, 1.0F);
     }
 
     private static void handleMorphineConsumption(Player player, Level level) {
-        MorphineEffectsManager.startMorphineEffect(player, level);
+        DrugStateManager.addDrug(player, DrugType.MORPHINE, 1.0F);
     }
 
     private static void handleLSDConsumption(Player player, Level level, ItemStack stack) {
-        LSDEffectsManager.startLsdEffect(player, level, getDose(stack));
+        DrugStateManager.addDrug(player, DrugType.LSD, (float) getDose(stack));
     }
 
     private static void handleVoidConsumption(Player player, Level level) {
-        FentanylEffectsManager.startFentanylOverdose(player, level);
+        DrugStateManager.addDrug(player, DrugType.FENTANYL, 1.0F);
     }
 
     private static void applyBlissCooldowns(Player player) {
-        player.getCooldowns().addCooldown(ModItems.SYRINGE.get(), HeroinEffectsManager.getCooldownDuration());
         player.getCooldowns().addCooldown(ModItems.LSD_PAPER.get(), HeroinEffectsManager.getCooldownDuration());
     }
 
     private static void applyMorphineCooldowns(Player player) {
-        player.getCooldowns().addCooldown(ModItems.SYRINGE.get(), MorphineEffectsManager.getCooldownDuration());
         player.getCooldowns().addCooldown(ModItems.LSD_PAPER.get(), MorphineEffectsManager.getCooldownDuration());
     }
 
     private static void applyLSDCooldowns(Player player) {
         int cooldownDuration = LSDEffectsManager.getCooldownDuration();
-        player.getCooldowns().addCooldown(ModItems.SYRINGE.get(), cooldownDuration);
         player.getCooldowns().addCooldown(ModItems.LSD_PAPER.get(), cooldownDuration);
     }
 
     private static void applyVoidCooldowns(Player player) {
-        int cooldownDuration = FentanylEffectsManager.getCooldownDuration();
-        player.getCooldowns().addCooldown(ModItems.SYRINGE.get(), cooldownDuration);
+        int cooldownDuration = UniversalOverdoseHandler.getCooldownDuration();
         player.getCooldowns().addCooldown(ModItems.LSD_PAPER.get(), cooldownDuration);
     }
 

@@ -31,6 +31,7 @@ public final class HeroinClientEffectManager {
     private static final String HEROIN_BLUR_PROGRAM_NAME = CreateMadLab.MOD_ID + ":heroin/blur";
     private static final String HEROIN_COMPOSITE_PROGRAM_NAME = CreateMadLab.MOD_ID + ":heroin/composite";
     private static final String BLIT_PROGRAM_NAME = "minecraft:blit";
+    private static final String SMOOTH_CAMERA_OWNER = "heroin";
     private static final float FOV_BREATHING_DEGREES = 2.15F;
 
     private static TextureTarget swapTarget;
@@ -51,20 +52,40 @@ public final class HeroinClientEffectManager {
     private static int lastTargetHeight = -1;
     private static boolean previousSmoothCamera;
     private static boolean smoothCameraStateCaptured;
+    private static boolean cinematicCameraEnabled;
 
     private HeroinClientEffectManager() {
     }
 
     public static void activate(int durationTicks) {
+        activate(durationTicks, HeroinEffectsManager.getTotalDuration(), 1.0F, true, false);
+    }
+
+    public static void activate(int durationTicks, int totalTicks, float visualStrength, boolean cinematicCamera) {
+        activate(durationTicks, totalTicks, visualStrength, cinematicCamera, false);
+    }
+
+    public static void activate(int durationTicks, int totalTicks, float visualStrength, boolean cinematicCamera, boolean fadeOut) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft == null) {
             return;
         }
 
-        int totalTicks = HeroinEffectsManager.getTotalDuration();
-        int remainingTicks = durationTicks > 0 ? Mth.clamp(durationTicks, 0, totalTicks) : totalTicks;
-        HeroinTripState.resume(totalTicks, remainingTicks);
-        enableSmoothCamera(minecraft);
+        int safeTotalTicks = totalTicks > 0 ? totalTicks : HeroinEffectsManager.getTotalDuration();
+        int remainingTicks = durationTicks > 0 ? Mth.clamp(durationTicks, 0, safeTotalTicks) : safeTotalTicks;
+        if (fadeOut) {
+            HeroinTripState.resumeFadeOut(safeTotalTicks, remainingTicks, visualStrength);
+        } else if (HeroinTripState.isActive()) {
+            HeroinTripState.extend(safeTotalTicks, remainingTicks, visualStrength);
+        } else {
+            HeroinTripState.resume(safeTotalTicks, remainingTicks, visualStrength);
+        }
+        cinematicCameraEnabled = cinematicCamera;
+        if (cinematicCameraEnabled) {
+            enableSmoothCamera(minecraft);
+        } else {
+            restoreSmoothCamera(minecraft);
+        }
         historyPrimed = false;
         lastWindowWidth = minecraft.getWindow().getWidth();
         lastWindowHeight = minecraft.getWindow().getHeight();
@@ -75,6 +96,7 @@ public final class HeroinClientEffectManager {
 
     public static void deactivate() {
         restoreSmoothCamera(Minecraft.getInstance());
+        cinematicCameraEnabled = false;
         HeroinTripState.deactivate();
         closeProcessor();
         historyPrimed = false;
@@ -85,7 +107,7 @@ public final class HeroinClientEffectManager {
     }
 
     public static boolean isActive() {
-        return HeroinTripState.isActive();
+        return ClientDrugVisualAuthority.isHeroinAllowed() && HeroinTripState.isActive();
     }
 
     @SubscribeEvent
@@ -95,6 +117,11 @@ public final class HeroinClientEffectManager {
         }
 
         Minecraft minecraft = Minecraft.getInstance();
+        if (!ClientDrugVisualAuthority.isHeroinAllowed()) {
+            deactivate();
+            return;
+        }
+
         if (minecraft == null || minecraft.player == null || minecraft.level == null) {
             closeProcessor();
             return;
@@ -105,9 +132,12 @@ public final class HeroinClientEffectManager {
             return;
         }
 
-        enableSmoothCamera(minecraft);
+        if (cinematicCameraEnabled) {
+            enableSmoothCamera(minecraft);
+        } else {
+            restoreSmoothCamera(minecraft);
+        }
         HeroinTripState.tick(minecraft);
-        softenHurtFeedback(minecraft);
         if (!HeroinTripState.isActive()) {
             deactivate();
         }
@@ -115,7 +145,9 @@ public final class HeroinClientEffectManager {
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (!HeroinTripState.isActive() || event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+        if (!ClientDrugVisualAuthority.isHeroinAllowed()
+                || !HeroinTripState.isActive()
+                || event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
             return;
         }
 
@@ -163,7 +195,7 @@ public final class HeroinClientEffectManager {
 
     @SubscribeEvent
     public static void onComputeFov(ViewportEvent.ComputeFov event) {
-        if (!HeroinTripState.isActive()) {
+        if (!ClientDrugVisualAuthority.isHeroinAllowed() || !HeroinTripState.isActive()) {
             return;
         }
 
@@ -368,44 +400,16 @@ public final class HeroinClientEffectManager {
         }
     }
 
-    private static void softenHurtFeedback(Minecraft minecraft) {
-        if (minecraft.player == null || minecraft.player.hurtTime <= 0) {
-            return;
-        }
-
-        float intensity = HeroinTripState.getTargetIntensity();
-        int cappedHurtTime = intensity >= 0.72F ? 1 : intensity >= 0.42F ? 2 : 3;
-        if (minecraft.player.hurtTime > cappedHurtTime) {
-            minecraft.player.hurtTime = cappedHurtTime;
-        }
-        if (intensity > 0.30F && minecraft.player.hurtTime > 1) {
-            minecraft.player.hurtTime--;
-        }
-    }
-
     private static float smoothstep(float edge0, float edge1, float value) {
         float t = Mth.clamp((value - edge0) / (edge1 - edge0), 0.0F, 1.0F);
         return t * t * (3.0F - 2.0F * t);
     }
 
     private static void enableSmoothCamera(Minecraft minecraft) {
-        if (minecraft == null) {
-            return;
-        }
-
-        if (!smoothCameraStateCaptured) {
-            previousSmoothCamera = minecraft.options.smoothCamera;
-            smoothCameraStateCaptured = true;
-        }
-
-        minecraft.options.smoothCamera = true;
+        DrugSmoothCameraManager.enable(minecraft, SMOOTH_CAMERA_OWNER);
     }
 
     private static void restoreSmoothCamera(Minecraft minecraft) {
-        if (minecraft != null && smoothCameraStateCaptured) {
-            minecraft.options.smoothCamera = previousSmoothCamera;
-        }
-
-        smoothCameraStateCaptured = false;
+        DrugSmoothCameraManager.disable(minecraft, SMOOTH_CAMERA_OWNER);
     }
 }

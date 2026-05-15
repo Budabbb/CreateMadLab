@@ -23,8 +23,9 @@
 
 - **LSD (Exciting Paper)**: applies a long psychedelic visual effect with dose-scaled intensity.
 - **Heroin (Bliss)**: applies a sedating visual effect, and makes hostile mobs neutral to the player.
-- **Morphine**: converts some incoming damage into unstable health debt, then drains that debt over time.
+- **Morphine**: converts some incoming damage into unstable hearts that drain over time.
 - **Fentanyl (Void)**: starts an escalating overdose sequence with heavy screen effects and a fatal endpoint.
+- **Naloxone**: used to counter opiates like Heroin, Morphine or Fentanyl. Withdrawal effects still apply.
 
 *JEI or another recipe viewer is recommended because the mod adds a lot of Create processing recipes.*
 

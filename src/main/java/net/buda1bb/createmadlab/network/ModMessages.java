@@ -1,10 +1,13 @@
 package net.buda1bb.createmadlab.network;
 
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.network.packet.DrugVisualStateS2CPacket;
 import net.buda1bb.createmadlab.network.packet.FentanylEffectS2CPacket;
 import net.buda1bb.createmadlab.network.packet.HeroinEffectS2CPacket;
 import net.buda1bb.createmadlab.network.packet.LSDEffectS2CPacket;
 import net.buda1bb.createmadlab.network.packet.MorphineEffectS2CPacket;
+import net.buda1bb.createmadlab.network.packet.OpiateWithdrawalEffectS2CPacket;
+import net.buda1bb.createmadlab.network.packet.OpioidOverdoseEffectS2CPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -13,7 +16,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class ModMessages {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "2";
     private static int packetId;
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
@@ -47,6 +50,21 @@ public final class ModMessages {
                 .encoder(FentanylEffectS2CPacket::encode)
                 .decoder(FentanylEffectS2CPacket::decode)
                 .consumerMainThread(FentanylEffectS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(OpioidOverdoseEffectS2CPacket.class, nextId(), NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(OpioidOverdoseEffectS2CPacket::encode)
+                .decoder(OpioidOverdoseEffectS2CPacket::decode)
+                .consumerMainThread(OpioidOverdoseEffectS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(OpiateWithdrawalEffectS2CPacket.class, nextId(), NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(OpiateWithdrawalEffectS2CPacket::encode)
+                .decoder(OpiateWithdrawalEffectS2CPacket::decode)
+                .consumerMainThread(OpiateWithdrawalEffectS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(DrugVisualStateS2CPacket.class, nextId(), NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(DrugVisualStateS2CPacket::encode)
+                .decoder(DrugVisualStateS2CPacket::decode)
+                .consumerMainThread(DrugVisualStateS2CPacket::handle)
                 .add();
     }
 

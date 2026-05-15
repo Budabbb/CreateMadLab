@@ -9,7 +9,9 @@
     "AnvilEditScreenMixin",
     "BookEditScreenMixin",
     "ClientPacketListenerMixin",
-    "FontMixin"
+    "FontMixin",
+    "PlayerModelMixin",
+    "SignRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

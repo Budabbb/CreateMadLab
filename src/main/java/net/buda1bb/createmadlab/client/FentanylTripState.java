@@ -28,23 +28,35 @@ public final class FentanylTripState {
     private static float previousLagPitchOffset;
     private static float previousYaw;
     private static float previousPitch;
+    private static boolean fadeOutMode;
+    private static float fadeOutStartIntensity;
+    private static float fadeOutStartBlackoutAlpha;
+    private static float visualStrength = 1.0F;
     private static boolean hasCameraBaseline;
 
     private FentanylTripState() {
     }
 
     public static void sync(int totalDurationTicks, int remainingDurationTicks) {
+        sync(totalDurationTicks, remainingDurationTicks, 1.0F);
+    }
+
+    public static void sync(int totalDurationTicks, int remainingDurationTicks, float syncedVisualStrength) {
         int safeTotalTicks = Math.max(1, totalDurationTicks);
         int safeRemainingTicks = Mth.clamp(remainingDurationTicks, 0, safeTotalTicks);
         float syncedTimeTicks = safeTotalTicks - safeRemainingTicks;
         boolean shouldReset = !active || totalTicks != safeTotalTicks || timeTicks > syncedTimeTicks + 5.0F;
 
         active = true;
+        fadeOutMode = false;
+        fadeOutStartIntensity = 0.0F;
+        fadeOutStartBlackoutAlpha = 0.0F;
+        visualStrength = sanitizeVisualStrength(syncedVisualStrength);
         totalTicks = safeTotalTicks;
         remainingTicks = safeRemainingTicks;
         timeTicks = syncedTimeTicks;
         previousTimeTicks = syncedTimeTicks;
-        targetIntensity = FentanylEffectsManager.computeVisualIntensity(timeTicks);
+        targetIntensity = computeStackedVisualIntensity(timeTicks);
         blackoutAlpha = FentanylEffectsManager.computeBlackoutAlpha(timeTicks);
         previousBlackoutAlpha = blackoutAlpha;
 
@@ -67,6 +79,38 @@ public final class FentanylTripState {
         previousLagPitchOffset = lagPitchOffset;
     }
 
+    public static void syncFadeOut(int totalDurationTicks, int remainingDurationTicks, float startIntensity, float startBlackoutAlpha) {
+        syncFadeOut(totalDurationTicks, remainingDurationTicks, startIntensity, startBlackoutAlpha, 1.0F);
+    }
+
+    public static void syncFadeOut(int totalDurationTicks, int remainingDurationTicks, float startIntensity,
+                                   float startBlackoutAlpha, float syncedVisualStrength) {
+        int safeTotalTicks = Math.max(1, totalDurationTicks);
+        int safeRemainingTicks = Mth.clamp(remainingDurationTicks, 0, safeTotalTicks);
+
+        active = safeRemainingTicks > 0;
+        fadeOutMode = true;
+        fadeOutStartIntensity = Mth.clamp(startIntensity, 0.0F, 1.0F);
+        fadeOutStartBlackoutAlpha = Mth.clamp(startBlackoutAlpha, 0.0F, 1.0F);
+        visualStrength = sanitizeVisualStrength(syncedVisualStrength);
+        totalTicks = safeTotalTicks;
+        remainingTicks = safeRemainingTicks;
+        timeTicks = safeTotalTicks - safeRemainingTicks;
+        previousTimeTicks = timeTicks;
+        targetIntensity = computeFadeOutTargetIntensity();
+        smoothedIntensity = targetIntensity;
+        previousSmoothedIntensity = targetIntensity;
+        blackoutAlpha = computeFadeOutBlackoutAlpha();
+        previousBlackoutAlpha = blackoutAlpha;
+        smoothedCameraMotion = 0.0F;
+        previousCameraMotion = 0.0F;
+        lagYawOffset = 0.0F;
+        previousLagYawOffset = 0.0F;
+        lagPitchOffset = 0.0F;
+        previousLagPitchOffset = 0.0F;
+        hasCameraBaseline = false;
+    }
+
     public static void deactivate() {
         active = false;
         totalTicks = 0;
@@ -84,6 +128,10 @@ public final class FentanylTripState {
         previousLagYawOffset = 0.0F;
         lagPitchOffset = 0.0F;
         previousLagPitchOffset = 0.0F;
+        fadeOutMode = false;
+        fadeOutStartIntensity = 0.0F;
+        fadeOutStartBlackoutAlpha = 0.0F;
+        visualStrength = 1.0F;
         hasCameraBaseline = false;
     }
 
@@ -104,14 +152,32 @@ public final class FentanylTripState {
         }
         timeTicks = Math.min(totalTicks, timeTicks + 1.0F);
 
-        targetIntensity = FentanylEffectsManager.computeVisualIntensity(timeTicks);
-        smoothedIntensity += (targetIntensity - smoothedIntensity) * INTENSITY_SMOOTHING;
-        blackoutAlpha = FentanylEffectsManager.computeBlackoutAlpha(timeTicks);
-        updateCameraLag(minecraft);
+        if (fadeOutMode) {
+            if (remainingTicks <= 0) {
+                deactivate();
+                return;
+            }
+
+            targetIntensity = computeFadeOutTargetIntensity();
+            smoothedIntensity = targetIntensity;
+            blackoutAlpha = computeFadeOutBlackoutAlpha();
+            smoothedCameraMotion = 0.0F;
+            lagYawOffset = 0.0F;
+            lagPitchOffset = 0.0F;
+        } else {
+            targetIntensity = computeStackedVisualIntensity(timeTicks);
+            smoothedIntensity += (targetIntensity - smoothedIntensity) * INTENSITY_SMOOTHING;
+            blackoutAlpha = FentanylEffectsManager.computeBlackoutAlpha(timeTicks);
+            updateCameraLag(minecraft);
+        }
     }
 
     public static boolean isActive() {
         return active;
+    }
+
+    public static boolean isFadeOutMode() {
+        return fadeOutMode;
     }
 
     public static float getSmoothedIntensity(float partialTick) {
@@ -183,6 +249,26 @@ public final class FentanylTripState {
 
         float rawMotion = Mth.clamp((float) Math.sqrt(deltaYaw * deltaYaw + deltaPitch * deltaPitch) / CAMERA_MOTION_SCALE, 0.0F, 1.0F);
         smoothedCameraMotion += (rawMotion - smoothedCameraMotion) * CAMERA_MOTION_SMOOTHING;
+    }
+
+    private static float computeFadeOutTargetIntensity() {
+        return fadeOutStartIntensity * getFadeOutProgress();
+    }
+
+    private static float computeStackedVisualIntensity(float elapsedTicks) {
+        return FentanylEffectsManager.computeVisualIntensity(elapsedTicks) * visualStrength;
+    }
+
+    private static float sanitizeVisualStrength(float strength) {
+        return Mth.clamp(strength, 0.0F, 3.0F);
+    }
+
+    private static float computeFadeOutBlackoutAlpha() {
+        return fadeOutStartBlackoutAlpha * getFadeOutProgress();
+    }
+
+    private static float getFadeOutProgress() {
+        return totalTicks <= 0 ? 0.0F : Mth.clamp(remainingTicks / (float) totalTicks, 0.0F, 1.0F);
     }
 
     private static float smoothstep(float edge0, float edge1, float value) {

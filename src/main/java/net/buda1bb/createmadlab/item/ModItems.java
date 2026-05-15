@@ -102,6 +102,12 @@ public class ModItems {
     public static final RegistryObject<Item> MORPHINE_BASE =
             ITEMS.register("morphine_base", () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> OXYMORPHONE =
+            ITEMS.register("oxymorphone", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> NALOXONE_BASE =
+            ITEMS.register("naloxone_base", () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> DIAMORPHINE =
             ITEMS.register("diamorphine", () -> new Item(new Item.Properties()));
 

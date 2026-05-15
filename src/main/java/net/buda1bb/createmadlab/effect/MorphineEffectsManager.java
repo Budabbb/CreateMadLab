@@ -2,6 +2,9 @@ package net.buda1bb.createmadlab.effect;
 
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.MorphineEffectS2CPacket;
+import net.buda1bb.createmadlab.drug.DrugClass;
+import net.buda1bb.createmadlab.drug.DrugStateManager;
+import net.buda1bb.createmadlab.drug.DrugType;
 import net.buda1bb.createmadlab.util.ShaderUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,11 +23,18 @@ public final class MorphineEffectsManager {
     private static final String MORPHINE_START_TIME_TAG = "MorphineStartTime";
     private static final String MORPHINE_ACTIVE_TAG = "MorphineActive";
     private static final String MORPHINE_UNSTABLE_HP_TAG = "MorphineUnstableHp";
+    private static final String MORPHINE_COUNTERED_BY_NALOXONE_TAG = "MorphineCounteredByNaloxone";
+    private static final String MORPHINE_COUNTERED_REMAINING_TICKS_TAG = "MorphineCounteredRemainingTicks";
+    private static final String MORPHINE_COUNTERED_VISUAL_START_INTENSITY_TAG = "MorphineCounteredVisualStartIntensity";
+    private static final String MORPHINE_COUNTERED_DEBT_START_INTENSITY_TAG = "MorphineCounteredDebtStartIntensity";
+    private static final String MORPHINE_COUNTERED_MOVEMENT_START_PENALTY_TAG = "MorphineCounteredMovementStartPenalty";
+    private static final String MORPHINE_COUNTERED_ATTACK_START_PENALTY_TAG = "MorphineCounteredAttackStartPenalty";
     private static final int COMEUP_DURATION_TICKS = 5 * 20;
     private static final int PEAK_DURATION_TICKS = 55 * 20;
     private static final int COMEDOWN_DURATION_TICKS = 60 * 20;
     private static final int PEAK_END_TICKS = COMEUP_DURATION_TICKS + PEAK_DURATION_TICKS;
     private static final int TOTAL_DURATION = PEAK_END_TICKS + COMEDOWN_DURATION_TICKS;
+    private static final int NALOXONE_FADE_DURATION_TICKS = 5 * 20;
     private static final int COOLDOWN_DURATION = TOTAL_DURATION;
     private static final int ACTIVE_DRAIN_INTERVAL_TICKS = 20;
     private static final int DEBT_DRAIN_INTERVAL_TICKS = 20;
@@ -56,7 +66,9 @@ public final class MorphineEffectsManager {
         CompoundTag persistedData = getPersistedData(player);
         persistedData.putLong(MORPHINE_START_TIME_TAG, level.getGameTime());
         persistedData.putBoolean(MORPHINE_ACTIVE_TAG, true);
+        clearNaloxoneFadeData(persistedData);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persistedData);
+        OpiateWithdrawalEffectsManager.clearWithdrawalEffect(player, level);
 
         if (player instanceof ServerPlayer serverPlayer) {
             syncActiveEffect(serverPlayer);
@@ -69,6 +81,16 @@ public final class MorphineEffectsManager {
         }
 
         Level level = player.level();
+        if (isCounteredByNaloxone(player)) {
+            if (getCounteredRemainingDurationTicks(player) <= 0) {
+                finishNaloxoneFade(player, level);
+                return;
+            }
+
+            sendEffectState(player, false, false);
+            return;
+        }
+
         if (hasActiveMorphineWindow(player) && getRemainingDurationTicks(player, level) <= 0) {
             endMorphineEffect(player, level);
             return;
@@ -77,8 +99,30 @@ public final class MorphineEffectsManager {
         sendEffectState(player, false, false);
     }
 
+    public static void extendMorphineEffect(Player player, Level level, int remainingTicks) {
+        if (player == null || level == null || level.isClientSide || remainingTicks <= 0 || isCounteredByNaloxone(player)) {
+            return;
+        }
+
+        int safeRemainingTicks = Mth.clamp(remainingTicks, 1, TOTAL_DURATION);
+        long adjustedStartTime = level.getGameTime() - (TOTAL_DURATION - safeRemainingTicks);
+        CompoundTag persistedData = getPersistedData(player);
+        persistedData.putLong(MORPHINE_START_TIME_TAG, adjustedStartTime);
+        persistedData.putBoolean(MORPHINE_ACTIVE_TAG, true);
+        clearNaloxoneFadeData(persistedData);
+        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persistedData);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            syncActiveEffect(serverPlayer);
+        }
+    }
+
     public static void handleMorphineEffectTicks(Player player, Level level, long elapsedTicks) {
         if (player == null || level == null) {
+            return;
+        }
+
+        if (isCounteredByNaloxone(player)) {
             return;
         }
 
@@ -87,7 +131,28 @@ public final class MorphineEffectsManager {
         }
     }
 
+    public static void tickNaloxoneFade(Player player, Level level) {
+        if (player == null || level == null || level.isClientSide || !isCounteredByNaloxone(player)) {
+            return;
+        }
+
+        int remainingTicks = getCounteredRemainingDurationTicks(player);
+        if (remainingTicks <= 0) {
+            finishNaloxoneFade(player, level);
+            return;
+        }
+
+        setCounteredRemainingDuration(player, remainingTicks - 1);
+        if (remainingTicks - 1 <= 0) {
+            finishNaloxoneFade(player, level);
+        }
+    }
+
     public static int convertIncomingDamage(ServerPlayer player, DamageSource source, float damageAmount) {
+        if (isCounteredByNaloxone(player)) {
+            return -1;
+        }
+
         if (!shouldTrackMorphineHit(player, source, damageAmount)) {
             return -1;
         }
@@ -148,6 +213,11 @@ public final class MorphineEffectsManager {
             return;
         }
 
+        if (isCounteredByNaloxone(player)) {
+            applyNaloxoneFadeModifiers(player);
+            return;
+        }
+
         int unstableHp = getUnstableHp(player);
         if (unstableHp >= SEVERE_DEBT_THRESHOLD) {
             applyDebtModifiers(player, SEVERE_DEBT_MOVEMENT_PENALTY, SEVERE_DEBT_ATTACK_DAMAGE_PENALTY);
@@ -169,6 +239,16 @@ public final class MorphineEffectsManager {
                 "morphine_unstable_weakness", attackPenalty, AttributeModifier.Operation.ADDITION);
     }
 
+    private static void applyNaloxoneFadeModifiers(Player player) {
+        float progress = getCounteredRemainingProgress(player);
+        ensureModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), DEBT_MOVEMENT_SPEED_MODIFIER_ID,
+                "morphine_naloxone_fade_speed", getCounteredMovementStartPenalty(player) * progress,
+                AttributeModifier.Operation.MULTIPLY_TOTAL);
+        ensureModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), DEBT_ATTACK_DAMAGE_MODIFIER_ID,
+                "morphine_naloxone_fade_weakness", getCounteredAttackStartPenalty(player) * progress,
+                AttributeModifier.Operation.ADDITION);
+    }
+
     private static void removeAllModifiers(Player player) {
         removeModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), DEBT_MOVEMENT_SPEED_MODIFIER_ID);
         removeModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), DEBT_ATTACK_DAMAGE_MODIFIER_ID);
@@ -179,11 +259,19 @@ public final class MorphineEffectsManager {
             return;
         }
 
+        boolean startWithdrawal = !level.isClientSide
+                && hasActiveMorphineWindow(player)
+                && !player.isDeadOrDying()
+                && !DrugStateManager.hasActiveDrugClass(player, DrugClass.OPIOID)
+                && !OpiateWithdrawalEffectsManager.isWithdrawalActive(player, level);
         removeActiveMorphineNBTData(player);
         removeAllModifiers(player);
 
         if (player instanceof ServerPlayer serverPlayer) {
             sendEffectState(serverPlayer, false, false);
+            if (startWithdrawal) {
+                OpiateWithdrawalEffectsManager.startMorphineWithdrawal(serverPlayer, level);
+            }
         } else if (level.isClientSide && getUnstableHp(player) <= 0) {
             ShaderUtils.deactivateMorphineShaders();
         }
@@ -204,6 +292,45 @@ public final class MorphineEffectsManager {
         }
     }
 
+    public static void counterWithNaloxone(Player player, Level level) {
+        if (player == null || level == null || !hasMorphineState(player)) {
+            return;
+        }
+
+        float visualStartIntensity = Mth.clamp(getEffectIntensity(player, level), 0.0F, 1.0F);
+        int unstableHp = getUnstableHp(player);
+        float debtStartIntensity = computeDebtIntensity(unstableHp);
+        double movementStartPenalty = getDebtMovementPenalty(unstableHp);
+        double attackStartPenalty = getDebtAttackPenalty(unstableHp);
+
+        CompoundTag persistedData = getPersistedData(player);
+        persistedData.remove(MORPHINE_START_TIME_TAG);
+        persistedData.remove(MORPHINE_ACTIVE_TAG);
+        persistedData.putBoolean(MORPHINE_COUNTERED_BY_NALOXONE_TAG, true);
+        persistedData.putInt(MORPHINE_COUNTERED_REMAINING_TICKS_TAG, NALOXONE_FADE_DURATION_TICKS);
+        persistedData.putFloat(MORPHINE_COUNTERED_VISUAL_START_INTENSITY_TAG, visualStartIntensity);
+        persistedData.putFloat(MORPHINE_COUNTERED_DEBT_START_INTENSITY_TAG, debtStartIntensity);
+        persistedData.putDouble(MORPHINE_COUNTERED_MOVEMENT_START_PENALTY_TAG, movementStartPenalty);
+        persistedData.putDouble(MORPHINE_COUNTERED_ATTACK_START_PENALTY_TAG, attackStartPenalty);
+        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persistedData);
+
+        removeAllModifiers(player);
+        if (player instanceof ServerPlayer serverPlayer) {
+            sendEffectState(serverPlayer, false, false);
+        }
+    }
+
+    private static void finishNaloxoneFade(Player player, Level level) {
+        removeAllModifiers(player);
+        cleanupMorphineNBTData(player, false);
+        if (player instanceof ServerPlayer serverPlayer) {
+            sendEffectState(serverPlayer, false, false);
+        } else if (level.isClientSide && getUnstableHp(player) <= 0) {
+            ShaderUtils.deactivateMorphineShaders();
+        }
+
+    }
+
     private static void cleanupMorphineNBTData(Player player, boolean clearUnstableHp) {
         CompoundTag persistedData = getPersistedData(player);
         persistedData.remove(MORPHINE_START_TIME_TAG);
@@ -211,6 +338,7 @@ public final class MorphineEffectsManager {
         if (clearUnstableHp) {
             persistedData.remove(MORPHINE_UNSTABLE_HP_TAG);
         }
+        clearNaloxoneFadeData(persistedData);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persistedData);
     }
 
@@ -221,6 +349,10 @@ public final class MorphineEffectsManager {
     public static boolean isMorphineActive(Player player, Level level) {
         if (player == null || level == null || player.isDeadOrDying()) {
             return false;
+        }
+
+        if (isCounteredByNaloxone(player)) {
+            return getCounteredRemainingDurationTicks(player) > 0;
         }
 
         CompoundTag persistedData = getPersistedData(player);
@@ -250,6 +382,10 @@ public final class MorphineEffectsManager {
         }
 
         CompoundTag persistedData = getPersistedData(player);
+        if (persistedData.getBoolean(MORPHINE_COUNTERED_BY_NALOXONE_TAG)) {
+            return getCounteredRemainingDurationTicks(player);
+        }
+
         if (!persistedData.getBoolean(MORPHINE_ACTIVE_TAG) || !persistedData.contains(MORPHINE_START_TIME_TAG)) {
             return 0;
         }
@@ -268,7 +404,11 @@ public final class MorphineEffectsManager {
             return 0.0F;
         }
 
-        return computeEffectIntensity(TOTAL_DURATION, TOTAL_DURATION - remainingTicks);
+        if (isCounteredByNaloxone(player)) {
+            return getCounteredVisualStartIntensity(player) * getCounteredRemainingProgress(player);
+        }
+
+        return computeEffectIntensity(TOTAL_DURATION, TOTAL_DURATION - remainingTicks) * getMorphineVisualStrength(player);
     }
 
     public static boolean hasMorphineState(Player player) {
@@ -277,7 +417,9 @@ public final class MorphineEffectsManager {
         }
 
         CompoundTag persistedData = getPersistedData(player);
-        return persistedData.getBoolean(MORPHINE_ACTIVE_TAG) || getUnstableHp(player) > 0;
+        return persistedData.getBoolean(MORPHINE_ACTIVE_TAG)
+                || persistedData.getBoolean(MORPHINE_COUNTERED_BY_NALOXONE_TAG)
+                || getUnstableHp(player) > 0;
     }
 
     public static int getUnstableHp(Player player) {
@@ -308,6 +450,18 @@ public final class MorphineEffectsManager {
         return Mth.clamp(unstableHp / 12.0F, 0.0F, 1.0F);
     }
 
+    public static float getMorphineVisualStrength(Player player) {
+        if (player == null) {
+            return 0.0F;
+        }
+
+        float strength = DrugStateManager.getDrugVisualStrength(player, DrugType.MORPHINE);
+        if (strength <= 0.0F && player.level() != null && isMorphineActive(player, player.level())) {
+            return 1.0F;
+        }
+        return Mth.clamp(strength, 0.0F, 3.0F);
+    }
+
     public static float computeEffectIntensity(int totalTicks, float elapsedTicks) {
         int safeTotalTicks = Math.max(1, totalTicks);
         float clampedElapsedTicks = Mth.clamp(elapsedTicks, 0.0F, safeTotalTicks);
@@ -335,6 +489,88 @@ public final class MorphineEffectsManager {
         return PEAK_INTENSITY * (1.0F - smoothstep(safePeakEnd, safeTotalTicks, clampedElapsedTicks));
     }
 
+    private static boolean isCounteredByNaloxone(Player player) {
+        return player != null && getPersistedData(player).getBoolean(MORPHINE_COUNTERED_BY_NALOXONE_TAG);
+    }
+
+    private static int getCounteredRemainingDurationTicks(Player player) {
+        if (player == null) {
+            return 0;
+        }
+
+        return Mth.clamp(getPersistedData(player).getInt(MORPHINE_COUNTERED_REMAINING_TICKS_TAG),
+                0, NALOXONE_FADE_DURATION_TICKS);
+    }
+
+    private static void setCounteredRemainingDuration(Player player, int remainingTicks) {
+        CompoundTag persistedData = getPersistedData(player);
+        persistedData.putBoolean(MORPHINE_COUNTERED_BY_NALOXONE_TAG, true);
+        persistedData.putInt(MORPHINE_COUNTERED_REMAINING_TICKS_TAG,
+                Mth.clamp(remainingTicks, 0, NALOXONE_FADE_DURATION_TICKS));
+        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persistedData);
+    }
+
+    private static float getCounteredRemainingProgress(Player player) {
+        return Mth.clamp(getCounteredRemainingDurationTicks(player) / (float) NALOXONE_FADE_DURATION_TICKS, 0.0F, 1.0F);
+    }
+
+    private static float getCounteredVisualStartIntensity(Player player) {
+        CompoundTag persistedData = getPersistedData(player);
+        return persistedData.contains(MORPHINE_COUNTERED_VISUAL_START_INTENSITY_TAG)
+                ? Mth.clamp(persistedData.getFloat(MORPHINE_COUNTERED_VISUAL_START_INTENSITY_TAG), 0.0F, 1.0F)
+                : 0.0F;
+    }
+
+    private static float getCounteredDebtStartIntensity(Player player) {
+        CompoundTag persistedData = getPersistedData(player);
+        return persistedData.contains(MORPHINE_COUNTERED_DEBT_START_INTENSITY_TAG)
+                ? Mth.clamp(persistedData.getFloat(MORPHINE_COUNTERED_DEBT_START_INTENSITY_TAG), 0.0F, 1.0F)
+                : 0.0F;
+    }
+
+    private static double getCounteredMovementStartPenalty(Player player) {
+        CompoundTag persistedData = getPersistedData(player);
+        return persistedData.contains(MORPHINE_COUNTERED_MOVEMENT_START_PENALTY_TAG)
+                ? Mth.clamp(persistedData.getDouble(MORPHINE_COUNTERED_MOVEMENT_START_PENALTY_TAG), SEVERE_DEBT_MOVEMENT_PENALTY, 0.0D)
+                : 0.0D;
+    }
+
+    private static double getCounteredAttackStartPenalty(Player player) {
+        CompoundTag persistedData = getPersistedData(player);
+        return persistedData.contains(MORPHINE_COUNTERED_ATTACK_START_PENALTY_TAG)
+                ? Mth.clamp(persistedData.getDouble(MORPHINE_COUNTERED_ATTACK_START_PENALTY_TAG), SEVERE_DEBT_ATTACK_DAMAGE_PENALTY, 0.0D)
+                : 0.0D;
+    }
+
+    private static double getDebtMovementPenalty(int unstableHp) {
+        if (unstableHp >= SEVERE_DEBT_THRESHOLD) {
+            return SEVERE_DEBT_MOVEMENT_PENALTY;
+        }
+        if (unstableHp >= MILD_DEBT_THRESHOLD) {
+            return MILD_DEBT_MOVEMENT_PENALTY;
+        }
+        return 0.0D;
+    }
+
+    private static double getDebtAttackPenalty(int unstableHp) {
+        if (unstableHp >= SEVERE_DEBT_THRESHOLD) {
+            return SEVERE_DEBT_ATTACK_DAMAGE_PENALTY;
+        }
+        if (unstableHp >= MILD_DEBT_THRESHOLD) {
+            return MILD_DEBT_ATTACK_DAMAGE_PENALTY;
+        }
+        return 0.0D;
+    }
+
+    private static void clearNaloxoneFadeData(CompoundTag persistedData) {
+        persistedData.remove(MORPHINE_COUNTERED_BY_NALOXONE_TAG);
+        persistedData.remove(MORPHINE_COUNTERED_REMAINING_TICKS_TAG);
+        persistedData.remove(MORPHINE_COUNTERED_VISUAL_START_INTENSITY_TAG);
+        persistedData.remove(MORPHINE_COUNTERED_DEBT_START_INTENSITY_TAG);
+        persistedData.remove(MORPHINE_COUNTERED_MOVEMENT_START_PENALTY_TAG);
+        persistedData.remove(MORPHINE_COUNTERED_ATTACK_START_PENALTY_TAG);
+    }
+
     private static CompoundTag getPersistedData(Player player) {
         CompoundTag persistentData = player.getPersistentData();
         if (!persistentData.contains(Player.PERSISTED_NBT_TAG)) {
@@ -352,7 +588,11 @@ public final class MorphineEffectsManager {
             return false;
         }
 
-        if (!isMorphineActive(player, player.level()) || player.isCreative() || player.isSpectator() || player.getAbilities().invulnerable) {
+        if (isCounteredByNaloxone(player)
+                || !isMorphineActive(player, player.level())
+                || player.isCreative()
+                || player.isSpectator()
+                || player.getAbilities().invulnerable) {
             return false;
         }
 
@@ -452,6 +692,39 @@ public final class MorphineEffectsManager {
     }
 
     private static void sendEffectState(ServerPlayer player, float syncedHealth, boolean silentDecay, boolean convertedDamage) {
+        if (!isCounteredByNaloxone(player) && OpiateWithdrawalEffectsManager.isWithdrawalActive(player, player.level())) {
+            int unstableHp = getUnstableHp(player);
+            ModMessages.sendToPlayer(new MorphineEffectS2CPacket(
+                    0,
+                    NALOXONE_FADE_DURATION_TICKS,
+                    unstableHp,
+                    syncedHealth,
+                    silentDecay,
+                    convertedDamage,
+                    unstableHp > 0 || silentDecay,
+                    0.0F,
+                    0.0F,
+                    getMorphineVisualStrength(player)
+            ), player);
+            return;
+        }
+
+        if (isCounteredByNaloxone(player)) {
+            ModMessages.sendToPlayer(new MorphineEffectS2CPacket(
+                    getCounteredRemainingDurationTicks(player),
+                    NALOXONE_FADE_DURATION_TICKS,
+                    getUnstableHp(player),
+                    syncedHealth,
+                    silentDecay,
+                    convertedDamage,
+                    true,
+                    getCounteredVisualStartIntensity(player),
+                    getCounteredDebtStartIntensity(player),
+                    getMorphineVisualStrength(player)
+            ), player);
+            return;
+        }
+
         int unstableHp = getUnstableHp(player);
         int remainingTicks = getRemainingDurationTicks(player, player.level());
         if (remainingTicks <= 0 && unstableHp <= 0) {
@@ -465,7 +738,11 @@ public final class MorphineEffectsManager {
                 unstableHp,
                 syncedHealth,
                 silentDecay,
-                convertedDamage
+                convertedDamage,
+                false,
+                0.0F,
+                0.0F,
+                getMorphineVisualStrength(player)
         ), player);
     }
 
@@ -474,8 +751,13 @@ public final class MorphineEffectsManager {
             return;
         }
 
+        if (Math.abs(amount) < 0.0001D) {
+            removeModifier(attribute, id);
+            return;
+        }
+
         AttributeModifier existing = attribute.getModifier(id);
-        if (existing != null && existing.getAmount() == amount && existing.getOperation() == operation) {
+        if (existing != null && Math.abs(existing.getAmount() - amount) < 0.0001D && existing.getOperation() == operation) {
             return;
         }
 

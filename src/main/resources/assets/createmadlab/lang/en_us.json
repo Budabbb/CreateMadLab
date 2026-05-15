@@ -24,6 +24,8 @@
   "item.createmadlab.npp_hydrochloride": "NPP-Hydrochloride",
 
   "item.createmadlab.morphine_base": "Morphine Base",
+  "item.createmadlab.oxymorphone": "Oxymorphone",
+  "item.createmadlab.naloxone_base": "Naloxone Base",
   "item.createmadlab.diamorphine": "Diamorphine",
   "item.createmadlab.morphine_sulfate": "Morphine Sulfate",
   "item.createmadlab.fentanyl_base": "Void Base",
@@ -44,6 +46,14 @@
 
   "item.createmadlab.ergot_paper": "Ergot Paper",
   "item.createmadlab.lsd_paper": "Exciting Paper",
+
+  "jei.createmadlab.ergot_infestation": "Wheat Infestation",
+  "jei.createmadlab.ergot_infestation.input": "Wheat crop",
+  "jei.createmadlab.ergot_infestation.crop": "Infested crop",
+  "jei.createmadlab.ergot_infestation.output": "Harvest",
+  "jei.createmadlab.ergot_infestation.description": "Mature wheat can turn into Ergot Infested Wheat as it grows. Rain, recent rain, mild biomes, and nearby infested wheat improve the chance.",
+  "jei.createmadlab.ergot_infestation.input.tooltip": "Grow wheat to maturity. The infestation roll happens when the crop reaches age 7.",
+  "jei.createmadlab.ergot_infestation.output.tooltip": "Harvest Ergot Infested Wheat to receive 1-2 Ergot Fungus.",
 
 
 
@@ -131,6 +141,10 @@
   "fluid.createmadlab.ethyl_chloride": "Ethyl Chloride",
   "item.createmadlab.ethyl_chloride_bucket": "Ethyl Chloride Bucket",
 
+  "block.createmadlab.allyl_chloride": "Allyl Chloride",
+  "fluid.createmadlab.allyl_chloride": "Allyl Chloride",
+  "item.createmadlab.allyl_chloride_bucket": "Allyl Chloride Bucket",
+
   "block.createmadlab.diethylamine": "Diethylamine",
   "fluid.createmadlab.diethylamine": "Diethylamine",
   "item.createmadlab.diethylamine_bucket": "Diethylamine Bucket",
@@ -147,11 +161,17 @@
   "fluid.createmadlab.npp_hydrochloride_solution": "NPP Hydrochloride Solution",
   "item.createmadlab.npp_hydrochloride_solution_bucket": "NPP Hydrochloride Solution Bucket",
 
+  "block.createmadlab.naloxone_solution": "Naloxone Solution",
+  "fluid.createmadlab.naloxone_solution": "Naloxone Solution",
+  "item.createmadlab.naloxone_solution_bucket": "Naloxone Solution Bucket",
+
   "block.createmadlab.hydrogen_peroxide": "Hydrogen Peroxide",
   "fluid.createmadlab.hydrogen_peroxide": "Hydrogen Peroxide",
   "item.createmadlab.hydrogen_peroxide_bucket": "Hydrogen Peroxide Bucket",
 
   "block.createmadlab.fentanyl_solution": "Void Solution",
   "fluid.createmadlab.fentanyl_solution": "Void Solution",
-  "item.createmadlab.fentanyl_solution_bucket": "Void Solution Bucket"
+  "item.createmadlab.fentanyl_solution_bucket": "Void Solution Bucket",
+
+  "death.attack.createmadlab.opioid_overdose": "%1$s succumbed to an opioid overdose"
 }

@@ -1,5 +1,7 @@
 package net.buda1bb.createmadlab.item;
 
+import net.buda1bb.createmadlab.drug.DrugStateManager;
+import net.buda1bb.createmadlab.drug.DrugType;
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +31,7 @@ public class LSDPaperItem extends Item {
         ItemStack result = super.finishUsingItem(stack, level, entity);
         if (entity instanceof Player player) {
             if (!level.isClientSide) {
-                LSDEffectsManager.startLsdEffect(player, level, dose);
+                DrugStateManager.addDrug(player, DrugType.LSD, (float) dose);
                 applyCrossCooldowns(player);
             }
 
@@ -71,11 +73,6 @@ public class LSDPaperItem extends Item {
     private void applyCrossCooldowns(Player player) {
         int cooldownDuration = LSDEffectsManager.getCooldownDuration();
         player.getCooldowns().addCooldown(this, cooldownDuration);
-
-        Item syringeItem = ModItems.SYRINGE.get();
-        if (syringeItem != null) {
-            player.getCooldowns().addCooldown(syringeItem, cooldownDuration);
-        }
     }
 
     public static double getDose(ItemStack stack) {

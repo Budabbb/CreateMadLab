@@ -116,7 +116,7 @@ void main() {
     float vignette = smoothstep(0.20, 0.96, radius);
     float tunnelDarken = VignetteStrength * (0.34 + 0.18 * Intensity + 0.22 * FinalFade);
     color *= 1.0 - vignette * tunnelDarken;
-    color += vec3(0.004, 0.135, 0.120) * vignette * VignetteStrength * (0.24 + 0.24 * Intensity);
+    color += vec3(0.004, 0.135, 0.120) * vignette * VignetteStrength * TintStrength * (0.24 + 0.24 * Intensity);
     color = mix(color, vec3(luminance(color)) * vec3(0.50, 0.92, 0.88), vignette * DesaturationStrength * 0.22);
 
     color = mix(color, vec3(0.0, 0.035, 0.032), saturate(FinalFade * 0.88));

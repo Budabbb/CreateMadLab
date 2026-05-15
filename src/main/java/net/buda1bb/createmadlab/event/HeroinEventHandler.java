@@ -38,9 +38,9 @@ public final class HeroinEventHandler {
             return;
         }
 
-        event.setAmount(event.getAmount() * HeroinEffectsManager.getDamageMultiplier());
+        event.setAmount(event.getAmount() * HeroinEffectsManager.getDamageMultiplier(player));
 
-        if (event.getEntity() instanceof Mob mob && mob instanceof Enemy) {
+        if (event.getEntity() instanceof Mob mob && mob instanceof Enemy && HeroinEffectsManager.shouldPacifyMobs(player)) {
             provokeNearbyEnemies(mob, player);
         }
     }
@@ -52,7 +52,7 @@ public final class HeroinEventHandler {
             return;
         }
 
-        event.setNewSpeed(Math.max(0.0F, event.getNewSpeed() * HeroinEffectsManager.getMiningSpeedMultiplier()));
+        event.setNewSpeed(Math.max(0.0F, event.getNewSpeed() * HeroinEffectsManager.getMiningSpeedMultiplier(player)));
     }
 
     @SubscribeEvent
@@ -66,9 +66,9 @@ public final class HeroinEventHandler {
             return;
         }
 
-        player.setDeltaMovement(deltaMovement.x * HeroinEffectsManager.getJumpDistanceMultiplier(),
+        player.setDeltaMovement(deltaMovement.x * HeroinEffectsManager.getJumpDistanceMultiplier(player),
                 deltaMovement.y,
-                deltaMovement.z * HeroinEffectsManager.getJumpDistanceMultiplier());
+                deltaMovement.z * HeroinEffectsManager.getJumpDistanceMultiplier(player));
     }
 
     @SubscribeEvent
@@ -78,7 +78,9 @@ public final class HeroinEventHandler {
         }
 
         LivingEntity target = mob.getTarget();
-        if (!(target instanceof Player player) || !HeroinEffectsManager.isHeroinActive(player, player.level())) {
+        if (!(target instanceof Player player)
+                || !HeroinEffectsManager.isHeroinActive(player, player.level())
+                || !HeroinEffectsManager.shouldPacifyMobs(player)) {
             return;
         }
 
@@ -94,7 +96,9 @@ public final class HeroinEventHandler {
         }
 
         LivingEntity newTarget = event.getNewTarget();
-        if (!(newTarget instanceof Player player) || !HeroinEffectsManager.isHeroinActive(player, player.level())) {
+        if (!(newTarget instanceof Player player)
+                || !HeroinEffectsManager.isHeroinActive(player, player.level())
+                || !HeroinEffectsManager.shouldPacifyMobs(player)) {
             return;
         }
 
