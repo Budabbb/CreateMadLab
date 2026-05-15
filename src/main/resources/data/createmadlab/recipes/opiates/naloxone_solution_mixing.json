@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:naloxone_base"
+    },
+    {
+      "fluid": "createmadlab:hydrochloric_acid",
+      "amount": 25
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 75
+    }
+  ],
+  "results": [
+    {
+      "fluid": "createmadlab:naloxone_solution",
+      "amount": 100
+    }
+  ]
+}

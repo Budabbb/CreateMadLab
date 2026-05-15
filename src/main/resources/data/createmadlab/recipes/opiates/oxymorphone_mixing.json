@@ -1,0 +1,30 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:morphine_base"
+    },
+    {
+      "fluid": "createmadlab:hydrogen_peroxide",
+      "amount": 50
+    },
+    {
+      "item": "createmadlab:iron_sulfate_catalyst"
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:oxymorphone",
+      "count": 1
+    },
+    {
+      "fluid": "createmadlab:residue",
+      "amount": 25
+    },
+    {
+      "item": "createmadlab:iron_sulfate_catalyst",
+      "count": 1
+    }
+  ],
+  "heatRequirement": "heated"
+}

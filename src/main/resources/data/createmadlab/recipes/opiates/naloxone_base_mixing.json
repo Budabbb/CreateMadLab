@@ -1,0 +1,30 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "createmadlab:oxymorphone"
+    },
+    {
+      "fluid": "createmadlab:allyl_chloride",
+      "amount": 25
+    },
+    {
+      "item": "createmadlab:sodium_hydroxide"
+    },
+    {
+      "fluid": "createmadlab:diethyl_ether",
+      "amount": 50
+    }
+  ],
+  "results": [
+    {
+      "item": "createmadlab:naloxone_base",
+      "count": 1
+    },
+    {
+      "fluid": "createmadlab:residue",
+      "amount": 50
+    }
+  ],
+  "heatRequirement": "heated"
+}
