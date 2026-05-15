@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -9,14 +9,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:sulfur_trioxide",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:sulfur_trioxide"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "minecraft:gunpowder"
+                        "id":  "minecraft:gunpowder",
+                        "count":  1
                     }
                 ]
 }

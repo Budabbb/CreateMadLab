@@ -1,16 +1,23 @@
 {
-    "required":  true,
-    "minVersion":  "0.8",
-    "package":  "net.buda1bb.createmadlab.mixin",
-    "compatibilityLevel":  "JAVA_21",
-    "client":  [
-                   "SignEditScreenMixin",
-                   "AnvilEditScreenMixin",
-                   "BookEditScreenMixin",
-                   "ClientPacketListenerMixin",
-                   "FontMixin"
-               ],
-    "injectors":  {
-                      "defaultRequire":  1
-                  }
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.buda1bb.createmadlab.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "createmadlab.refmap.json",
+  "mixins": [
+    "BasinBlockEntityMixin",
+    "BasinRecipeMixin"
+  ],
+  "client": [
+    "SignEditScreenMixin",
+    "AnvilEditScreenMixin",
+    "BookEditScreenMixin",
+    "ClientPacketListenerMixin",
+    "FontMixin",
+    "PlayerModelMixin",
+    "SignRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

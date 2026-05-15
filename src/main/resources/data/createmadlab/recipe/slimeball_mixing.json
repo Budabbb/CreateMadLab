@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,19 +6,19 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "minecraft:water",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "minecraft:water"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:sludge",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:sludge"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "minecraft:slime_ball"
+                        "id":  "minecraft:slime_ball",
+                        "count":  1
                     }
                 ],
     "heat_requirement":  "heated"

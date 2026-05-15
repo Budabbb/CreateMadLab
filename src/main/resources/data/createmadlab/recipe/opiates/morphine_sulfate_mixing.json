@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:sulfuric_acid",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:sulfuric_acid"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:morphine_sulfate"
+                        "id":  "createmadlab:morphine_sulfate",
+                        "count":  1
                     }
                 ],
     "heat_requirement":  "heated"

@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,8 +6,8 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:chlorine",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:chlorine"
                         },
                         {
                             "tag":  "c:salts"
@@ -15,8 +15,8 @@
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "minecraft:glow_ink_sac"
+                        "id":  "minecraft:glow_ink_sac",
+                        "count":  1
                     }
                 ]
 }

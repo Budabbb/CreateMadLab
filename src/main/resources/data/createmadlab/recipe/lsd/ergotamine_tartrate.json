@@ -1,21 +1,21 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:purified_ergot_solution",
-                            "amount":  75
+                            "amount":  75,
+                            "fluid":  "createmadlab:purified_ergot_solution"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:ammonia",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createbb:ammonia"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:ergotamine_tartrate"
+                        "id":  "createmadlab:ergotamine_tartrate",
+                        "count":  1
                     }
                 ]
 }

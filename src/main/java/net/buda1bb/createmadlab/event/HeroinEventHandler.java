@@ -14,8 +14,8 @@ import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 @EventBusSubscriber(modid = CreateMadLab.MOD_ID)
 public final class HeroinEventHandler {
@@ -40,9 +40,9 @@ public final class HeroinEventHandler {
             return;
         }
 
-        event.setAmount(event.getAmount() * HeroinEffectsManager.getDamageMultiplier());
+        event.setAmount(event.getAmount() * HeroinEffectsManager.getDamageMultiplier(player));
 
-        if (event.getEntity() instanceof Mob mob && mob instanceof Enemy) {
+        if (event.getEntity() instanceof Mob mob && mob instanceof Enemy && HeroinEffectsManager.shouldPacifyMobs(player)) {
             provokeNearbyEnemies(mob, player);
         }
     }
@@ -54,7 +54,7 @@ public final class HeroinEventHandler {
             return;
         }
 
-        event.setNewSpeed(Math.max(0.0F, event.getNewSpeed() * HeroinEffectsManager.getMiningSpeedMultiplier()));
+        event.setNewSpeed(Math.max(0.0F, event.getNewSpeed() * HeroinEffectsManager.getMiningSpeedMultiplier(player)));
     }
 
     @SubscribeEvent
@@ -68,9 +68,9 @@ public final class HeroinEventHandler {
             return;
         }
 
-        player.setDeltaMovement(deltaMovement.x * HeroinEffectsManager.getJumpDistanceMultiplier(),
+        player.setDeltaMovement(deltaMovement.x * HeroinEffectsManager.getJumpDistanceMultiplier(player),
                 deltaMovement.y,
-                deltaMovement.z * HeroinEffectsManager.getJumpDistanceMultiplier());
+                deltaMovement.z * HeroinEffectsManager.getJumpDistanceMultiplier(player));
     }
 
     @SubscribeEvent
@@ -80,7 +80,9 @@ public final class HeroinEventHandler {
         }
 
         LivingEntity target = mob.getTarget();
-        if (!(target instanceof Player player) || !HeroinEffectsManager.isHeroinActive(player, player.level())) {
+        if (!(target instanceof Player player)
+                || !HeroinEffectsManager.isHeroinActive(player, player.level())
+                || !HeroinEffectsManager.shouldPacifyMobs(player)) {
             return;
         }
 
@@ -96,7 +98,9 @@ public final class HeroinEventHandler {
         }
 
         LivingEntity newTarget = event.getNewAboutToBeSetTarget();
-        if (!(newTarget instanceof Player player) || !HeroinEffectsManager.isHeroinActive(player, player.level())) {
+        if (!(newTarget instanceof Player player)
+                || !HeroinEffectsManager.isHeroinActive(player, player.level())
+                || !HeroinEffectsManager.shouldPacifyMobs(player)) {
             return;
         }
 

@@ -1,0 +1,47 @@
+{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  50,
+                            "fluid":  "createmadlab:acetone"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  25,
+                            "fluid":  "createbb:hydrogen"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  25,
+                            "fluid":  "createmadlab:chlorine"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  10,
+                            "fluid":  "createmadlab:sulfuric_acid"
+                        },
+                        {
+                            "item":  "createbb:copper_zinc_catalyst"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "amount":  50,
+                        "id":  "createmadlab:allyl_chloride"
+                    },
+                    {
+                        "amount":  25,
+                        "id":  "createmadlab:hydrochloric_acid"
+                    },
+                    {
+                        "amount":  25,
+                        "id":  "minecraft:water"
+                    },
+                    {
+                        "id":  "createbb:copper_zinc_catalyst",
+                        "count":  1
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

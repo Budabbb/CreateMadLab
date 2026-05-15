@@ -85,6 +85,9 @@ public class ModFluids {
     public static FluidEntry<BaseFlowingFluid.Flowing> ETHYL_CHLORIDE;
     public static ItemEntry<BucketItem> ETHYL_CHLORIDE_BUCKET;
 
+    public static FluidEntry<BaseFlowingFluid.Flowing> ALLYL_CHLORIDE;
+    public static ItemEntry<BucketItem> ALLYL_CHLORIDE_BUCKET;
+
     public static FluidEntry<BaseFlowingFluid.Flowing> DIETHYLAMINE;
     public static ItemEntry<BucketItem> DIETHYLAMINE_BUCKET;
 
@@ -96,6 +99,9 @@ public class ModFluids {
 
     public static FluidEntry<BaseFlowingFluid.Flowing> NPP_HYDROCHLORIDE_SOLUTION;
     public static ItemEntry<BucketItem> NPP_HYDROCHLORIDE_SOLUTION_BUCKET;
+
+    public static FluidEntry<BaseFlowingFluid.Flowing> NALOXONE_SOLUTION;
+    public static ItemEntry<BucketItem> NALOXONE_SOLUTION_BUCKET;
 
     public static FluidEntry<BaseFlowingFluid.Flowing> HYDROGEN_PEROXIDE;
     public static ItemEntry<BucketItem> HYDROGEN_PEROXIDE_BUCKET;
@@ -206,6 +212,10 @@ public class ModFluids {
         ETHYL_CHLORIDE_BUCKET = getBucket(fEthChl);
         ETHYL_CHLORIDE = fEthChl.register();
 
+        var fAllylChl = basicFluid("allyl_chloride", 0xfff2efd8);
+        ALLYL_CHLORIDE_BUCKET = getBucket(fAllylChl);
+        ALLYL_CHLORIDE = fAllylChl.register();
+
         var fDieth = basicFluid("diethylamine", 0xfff8f8e0);
         DIETHYLAMINE_BUCKET = getBucket(fDieth);
         DIETHYLAMINE = fDieth.register();
@@ -221,6 +231,10 @@ public class ModFluids {
         var fNppHydrochlorideSol = basicFluid("npp_hydrochloride_solution", 0xffd7d3ef);
         NPP_HYDROCHLORIDE_SOLUTION_BUCKET = getBucket(fNppHydrochlorideSol);
         NPP_HYDROCHLORIDE_SOLUTION = fNppHydrochlorideSol.register();
+
+        var fNaloxoneSol = basicFluid("naloxone_solution", 0xffd8f0ff);
+        NALOXONE_SOLUTION_BUCKET = getBucket(fNaloxoneSol);
+        NALOXONE_SOLUTION = fNaloxoneSol.register();
 
         var HydPer = basicFluid("hydrogen_peroxide", 0xfff8f8e0);
         HYDROGEN_PEROXIDE_BUCKET = getBucket(HydPer);

@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -7,18 +7,18 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:hydrochloric_acid",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:hydrochloric_acid"
                         }
                     ],
     "results":  [
                     {
-                        "count":  3,
-                        "id":  "minecraft:sugar"
+                        "id":  "minecraft:sugar",
+                        "count":  3
                     },
                     {
-                        "id":  "createmadlab:sludge",
-                        "amount":  10
+                        "amount":  10,
+                        "id":  "createmadlab:sludge"
                     }
                 ]
 }

@@ -1,25 +1,25 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:chlorine",
-                            "amount":  75
+                            "amount":  75,
+                            "fluid":  "createmadlab:chlorine"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:methanol",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createbb:methanol"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:chloroform",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:chloroform"
                     },
                     {
-                        "id":  "minecraft:water",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "minecraft:water"
                     }
                 ]
 }

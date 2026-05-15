@@ -1,6 +1,6 @@
 {
-    "replace":  false,
-    "values":  [
-                   "createmadlab:sodium_chloride"
-               ]
+  "replace": false,
+  "values": [
+    "createmadlab:sodium_chloride"
+  ]
 }

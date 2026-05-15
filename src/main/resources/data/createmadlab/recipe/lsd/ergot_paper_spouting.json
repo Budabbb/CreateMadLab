@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:filling",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:ergot_extract_solution",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createmadlab:ergot_extract_solution"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:ergot_paper"
+                        "id":  "createmadlab:ergot_paper",
+                        "count":  1
                     }
                 ]
 }

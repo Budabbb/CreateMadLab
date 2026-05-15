@@ -1,21 +1,21 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:lysergic_solution",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:lysergic_solution"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:acetic_anhydride",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createbb:acetic_anhydride"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:lysergic_acid"
+                        "id":  "createmadlab:lysergic_acid",
+                        "count":  1
                     }
                 ],
     "heat_requirement":  "heated"

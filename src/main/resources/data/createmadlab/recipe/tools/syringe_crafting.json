@@ -17,8 +17,8 @@
                       }
             },
     "result":  {
-                   "count":  1,
                    "id":  "createmadlab:syringe",
+                   "count":  1,
                    "components":  {
                                       "minecraft:custom_data":  {
                                                                     "content":  "empty"

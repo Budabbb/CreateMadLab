@@ -10,7 +10,7 @@
                       }
             },
     "result":  {
-                   "count":  1,
-                   "id":  "createmadlab:vanadium_pentoxide_catalyst"
+                   "id":  "createmadlab:vanadium_pentoxide_catalyst",
+                   "count":  1
                }
 }

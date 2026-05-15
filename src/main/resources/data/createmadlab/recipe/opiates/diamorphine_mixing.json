@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,26 +6,26 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:acetic_anhydride",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createbb:acetic_anhydride"
                         },
                         {
                             "item":  "createmadlab:sodium_carbonate"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "minecraft:water",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "minecraft:water"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:diamorphine"
+                        "id":  "createmadlab:diamorphine",
+                        "count":  1
                     },
                     {
-                        "id":  "createmadlab:residue",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:residue"
                     }
                 ],
     "heat_requirement":  "heated"

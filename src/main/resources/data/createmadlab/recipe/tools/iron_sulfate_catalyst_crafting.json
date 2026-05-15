@@ -10,7 +10,7 @@
                       }
             },
     "result":  {
-                   "count":  1,
-                   "id":  "createmadlab:iron_sulfate_catalyst"
+                   "id":  "createmadlab:iron_sulfate_catalyst",
+                   "count":  1
                }
 }

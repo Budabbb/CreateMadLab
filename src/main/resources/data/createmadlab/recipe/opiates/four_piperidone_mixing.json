@@ -1,15 +1,20 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:diethylamine",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:diethylamine"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:acetone",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:acetone"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  10,
+                            "fluid":  "createmadlab:sulfuric_acid"
                         },
                         {
                             "item":  "createmadlab:sodium_carbonate"
@@ -17,8 +22,8 @@
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:four_piperidone",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:four_piperidone"
                     }
                 ],
     "heat_requirement":  "heated"

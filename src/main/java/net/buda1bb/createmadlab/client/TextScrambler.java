@@ -1,6 +1,5 @@
 package net.buda1bb.createmadlab.client;
 
-import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSink;
@@ -16,6 +15,7 @@ public final class TextScrambler {
     private static final float MIN_VISIBLE_STRENGTH = 0.015F;
     private static final float MAX_TEXT_BLUR_STRENGTH = 0.60F;
     private static final int SCRAMBLE_CACHE_LIMIT = 4096;
+    private static final ThreadLocal<Integer> BLUR_SUPPRESSION_DEPTH = ThreadLocal.withInitial(() -> 0);
     private static final Map<String, String> SCRAMBLED_WORD_CACHE = new LinkedHashMap<>(256, 0.75F, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
@@ -66,18 +66,34 @@ public final class TextScrambler {
         return (adjustedColor & 0x00FFFFFF) | (blurredAlpha << 24);
     }
 
+    public static void pushBlurSuppression() {
+        BLUR_SUPPRESSION_DEPTH.set(BLUR_SUPPRESSION_DEPTH.get() + 1);
+    }
+
+    public static void popBlurSuppression() {
+        int depth = BLUR_SUPPRESSION_DEPTH.get();
+        if (depth <= 1) {
+            BLUR_SUPPRESSION_DEPTH.remove();
+        } else {
+            BLUR_SUPPRESSION_DEPTH.set(depth - 1);
+        }
+    }
+
+    public static boolean isBlurSuppressed() {
+        return BLUR_SUPPRESSION_DEPTH.get() > 0;
+    }
+
     public static float getScrambleStrength() {
         Minecraft minecraft = Minecraft.getInstance();
-        float partialTick = ClientRenderTime.partialTick(minecraft);
+        float partialTick = minecraft == null ? 1.0F : ClientRenderTime.partialTick(minecraft);
         float strength = 0.0F;
 
-        if (HeroinTripState.isActive()) {
+        if (ClientDrugVisualAuthority.isHeroinAllowed() && HeroinTripState.isActive()) {
             strength = Math.max(strength, HeroinTripState.getSmoothedIntensity(partialTick));
         }
 
-        if (FentanylTripState.isActive()) {
-            float elapsedTicks = FentanylTripState.getElapsedTicks(partialTick);
-            strength = Math.max(strength, FentanylEffectsManager.computeEffectFadeIn(elapsedTicks));
+        if (ClientDrugVisualAuthority.isFentanylAllowed() && FentanylTripState.isActive()) {
+            strength = Math.max(strength, FentanylTripState.getSmoothedIntensity(partialTick));
         }
 
         return Mth.clamp(strength, 0.0F, 1.0F);

@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,23 +6,23 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:ammonia",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createbb:ammonia"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "minecraft:water",
-                            "amount":  200
+                            "amount":  200,
+                            "fluid":  "minecraft:water"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:calcium_hydroxide"
+                        "id":  "createmadlab:calcium_hydroxide",
+                        "count":  1
                     },
                     {
-                        "count":  1,
-                        "id":  "createmadlab:ammonium_chloride"
+                        "id":  "createmadlab:ammonium_chloride",
+                        "count":  1
                     }
                 ],
     "heat_requirement":  "heated"

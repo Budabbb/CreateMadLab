@@ -1,0 +1,32 @@
+{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:oxymorphone"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  25,
+                            "fluid":  "createmadlab:allyl_chloride"
+                        },
+                        {
+                            "item":  "createmadlab:sodium_hydroxide"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  50,
+                            "fluid":  "createmadlab:diethyl_ether"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:naloxone_base",
+                        "count":  1
+                    },
+                    {
+                        "amount":  50,
+                        "id":  "createmadlab:residue"
+                    }
+                ],
+    "heat_requirement":  "heated"
+}

@@ -1,16 +1,14 @@
-﻿{
+{
     "type":  "createmadlab:custom_filling",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:heroin_solution",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createmadlab:heroin_solution"
                         }
                     ],
     "results":  [
-                    {
-                        "id":  "minecraft:apple"
-                    }
+
                 ],
     "dynamic_lacing_content":  "bliss"
 }

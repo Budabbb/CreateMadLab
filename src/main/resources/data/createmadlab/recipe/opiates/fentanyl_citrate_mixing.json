@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,19 +6,19 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:citric_acid",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:citric_acid"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:ethanol",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:ethanol"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:fentanyl_citrate"
+                        "id":  "createmadlab:fentanyl_citrate",
+                        "count":  1
                     }
                 ]
 }

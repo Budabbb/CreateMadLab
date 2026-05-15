@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:acetone",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:acetone"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:lsd_solution",
-                        "amount":  25
+                        "amount":  25,
+                        "id":  "createmadlab:lsd_solution"
                     }
                 ]
 }

@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:filling",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:liquid_lsd",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:liquid_lsd"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:purple_tray"
+                        "id":  "createmadlab:purple_tray",
+                        "count":  1
                     }
                 ]
 }

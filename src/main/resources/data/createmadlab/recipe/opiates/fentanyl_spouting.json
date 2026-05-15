@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "createmadlab:custom_filling",
     "ingredients":  [
                         {
@@ -6,8 +6,8 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:fentanyl_solution",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createmadlab:fentanyl_solution"
                         }
                     ],
     "results":  [

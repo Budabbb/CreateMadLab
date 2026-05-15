@@ -84,6 +84,22 @@ public final class LsdTripState {
         hasCameraBaseline = false;
     }
 
+    public static void extend(int totalDurationTicks, int remainingDurationTicks, float strength) {
+        if (!active) {
+            resume(totalDurationTicks, remainingDurationTicks, strength);
+            return;
+        }
+
+        int safeTotalTicks = Math.max(1, totalDurationTicks);
+        int safeRemainingTicks = Mth.clamp(remainingDurationTicks, 0, safeTotalTicks);
+        totalTicks = Math.max(totalTicks, Mth.ceil(timeTicks + safeRemainingTicks));
+        remainingTicks = Math.max(remainingTicks, safeRemainingTicks);
+        doseStrength = Math.max(doseStrength, Math.max(0.55F, strength));
+        potencyScale = Mth.clamp(0.90F + doseStrength * 0.30F, 0.92F, 1.76F);
+        ticksUntilNextSpike = isVeryHighDose() ? Math.min(ticksUntilNextSpike, sampleNextSpikeDelay(0.0F)) : ticksUntilNextSpike;
+        active = remainingTicks > 0;
+    }
+
     public static void deactivate() {
         active = false;
         totalTicks = 0;

@@ -1,7 +1,10 @@
 {
-    "replace":  false,
-    "values":  [
-                   "minecraft:poppy",
-                   "biomeswevegone:california_poppy"
-               ]
+  "replace": false,
+  "values": [
+    "minecraft:poppy",
+    {
+      "id": "biomeswevegone:california_poppy",
+      "required": false
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:crushing",
     "ingredients":  [
                         {
@@ -7,14 +7,14 @@
                     ],
     "results":  [
                     {
+                        "id":  "createmadlab:ergot_powder",
                         "count":  1,
-                        "chance":  1,
-                        "id":  "createmadlab:ergot_powder"
+                        "chance":  1
                     },
                     {
+                        "id":  "createmadlab:ergot_powder",
                         "count":  1,
-                        "chance":  0.2,
-                        "id":  "createmadlab:ergot_powder"
+                        "chance":  0.2
                     }
                 ],
     "processing_time":  50

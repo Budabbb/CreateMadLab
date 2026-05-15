@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -9,18 +9,18 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "minecraft:water",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "minecraft:water"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "minecraft:leather"
+                        "id":  "minecraft:leather",
+                        "count":  1
                     },
                     {
-                        "id":  "createmadlab:sludge",
-                        "amount":  25
+                        "amount":  25,
+                        "id":  "createmadlab:sludge"
                     }
                 ],
     "heat_requirement":  "heated"

@@ -1,25 +1,25 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:ethanol",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:ethanol"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:hydrochloric_acid",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:hydrochloric_acid"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:ethyl_chloride",
-                        "amount":  25
+                        "amount":  25,
+                        "id":  "createmadlab:ethyl_chloride"
                     },
                     {
-                        "id":  "minecraft:water",
-                        "amount":  25
+                        "amount":  25,
+                        "id":  "minecraft:water"
                     }
                 ]
 }

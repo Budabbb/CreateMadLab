@@ -1,5 +1,7 @@
 package net.buda1bb.createmadlab.effect;
 
+import net.buda1bb.createmadlab.drug.DrugStateManager;
+import net.buda1bb.createmadlab.drug.DrugType;
 import net.buda1bb.createmadlab.network.ModMessages;
 import net.buda1bb.createmadlab.network.packet.LSDEffectS2CPacket;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +24,7 @@ public final class LSDEffectsManager {
             return;
         }
 
-        float strength = getStrengthForDose(dose);
+        float strength = getStackedLsdStrength(player, dose);
         storeActiveTrip(player, strength, EFFECT_DURATION_TICKS, EFFECT_DURATION_TICKS);
         if (player instanceof ServerPlayer serverPlayer) {
             ModMessages.sendToPlayer(new LSDEffectS2CPacket(EFFECT_DURATION_TICKS, EFFECT_DURATION_TICKS, strength), serverPlayer);
@@ -37,10 +39,26 @@ public final class LSDEffectsManager {
         int remainingTicks = getRemainingDurationTicks(player, player.level());
         if (remainingTicks <= 0) {
             clearLsdEffect(player);
+            ModMessages.sendToPlayer(new LSDEffectS2CPacket(0, 0, 0.0F), player);
             return;
         }
 
-        ModMessages.sendToPlayer(new LSDEffectS2CPacket(remainingTicks, getStoredTotalDuration(player), getStoredStrength(player)), player);
+        float strength = getStackedLsdStrength(player, 1.0D);
+        storeActiveTrip(player, strength, getStoredTotalDuration(player), remainingTicks);
+        ModMessages.sendToPlayer(new LSDEffectS2CPacket(remainingTicks, getStoredTotalDuration(player), strength), player);
+    }
+
+    public static void extendLsdEffect(Player player, int remainingTicks, float stackedStrength) {
+        if (player == null || remainingTicks <= 0) {
+            return;
+        }
+
+        int safeRemainingTicks = clampInt(remainingTicks, 1, EFFECT_DURATION_TICKS);
+        float strength = Math.max(getStoredStrength(player), clamp(stackedStrength, 0.0F, 3.45F));
+        storeActiveTrip(player, strength, EFFECT_DURATION_TICKS, safeRemainingTicks);
+        if (player instanceof ServerPlayer serverPlayer) {
+            ModMessages.sendToPlayer(new LSDEffectS2CPacket(safeRemainingTicks, EFFECT_DURATION_TICKS, strength), serverPlayer);
+        }
     }
 
     public static void tickActiveEffect(Player player, Level level) {
@@ -115,6 +133,14 @@ public final class LSDEffectsManager {
             return 1.75F;
         }
         return clamp(0.58F + normalizedDose * 0.22F, 0.58F, 1.0F);
+    }
+
+    private static float getStackedLsdStrength(Player player, double fallbackDose) {
+        float stackedStrength = DrugStateManager.getDrugVisualStrength(player, DrugType.LSD);
+        if (stackedStrength > 0.0F) {
+            return clamp(stackedStrength, 0.0F, 3.45F);
+        }
+        return getStrengthForDose(fallbackDose);
     }
 
     private static void storeActiveTrip(Player player, float strength, int totalDurationTicks, int remainingDurationTicks) {

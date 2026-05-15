@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:chloroform",
-                            "amount":  35
+                            "amount":  35,
+                            "fluid":  "createmadlab:chloroform"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:ergot_extract_solution",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:ergot_extract_solution"
                     }
                 ]
 }

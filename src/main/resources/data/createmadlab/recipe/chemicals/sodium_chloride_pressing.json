@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:pressing",
     "ingredients":  [
                         {
@@ -7,8 +7,8 @@
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:sodium_chloride"
+                        "id":  "createmadlab:sodium_chloride",
+                        "count":  1
                     }
                 ]
 }

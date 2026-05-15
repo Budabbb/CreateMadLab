@@ -1,15 +1,15 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:hydrogen_peroxide",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createmadlab:hydrogen_peroxide"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:ammonia",
-                            "amount":  200
+                            "amount":  200,
+                            "fluid":  "createbb:ammonia"
                         },
                         {
                             "item":  "createmadlab:sodium_hydroxide"
@@ -17,8 +17,8 @@
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:anhydrous_hydrazine",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:anhydrous_hydrazine"
                     }
                 ],
     "heat_requirement":  "heated"

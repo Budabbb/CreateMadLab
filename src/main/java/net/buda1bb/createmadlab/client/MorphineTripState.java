@@ -22,14 +22,26 @@ public final class MorphineTripState {
     private static float previousSmoothedDebtIntensity;
     private static float heartPulse;
     private static float previousHeartPulse;
+    private static boolean fadeOutMode;
+    private static float fadeOutStartIntensity;
+    private static float fadeOutStartDebtIntensity;
+    private static float visualStrength = 1.0F;
 
     private MorphineTripState() {
     }
 
     public static void sync(int totalDurationTicks, int remainingDurationTicks, int syncedUnstableHp) {
+        sync(totalDurationTicks, remainingDurationTicks, syncedUnstableHp, 1.0F);
+    }
+
+    public static void sync(int totalDurationTicks, int remainingDurationTicks, int syncedUnstableHp, float syncedVisualStrength) {
         totalTicks = Math.max(1, totalDurationTicks);
         remainingTicks = Mth.clamp(remainingDurationTicks, 0, totalTicks);
         unstableHp = Math.max(0, syncedUnstableHp);
+        visualStrength = sanitizeVisualStrength(syncedVisualStrength);
+        fadeOutMode = false;
+        fadeOutStartIntensity = 0.0F;
+        fadeOutStartDebtIntensity = 0.0F;
         active = remainingTicks > 0 || unstableHp > 0;
 
         float syncedTimeTicks = totalTicks - remainingTicks;
@@ -42,7 +54,7 @@ public final class MorphineTripState {
         if (shouldReset) {
             timeTicks = syncedTimeTicks;
             previousTimeTicks = syncedTimeTicks;
-            targetIntensity = MorphineEffectsManager.computeEffectIntensity(totalTicks, syncedTimeTicks);
+            targetIntensity = computeStackedEffectIntensity(syncedTimeTicks);
             smoothedIntensity = targetIntensity;
             previousSmoothedIntensity = targetIntensity;
             targetDebtIntensity = MorphineEffectsManager.computeDebtIntensity(unstableHp);
@@ -55,8 +67,57 @@ public final class MorphineTripState {
 
         timeTicks = syncedTimeTicks;
         previousTimeTicks = syncedTimeTicks;
-        targetIntensity = MorphineEffectsManager.computeEffectIntensity(totalTicks, syncedTimeTicks);
+        targetIntensity = computeStackedEffectIntensity(syncedTimeTicks);
         targetDebtIntensity = MorphineEffectsManager.computeDebtIntensity(unstableHp);
+    }
+
+    public static void extend(int totalDurationTicks, int remainingDurationTicks, int syncedUnstableHp) {
+        extend(totalDurationTicks, remainingDurationTicks, syncedUnstableHp, 1.0F);
+    }
+
+    public static void extend(int totalDurationTicks, int remainingDurationTicks, int syncedUnstableHp, float syncedVisualStrength) {
+        if (!active || fadeOutMode) {
+            sync(totalDurationTicks, remainingDurationTicks, syncedUnstableHp, syncedVisualStrength);
+            return;
+        }
+
+        int safeTotalTicks = Math.max(1, totalDurationTicks);
+        int safeRemainingTicks = Mth.clamp(remainingDurationTicks, 0, safeTotalTicks);
+        totalTicks = Math.max(safeTotalTicks, Mth.ceil(timeTicks + safeRemainingTicks));
+        remainingTicks = safeRemainingTicks;
+        unstableHp = Math.max(0, syncedUnstableHp);
+        visualStrength = sanitizeVisualStrength(syncedVisualStrength);
+        active = remainingTicks > 0 || unstableHp > 0;
+        targetIntensity = computeStackedEffectIntensity(timeTicks);
+        targetDebtIntensity = MorphineEffectsManager.computeDebtIntensity(unstableHp);
+    }
+
+    public static void syncFadeOut(int totalDurationTicks, int remainingDurationTicks, int syncedUnstableHp,
+                                   float startIntensity, float startDebtIntensity) {
+        syncFadeOut(totalDurationTicks, remainingDurationTicks, syncedUnstableHp, startIntensity, startDebtIntensity, 1.0F);
+    }
+
+    public static void syncFadeOut(int totalDurationTicks, int remainingDurationTicks, int syncedUnstableHp,
+                                   float startIntensity, float startDebtIntensity, float syncedVisualStrength) {
+        totalTicks = Math.max(1, totalDurationTicks);
+        remainingTicks = Mth.clamp(remainingDurationTicks, 0, totalTicks);
+        unstableHp = Math.max(0, syncedUnstableHp);
+        visualStrength = sanitizeVisualStrength(syncedVisualStrength);
+        fadeOutMode = true;
+        fadeOutStartIntensity = Mth.clamp(startIntensity, 0.0F, 1.0F);
+        fadeOutStartDebtIntensity = Mth.clamp(startDebtIntensity, 0.0F, 1.0F);
+        active = remainingTicks > 0 || unstableHp > 0;
+
+        timeTicks = totalTicks - remainingTicks;
+        previousTimeTicks = timeTicks;
+        targetIntensity = computeFadeOutIntensity();
+        smoothedIntensity = targetIntensity;
+        previousSmoothedIntensity = targetIntensity;
+        targetDebtIntensity = computeFadeOutDebtIntensity();
+        smoothedDebtIntensity = targetDebtIntensity;
+        previousSmoothedDebtIntensity = targetDebtIntensity;
+        heartPulse = computeHeartPulse(timeTicks / 20.0F, smoothedIntensity, smoothedDebtIntensity, computeTripPhase());
+        previousHeartPulse = heartPulse;
     }
 
     public static void deactivate() {
@@ -74,6 +135,10 @@ public final class MorphineTripState {
         previousSmoothedDebtIntensity = 0.0F;
         heartPulse = 0.0F;
         previousHeartPulse = 0.0F;
+        fadeOutMode = false;
+        fadeOutStartIntensity = 0.0F;
+        fadeOutStartDebtIntensity = 0.0F;
+        visualStrength = 1.0F;
     }
 
     public static void tick() {
@@ -91,15 +156,35 @@ public final class MorphineTripState {
         }
         timeTicks += 1.0F;
 
-        targetIntensity = MorphineEffectsManager.computeEffectIntensity(totalTicks, timeTicks);
-        targetDebtIntensity = MorphineEffectsManager.computeDebtIntensity(unstableHp);
-        smoothedIntensity += (targetIntensity - smoothedIntensity) * TARGET_SMOOTHING;
-        smoothedDebtIntensity += (targetDebtIntensity - smoothedDebtIntensity) * DEBT_SMOOTHING;
+        if (fadeOutMode) {
+            if (remainingTicks <= 0) {
+                targetIntensity = 0.0F;
+                smoothedIntensity = 0.0F;
+                targetDebtIntensity = 0.0F;
+                smoothedDebtIntensity = 0.0F;
+                heartPulse = 0.0F;
+                active = unstableHp > 0;
+                if (!active) {
+                    deactivate();
+                }
+                return;
+            }
+
+            targetIntensity = computeFadeOutIntensity();
+            targetDebtIntensity = computeFadeOutDebtIntensity();
+            smoothedIntensity = targetIntensity;
+            smoothedDebtIntensity = targetDebtIntensity;
+        } else {
+            targetIntensity = computeStackedEffectIntensity(timeTicks);
+            targetDebtIntensity = MorphineEffectsManager.computeDebtIntensity(unstableHp);
+            smoothedIntensity += (targetIntensity - smoothedIntensity) * TARGET_SMOOTHING;
+            smoothedDebtIntensity += (targetDebtIntensity - smoothedDebtIntensity) * DEBT_SMOOTHING;
+        }
 
         float pulseTarget = computeHeartPulse(timeTicks / 20.0F, smoothedIntensity, smoothedDebtIntensity, computeTripPhase());
         heartPulse += (pulseTarget - heartPulse) * PULSE_SMOOTHING;
 
-        active = remainingTicks > 0 || unstableHp > 0 || smoothedIntensity >= 0.01F || smoothedDebtIntensity >= 0.01F || heartPulse >= 0.01F;
+        active = remainingTicks > 0 || (!fadeOutMode && unstableHp > 0) || smoothedIntensity >= 0.01F || smoothedDebtIntensity >= 0.01F || heartPulse >= 0.01F;
         if (!active) {
             deactivate();
         }
@@ -156,6 +241,26 @@ public final class MorphineTripState {
         }
 
         return Mth.clamp(1.0F - remainingTicks / (float) totalTicks, 0.0F, 1.0F);
+    }
+
+    private static float computeFadeOutIntensity() {
+        return fadeOutStartIntensity * getFadeOutProgress();
+    }
+
+    private static float computeStackedEffectIntensity(float elapsedTicks) {
+        return MorphineEffectsManager.computeEffectIntensity(totalTicks, elapsedTicks) * visualStrength;
+    }
+
+    private static float sanitizeVisualStrength(float strength) {
+        return Mth.clamp(strength, 0.0F, 3.0F);
+    }
+
+    private static float computeFadeOutDebtIntensity() {
+        return fadeOutStartDebtIntensity * getFadeOutProgress();
+    }
+
+    private static float getFadeOutProgress() {
+        return totalTicks <= 0 ? 0.0F : Mth.clamp(remainingTicks / (float) totalTicks, 0.0F, 1.0F);
     }
 
     private static float computeHeartPulse(float seconds, float intensity, float debtIntensity, float phase) {

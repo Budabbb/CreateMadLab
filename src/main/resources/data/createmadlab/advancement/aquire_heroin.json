@@ -1,28 +1,22 @@
 {
-    "parent":  "createmadlab:aquire_morphine_base",
-    "display":  {
-                    "icon":  {
-                                 "id":  "createmadlab:heroin"
-                             },
-                    "title":  "A refined temptation",
-                    "description":  "Get your hands on some Bliss Dust",
-                    "frame":  "goal",
-                    "show_toast":  true,
-                    "announce_to_chat":  true,
-                    "hidden":  false
-                },
-    "criteria":  {
-                     "get_heroin":  {
-                                        "trigger":  "minecraft:inventory_changed",
-                                        "conditions":  {
-                                                           "items":  [
-                                                                         {
-                                                                             "items":  [
-                                                                                           "createmadlab:heroin"
-                                                                                       ]
-                                                                         }
-                                                                     ]
-                                                       }
-                                    }
-                 }
+  "parent": "createmadlab:aquire_morphine_base",
+  "display": {
+    "icon": { "item": "createmadlab:heroin" },
+    "title": "A refined temptation",
+    "description": "Get your hands on some Bliss Dust",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_heroin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["createmadlab:heroin"] }
+        ]
+      }
+    }
+  }
 }

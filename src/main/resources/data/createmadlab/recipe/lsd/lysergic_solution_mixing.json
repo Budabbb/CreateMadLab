@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,18 +6,18 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:anhydrous_hydrazine",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:anhydrous_hydrazine"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:lysergic_solution",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:lysergic_solution"
                     },
                     {
-                        "id":  "createmadlab:residue",
-                        "amount":  25
+                        "amount":  25,
+                        "id":  "createmadlab:residue"
                     }
                 ]
 }

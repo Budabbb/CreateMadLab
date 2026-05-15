@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,8 +6,8 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:oxygen",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createbb:oxygen"
                         },
                         {
                             "item":  "createmadlab:vanadium_pentoxide_catalyst",
@@ -16,12 +16,12 @@
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:sulfur_trioxide",
-                        "amount":  75
+                        "amount":  75,
+                        "id":  "createmadlab:sulfur_trioxide"
                     },
                     {
-                        "count":  1,
-                        "id":  "createmadlab:vanadium_pentoxide_catalyst"
+                        "id":  "createmadlab:vanadium_pentoxide_catalyst",
+                        "count":  1
                     }
                 ],
     "heat_requirement":  "heated"

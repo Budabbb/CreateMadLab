@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:compacting",
     "ingredients":  [
                         {
@@ -7,12 +7,12 @@
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:opium_latex",
-                        "amount":  5
+                        "amount":  5,
+                        "id":  "createmadlab:opium_latex"
                     },
                     {
-                        "id":  "createmadlab:sludge",
-                        "amount":  15
+                        "amount":  15,
+                        "id":  "createmadlab:sludge"
                     }
                 ]
 }

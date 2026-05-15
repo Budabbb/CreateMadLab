@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -9,18 +9,18 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:sulfuric_acid",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createmadlab:sulfuric_acid"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:citric_acid",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:citric_acid"
                     },
                     {
-                        "count":  1,
-                        "id":  "createmadlab:calcium_sulfate"
+                        "id":  "createmadlab:calcium_sulfate",
+                        "count":  1
                     }
                 ]
 }

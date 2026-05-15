@@ -25,6 +25,9 @@ public final class HeroinTripState {
     private static float previousPitch;
     private static float sedationWave;
     private static float previousSedationWave;
+    private static float visualStrength = 1.0F;
+    private static boolean fadeOutMode;
+    private static float fadeOutStartIntensity;
     private static boolean hasCameraBaseline;
 
     private HeroinTripState() {
@@ -35,13 +38,53 @@ public final class HeroinTripState {
     }
 
     public static void resume(int totalDurationTicks, int remainingDurationTicks) {
+        resume(totalDurationTicks, remainingDurationTicks, 1.0F);
+    }
+
+    public static void resume(int totalDurationTicks, int remainingDurationTicks, float strength) {
         totalTicks = Math.max(1, totalDurationTicks);
         remainingTicks = Mth.clamp(remainingDurationTicks, 0, totalTicks);
+        visualStrength = Mth.clamp(strength, 0.0F, 3.0F);
+        fadeOutMode = false;
+        fadeOutStartIntensity = 0.0F;
         active = remainingTicks > 0;
 
         timeTicks = totalTicks - remainingTicks;
         previousTimeTicks = timeTicks;
-        targetIntensity = HeroinEffectsManager.computeEffectIntensity(totalTicks, timeTicks);
+        targetIntensity = remainingTicks > 0 ? computeScaledEffectIntensity(timeTicks) : 0.0F;
+        smoothedIntensity = targetIntensity;
+        previousSmoothedIntensity = targetIntensity;
+        smoothedCameraMotion = 0.0F;
+        previousCameraMotion = 0.0F;
+        sedationWave = computeSedationWave(timeTicks / 20.0F, smoothedIntensity);
+        previousSedationWave = sedationWave;
+        hasCameraBaseline = false;
+    }
+
+    public static void extend(int totalDurationTicks, int remainingDurationTicks, float strength) {
+        if (!active || fadeOutMode) {
+            resume(totalDurationTicks, remainingDurationTicks, strength);
+            return;
+        }
+
+        int safeTotalTicks = Math.max(1, totalDurationTicks);
+        int safeRemainingTicks = Mth.clamp(remainingDurationTicks, 0, safeTotalTicks);
+        totalTicks = Math.max(safeTotalTicks, Mth.ceil(timeTicks + safeRemainingTicks));
+        remainingTicks = safeRemainingTicks;
+        visualStrength = Mth.clamp(strength, 0.0F, 3.0F);
+        active = remainingTicks > 0;
+    }
+
+    public static void resumeFadeOut(int totalDurationTicks, int remainingDurationTicks, float startIntensity) {
+        totalTicks = Math.max(1, totalDurationTicks);
+        remainingTicks = Mth.clamp(remainingDurationTicks, 0, totalTicks);
+        fadeOutStartIntensity = Mth.clamp(startIntensity, 0.0F, 1.0F);
+        fadeOutMode = true;
+        active = remainingTicks > 0;
+
+        timeTicks = totalTicks - remainingTicks;
+        previousTimeTicks = timeTicks;
+        targetIntensity = computeFadeOutTargetIntensity();
         smoothedIntensity = targetIntensity;
         previousSmoothedIntensity = targetIntensity;
         smoothedCameraMotion = 0.0F;
@@ -64,6 +107,9 @@ public final class HeroinTripState {
         previousCameraMotion = 0.0F;
         sedationWave = 0.0F;
         previousSedationWave = 0.0F;
+        visualStrength = 1.0F;
+        fadeOutMode = false;
+        fadeOutStartIntensity = 0.0F;
         hasCameraBaseline = false;
     }
 
@@ -82,9 +128,20 @@ public final class HeroinTripState {
         }
         timeTicks += 1.0F;
 
-        targetIntensity = HeroinEffectsManager.computeEffectIntensity(totalTicks, timeTicks);
-        smoothedIntensity += (targetIntensity - smoothedIntensity) * TARGET_SMOOTHING;
-        updateCameraMotion(minecraft);
+        if (fadeOutMode) {
+            if (remainingTicks <= 0) {
+                deactivate();
+                return;
+            }
+
+            targetIntensity = computeFadeOutTargetIntensity();
+            smoothedIntensity = targetIntensity;
+            smoothedCameraMotion = 0.0F;
+        } else {
+            targetIntensity = computeScaledEffectIntensity(timeTicks);
+            smoothedIntensity += (targetIntensity - smoothedIntensity) * TARGET_SMOOTHING;
+            updateCameraMotion(minecraft);
+        }
 
         float waveTarget = computeSedationWave(timeTicks / 20.0F, smoothedIntensity);
         sedationWave += (waveTarget - sedationWave) * WAVE_SMOOTHING;
@@ -151,6 +208,18 @@ public final class HeroinTripState {
         float wave = smoothstep(0.18F, 1.0F, combined);
         float gate = smoothstep(0.55F, 0.80F, intensity);
         return wave * gate;
+    }
+
+    private static float computeScaledEffectIntensity(float elapsedTicks) {
+        return HeroinEffectsManager.computeEffectIntensity(totalTicks, elapsedTicks) * visualStrength;
+    }
+
+    private static float getFadeOutProgress() {
+        return totalTicks <= 0 ? 0.0F : Mth.clamp(remainingTicks / (float) totalTicks, 0.0F, 1.0F);
+    }
+
+    private static float computeFadeOutTargetIntensity() {
+        return fadeOutStartIntensity * getFadeOutProgress();
     }
 
     private static float smoothstep(float edge0, float edge1, float value) {

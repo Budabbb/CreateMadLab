@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:crushing",
     "ingredients":  [
                         {
@@ -7,13 +7,13 @@
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:calcium_carbonate"
+                        "id":  "createmadlab:calcium_carbonate",
+                        "count":  1
                     },
                     {
+                        "id":  "createmadlab:calcium_carbonate",
                         "count":  1,
-                        "chance":  0.3,
-                        "id":  "createmadlab:calcium_carbonate"
+                        "chance":  0.3
                     }
                 ],
     "processing_time":  50

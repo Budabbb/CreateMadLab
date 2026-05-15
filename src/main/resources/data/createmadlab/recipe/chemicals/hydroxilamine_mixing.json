@@ -1,15 +1,15 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:ammonia",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createbb:ammonia"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:hydrogen_peroxide",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:hydrogen_peroxide"
                         },
                         {
                             "item":  "createmadlab:iron_sulfate_catalyst"
@@ -17,12 +17,12 @@
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:hydroxilamine"
+                        "id":  "createmadlab:hydroxilamine",
+                        "count":  1
                     },
                     {
-                        "count":  1,
-                        "id":  "createmadlab:iron_sulfate_catalyst"
+                        "id":  "createmadlab:iron_sulfate_catalyst",
+                        "count":  1
                     }
                 ]
 }

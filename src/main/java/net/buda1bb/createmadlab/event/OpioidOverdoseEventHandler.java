@@ -2,16 +2,17 @@ package net.buda1bb.createmadlab.event;
 
 import net.buda1bb.createmadlab.CreateMadLab;
 import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
+import net.buda1bb.createmadlab.effect.UniversalOverdoseHandler;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 @EventBusSubscriber(modid = CreateMadLab.MOD_ID)
-public final class FentanylEventHandler {
-    private FentanylEventHandler() {
+public final class OpioidOverdoseEventHandler {
+    private OpioidOverdoseEventHandler() {
     }
 
     @SubscribeEvent
@@ -20,13 +21,19 @@ public final class FentanylEventHandler {
             return;
         }
 
-        if (!FentanylEffectsManager.isFentanylOverdoseActive(player, player.level())) {
-            return;
+        double horizontalMultiplier = 1.0D;
+        double jumpMultiplier = 1.0D;
+
+        if (FentanylEffectsManager.isFentanylActive(player, player.level())) {
+            horizontalMultiplier *= FentanylEffectsManager.getHorizontalJumpDistanceMultiplier(player);
+            jumpMultiplier *= FentanylEffectsManager.getJumpVelocityMultiplier(player);
         }
 
-        int elapsedTicks = FentanylEffectsManager.getElapsedTicks(player);
-        double horizontalMultiplier = FentanylEffectsManager.getHorizontalJumpDistanceMultiplier(elapsedTicks);
-        double jumpMultiplier = FentanylEffectsManager.getJumpVelocityMultiplier(elapsedTicks);
+        if (UniversalOverdoseHandler.isOpioidOverdoseActive(player, player.level())) {
+            horizontalMultiplier *= UniversalOverdoseHandler.getHorizontalJumpDistanceMultiplier(player);
+            jumpMultiplier *= UniversalOverdoseHandler.getJumpVelocityMultiplier(player);
+        }
+
         if (jumpMultiplier >= 1.0D && horizontalMultiplier >= 0.999D) {
             return;
         }

@@ -17,8 +17,8 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
 
@@ -50,7 +50,11 @@ public final class LSDClientEffectManager {
             return;
         }
 
-        LsdTripState.resume(totalTicks, remainingTicks, strength);
+        if (LsdTripState.isActive()) {
+            LsdTripState.extend(totalTicks, remainingTicks, strength);
+        } else {
+            LsdTripState.resume(totalTicks, remainingTicks, strength);
+        }
         lastWindowWidth = minecraft.getWindow().getWidth();
         lastWindowHeight = minecraft.getWindow().getHeight();
     }
@@ -145,7 +149,7 @@ public final class LSDClientEffectManager {
             return;
         }
 
-        float partialTick = (float) event.getPartialTick();
+        float partialTick = ClientRenderTime.partialTick(minecraft);
         float intensity = LsdTripState.getSmoothedIntensity(partialTick);
         if (intensity < 0.10F) {
             return;

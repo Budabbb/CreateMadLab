@@ -1,24 +1,29 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:four_piperidone",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:four_piperidone"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:phenethylamine",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:phenethylamine"
                         },
                         {
                             "item":  "createmadlab:calcium_chloride"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  50,
+                            "fluid":  "createmadlab:diethyl_ether"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:npp_hydrochloride_solution",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:npp_hydrochloride_solution"
                     }
                 ],
     "heat_requirement":  "heated"

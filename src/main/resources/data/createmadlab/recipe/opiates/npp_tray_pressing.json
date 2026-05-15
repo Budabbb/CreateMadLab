@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:pressing",
     "ingredients":  [
                         {
@@ -7,12 +7,12 @@
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createbb:tray"
+                        "id":  "createbb:tray",
+                        "count":  1
                     },
                     {
-                        "count":  1,
-                        "id":  "createmadlab:npp_hydrochloride"
+                        "id":  "createmadlab:npp_hydrochloride",
+                        "count":  1
                     }
                 ]
 }

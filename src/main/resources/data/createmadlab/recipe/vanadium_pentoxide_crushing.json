@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:crushing",
     "ingredients":  [
                         {
@@ -7,9 +7,9 @@
                     ],
     "results":  [
                     {
+                        "id":  "createmadlab:vanadium_pentoxide",
                         "count":  1,
-                        "chance":  0.3,
-                        "id":  "createmadlab:vanadium_pentoxide"
+                        "chance":  0.3
                     }
                 ],
     "processing_time":  50

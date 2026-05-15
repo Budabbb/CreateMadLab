@@ -1,19 +1,25 @@
 package net.buda1bb.createmadlab.event;
 
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.buda1bb.createmadlab.drug.DrugStateManager;
 import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
 import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
 import net.buda1bb.createmadlab.effect.LSDEffectsManager;
 import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
+import net.buda1bb.createmadlab.effect.OpiateWithdrawalEffectsManager;
+import net.buda1bb.createmadlab.effect.UniversalOverdoseHandler;
 import net.buda1bb.createmadlab.network.ModMessages;
+import net.buda1bb.createmadlab.network.packet.DrugVisualStateS2CPacket;
 import net.buda1bb.createmadlab.network.packet.LSDEffectS2CPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.Set;
 import java.util.UUID;
@@ -25,62 +31,80 @@ public class ServerEventHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (event.getEntity() == null) {
+            return;
+        }
+
         Player player = event.getEntity();
-        if (player == null || player.level().isClientSide) {
+        Level level = player.level();
+        if (level.isClientSide) {
             return;
         }
 
         if (MorphineEffectsManager.hasActiveMorphineWindow(player)) {
             long startTime = MorphineEffectsManager.getMorphineStartTime(player);
-            long currentTime = player.level().getGameTime();
+            long currentTime = level.getGameTime();
             long elapsedTicks = currentTime - startTime;
 
-            MorphineEffectsManager.handleMorphineEffectTicks(player, player.level(), elapsedTicks);
+            MorphineEffectsManager.handleMorphineEffectTicks(player, level, elapsedTicks);
         }
 
-        MorphineEffectsManager.tickUnstableHp(player, player.level());
+        MorphineEffectsManager.tickNaloxoneFade(player, level);
+        MorphineEffectsManager.tickUnstableHp(player, level);
+        DrugStateManager.tickActiveDrugs(player, level);
 
-        boolean shouldSyncEffects = player instanceof ServerPlayer serverPlayer
+        ServerPlayer serverPlayer = player instanceof ServerPlayer playerOnServer ? playerOnServer : null;
+        boolean shouldSyncEffects = serverPlayer != null
                 && PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
-        if (shouldSyncEffects && player instanceof ServerPlayer serverPlayer) {
+        if (shouldSyncEffects) {
             MorphineEffectsManager.syncActiveEffect(serverPlayer);
             HeroinEffectsManager.syncActiveEffect(serverPlayer);
-            LSDEffectsManager.syncActiveEffect(serverPlayer);
             FentanylEffectsManager.syncActiveEffect(serverPlayer);
+            LSDEffectsManager.syncActiveEffect(serverPlayer);
+            UniversalOverdoseHandler.syncActiveEffect(serverPlayer);
+            OpiateWithdrawalEffectsManager.syncActiveEffect(serverPlayer);
         } else {
             HeroinEffectsManager.tickActiveEffect(player);
-            LSDEffectsManager.tickActiveEffect(player, player.level());
-            FentanylEffectsManager.tickActiveEffect(player, player.level());
+            FentanylEffectsManager.tickActiveEffect(player);
+            LSDEffectsManager.tickActiveEffect(player, level);
+            UniversalOverdoseHandler.tickActiveEffect(player, level);
+            OpiateWithdrawalEffectsManager.tickActiveEffect(player, level);
         }
 
-        MorphineEffectsManager.updateOngoingGameplayEffects(player, player.level());
-        HeroinEffectsManager.updateOngoingGameplayEffects(player, player.level());
-        FentanylEffectsManager.updateOngoingGameplayEffects(player, player.level());
+        MorphineEffectsManager.updateOngoingGameplayEffects(player, level);
+        HeroinEffectsManager.updateOngoingGameplayEffects(player, level);
+        FentanylEffectsManager.updateOngoingGameplayEffects(player, level);
+        UniversalOverdoseHandler.updateOngoingGameplayEffects(player, level);
+        OpiateWithdrawalEffectsManager.updateOngoingGameplayEffects(player, level);
 
-        if (!HeroinEffectsManager.isHeroinActive(player, player.level())) {
+        if (!HeroinEffectsManager.isHeroinActive(player, level)) {
             HeroinEffectsManager.clearHeroinEffect(player);
         }
 
-        if (!LSDEffectsManager.isLsdActive(player, player.level())) {
+        if (!FentanylEffectsManager.isFentanylActive(player, level)
+                && FentanylEffectsManager.getRemainingDurationTicks(player) > 0) {
+            FentanylEffectsManager.cleanupFentanylEffect(player, level);
+        }
+
+        if (!LSDEffectsManager.isLsdActive(player, level)) {
             LSDEffectsManager.clearLsdEffect(player);
         }
 
-        if (FentanylEffectsManager.hasFentanylOverdoseState(player)
-                && !FentanylEffectsManager.isFentanylOverdoseActive(player, player.level())) {
-            FentanylEffectsManager.clearFentanylOverdose(player);
+        if (UniversalOverdoseHandler.hasOpioidOverdoseState(player)
+                && !UniversalOverdoseHandler.isOpioidOverdoseActive(player, level)) {
+            UniversalOverdoseHandler.clearOpioidOverdose(player);
         }
 
         if (player.isDeadOrDying()) {
-            if (MorphineEffectsManager.hasMorphineState(player)) {
-                MorphineEffectsManager.cleanupMorphineEffects(player, player.level());
+            if (serverPlayer != null) {
+                clearAllDrugEffects(serverPlayer);
+            } else {
+                DrugStateManager.clearAll(player);
             }
-            if (HeroinEffectsManager.isHeroinActive(player, player.level())) {
-                HeroinEffectsManager.cleanupHeroinEffect(player, player.level());
-            }
-            if (FentanylEffectsManager.isFentanylOverdoseActive(player, player.level())) {
-                FentanylEffectsManager.clearFentanylOverdose(player);
-            }
+            return;
         }
+
+        DrugStateManager.syncIndividualEffectsWithActiveDrugs(player, level);
     }
 
     @SubscribeEvent
@@ -94,6 +118,7 @@ public class ServerEventHandler {
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
+            DrugStateManager.forgetSyncedVisualState(serverPlayer);
         }
     }
 
@@ -107,10 +132,18 @@ public class ServerEventHandler {
         MorphineEffectsManager.cleanupMorphineEffects(event.getEntity(), event.getEntity().level());
         HeroinEffectsManager.clearHeroinEffect(event.getOriginal());
         HeroinEffectsManager.clearHeroinEffect(event.getEntity());
+        FentanylEffectsManager.cleanupFentanylEffect(event.getOriginal(), event.getOriginal().level());
+        FentanylEffectsManager.cleanupFentanylEffect(event.getEntity(), event.getEntity().level());
         LSDEffectsManager.clearLsdEffect(event.getOriginal());
         LSDEffectsManager.clearLsdEffect(event.getEntity());
-        FentanylEffectsManager.clearFentanylOverdose(event.getOriginal());
-        FentanylEffectsManager.clearFentanylOverdose(event.getEntity());
+        UniversalOverdoseHandler.clearOpioidOverdose(event.getOriginal());
+        UniversalOverdoseHandler.clearOpioidOverdose(event.getEntity());
+        DrugStateManager.clearAll(event.getOriginal());
+        DrugStateManager.clearAll(event.getEntity());
+        DrugStateManager.forgetSyncedVisualState(event.getOriginal());
+        DrugStateManager.forgetSyncedVisualState(event.getEntity());
+        OpiateWithdrawalEffectsManager.clearWithdrawalEffect(event.getOriginal(), event.getOriginal().level());
+        OpiateWithdrawalEffectsManager.clearWithdrawalEffect(event.getEntity(), event.getEntity().level());
         PENDING_EFFECT_SYNC.remove(event.getOriginal().getUUID());
         PENDING_EFFECT_SYNC.remove(event.getEntity().getUUID());
     }
@@ -118,10 +151,7 @@ public class ServerEventHandler {
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            MorphineEffectsManager.cleanupMorphineEffects(serverPlayer, serverPlayer.level());
-            HeroinEffectsManager.clearHeroinEffect(serverPlayer);
-            LSDEffectsManager.clearLsdEffect(serverPlayer);
-            FentanylEffectsManager.clearFentanylOverdose(serverPlayer);
+            clearAllDrugEffects(serverPlayer);
             PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
         }
     }
@@ -129,14 +159,20 @@ public class ServerEventHandler {
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            if (MorphineEffectsManager.hasMorphineState(serverPlayer)) {
-                MorphineEffectsManager.cleanupMorphineEffects(serverPlayer, serverPlayer.level());
-            }
-            HeroinEffectsManager.cleanupHeroinEffect(serverPlayer, serverPlayer.level());
-            LSDEffectsManager.clearLsdEffect(serverPlayer);
-            FentanylEffectsManager.clearFentanylOverdose(serverPlayer);
+            clearAllDrugEffects(serverPlayer);
             PENDING_EFFECT_SYNC.remove(serverPlayer.getUUID());
-            ModMessages.sendToPlayer(new LSDEffectS2CPacket(0, 0, 0.0F), serverPlayer);
         }
+    }
+
+    private static void clearAllDrugEffects(ServerPlayer serverPlayer) {
+        MorphineEffectsManager.cleanupMorphineEffects(serverPlayer, serverPlayer.level());
+        HeroinEffectsManager.cleanupHeroinEffect(serverPlayer, serverPlayer.level());
+        FentanylEffectsManager.cleanupFentanylEffect(serverPlayer, serverPlayer.level());
+        LSDEffectsManager.clearLsdEffect(serverPlayer);
+        ModMessages.sendToPlayer(new LSDEffectS2CPacket(0, 0, 0.0F), serverPlayer);
+        UniversalOverdoseHandler.clearOpioidOverdose(serverPlayer);
+        OpiateWithdrawalEffectsManager.clearWithdrawalEffect(serverPlayer, serverPlayer.level());
+        DrugStateManager.clearAll(serverPlayer);
+        ModMessages.sendToPlayer(new DrugVisualStateS2CPacket(false, false, false, false, false, false), serverPlayer);
     }
 }

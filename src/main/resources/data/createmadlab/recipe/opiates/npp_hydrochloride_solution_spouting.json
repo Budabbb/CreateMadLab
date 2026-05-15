@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:filling",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:npp_hydrochloride_solution",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createmadlab:npp_hydrochloride_solution"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:npp_tray"
+                        "id":  "createmadlab:npp_tray",
+                        "count":  1
                     }
                 ]
 }

@@ -1,0 +1,24 @@
+{
+    "type":  "create:mixing",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:naloxone_base"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  25,
+                            "fluid":  "createmadlab:hydrochloric_acid"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  75,
+                            "fluid":  "minecraft:water"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "amount":  100,
+                        "id":  "createmadlab:naloxone_solution"
+                    }
+                ]
+}

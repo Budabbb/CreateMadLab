@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,19 +6,19 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:oxygen",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createbb:oxygen"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "minecraft:water",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "minecraft:water"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:hydrogen_peroxide",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:hydrogen_peroxide"
                     }
                 ],
     "heat_requirement":  "heated"

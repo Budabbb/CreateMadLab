@@ -1,0 +1,23 @@
+{
+    "type":  "createmadlab:custom_filling",
+    "ingredients":  [
+                        {
+                            "item":  "createmadlab:syringe"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  100,
+                            "fluid":  "createmadlab:naloxone_solution"
+                        }
+                    ],
+    "results":  [
+                    {
+                        "id":  "createmadlab:syringe",
+                        "components":  {
+                                           "minecraft:custom_data":  {
+                                                                         "content":  "naloxone"
+                                                                     }
+                                       }
+                    }
+                ]
+}

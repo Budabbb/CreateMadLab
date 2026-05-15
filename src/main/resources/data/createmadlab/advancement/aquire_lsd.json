@@ -1,28 +1,26 @@
 {
-    "parent":  "createmadlab:aquire_ergot_fungus",
-    "display":  {
-                    "icon":  {
-                                 "id":  "createmadlab:lsd_paper"
-                             },
-                    "title":  "Acid Test",
-                    "description":  "Office supplies, allegedly",
-                    "frame":  "challenge",
-                    "show_toast":  true,
-                    "announce_to_chat":  true,
-                    "hidden":  true
-                },
-    "criteria":  {
-                     "get_lsd":  {
-                                     "trigger":  "minecraft:inventory_changed",
-                                     "conditions":  {
-                                                        "items":  [
-                                                                      {
-                                                                          "items":  [
-                                                                                        "createmadlab:lsd_paper"
-                                                                                    ]
-                                                                      }
-                                                                  ]
-                                                    }
-                                 }
-                 }
+  "parent": "createmadlab:aquire_ergot_fungus",
+  "display": {
+    "icon": {
+      "item": "createmadlab:lsd_paper"
+    },
+    "title": "Acid Test",
+    "description": "Office supplies, allegedly",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "get_lsd": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["createmadlab:lsd_paper"]
+          }
+        ]
+      }
+    }
+  }
 }

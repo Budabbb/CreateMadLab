@@ -1,8 +1,8 @@
 package net.buda1bb.createmadlab.item;
 
-import net.buda1bb.createmadlab.effect.FentanylEffectsManager;
-import net.buda1bb.createmadlab.effect.HeroinEffectsManager;
-import net.buda1bb.createmadlab.effect.MorphineEffectsManager;
+import net.buda1bb.createmadlab.effect.NaloxoneEffectsManager;
+import net.buda1bb.createmadlab.drug.DrugStateManager;
+import net.buda1bb.createmadlab.drug.DrugType;
 import net.buda1bb.createmadlab.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -30,32 +30,27 @@ public class SyringeItem extends Item {
         if (entity instanceof Player player) {
             String content = getContent(stack);
 
-            if ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) {
-                if ("bliss".equals(content)) {
-                    HeroinEffectsManager.startHeroinEffect(player, level);
-                    if (!level.isClientSide) {
-                        applyBlissCooldowns(player);
+            if (isUsableContent(content)) {
+                if (!level.isClientSide) {
+                    if ("bliss".equals(content)) {
+                        DrugStateManager.addDrug(player, DrugType.HEROIN, 1.0F);
+                    } else if ("morphine".equals(content)) {
+                        DrugStateManager.addDrug(player, DrugType.MORPHINE, 1.0F);
+                    } else if ("void".equals(content)) {
+                        DrugStateManager.addDrug(player, DrugType.FENTANYL, 1.0F);
+                    } else if ("naloxone".equals(content)) {
+                        NaloxoneEffectsManager.applyNaloxone(player, level);
                     }
-                } else if ("morphine".equals(content)) {
-                    MorphineEffectsManager.startMorphineEffect(player, level);
-                    if (!level.isClientSide) {
-                        applyMorphineCooldowns(player);
-                    }
-                } else if ("void".equals(content)) {
-                    FentanylEffectsManager.startFentanylOverdose(player, level);
-                    if (!level.isClientSide) {
-                        applyFentanylCooldowns(player);
-                    }
-                }
 
-                if (!player.getAbilities().instabuild) {
-                    stack.shrink(1);
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
 
-                    ItemStack emptySyringe = new ItemStack(this);
-                    setContent(emptySyringe, "empty");
+                        ItemStack emptySyringe = new ItemStack(this);
+                        setContent(emptySyringe, "empty");
 
-                    if (!player.getInventory().add(emptySyringe)) {
-                        player.drop(emptySyringe, false);
+                        if (!player.getInventory().add(emptySyringe)) {
+                            player.drop(emptySyringe, false);
+                        }
                     }
                 }
             } else {
@@ -104,6 +99,8 @@ public class SyringeItem extends Item {
             tooltip.add(Component.literal("Full of Morphine").withStyle(ChatFormatting.AQUA));
         } else if ("void".equals(content)) {
             tooltip.add(Component.literal("Full of Void").withStyle(ChatFormatting.DARK_RED));
+        } else if ("naloxone".equals(content)) {
+            tooltip.add(Component.literal("Full of Naloxone").withStyle(ChatFormatting.BLUE));
         } else if ("empty".equals(content)) {
             tooltip.add(Component.literal("Empty").withStyle(ChatFormatting.DARK_GRAY));
         }
@@ -111,56 +108,16 @@ public class SyringeItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        String content = getContent(stack);
-        return ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) ? 8 : 0;
+        return isUsableContent(getContent(stack)) ? 8 : 0;
     }
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        String content = getContent(stack);
-        return ("bliss".equals(content) || "morphine".equals(content) || "void".equals(content)) ? UseAnim.DRINK : UseAnim.NONE;
+        return isUsableContent(getContent(stack)) ? UseAnim.DRINK : UseAnim.NONE;
     }
 
-    private void applyBlissCooldowns(Player player) {
-        player.getCooldowns().addCooldown(this, HeroinEffectsManager.getCooldownDuration());
-
-        Item lsdPaperItem = ModItems.LSD_PAPER.get();
-        if (lsdPaperItem != null) {
-            player.getCooldowns().addCooldown(lsdPaperItem, HeroinEffectsManager.getCooldownDuration());
-        }
-
-        Item syringeItem = ModItems.SYRINGE.get();
-        if (syringeItem != null) {
-            player.getCooldowns().addCooldown(syringeItem, HeroinEffectsManager.getCooldownDuration());
-        }
-    }
-
-    private void applyMorphineCooldowns(Player player) {
-        player.getCooldowns().addCooldown(this, MorphineEffectsManager.getCooldownDuration());
-
-        Item lsdPaperItem = ModItems.LSD_PAPER.get();
-        if (lsdPaperItem != null) {
-            player.getCooldowns().addCooldown(lsdPaperItem, MorphineEffectsManager.getCooldownDuration());
-        }
-
-        Item syringeItem = ModItems.SYRINGE.get();
-        if (syringeItem != null) {
-            player.getCooldowns().addCooldown(syringeItem, MorphineEffectsManager.getCooldownDuration());
-        }
-    }
-
-    private void applyFentanylCooldowns(Player player) {
-        player.getCooldowns().addCooldown(this, FentanylEffectsManager.getCooldownDuration());
-
-        Item lsdPaperItem = ModItems.LSD_PAPER.get();
-        if (lsdPaperItem != null) {
-            player.getCooldowns().addCooldown(lsdPaperItem, FentanylEffectsManager.getCooldownDuration());
-        }
-
-        Item syringeItem = ModItems.SYRINGE.get();
-        if (syringeItem != null) {
-            player.getCooldowns().addCooldown(syringeItem, FentanylEffectsManager.getCooldownDuration());
-        }
+    public boolean isEdible() {
+        return false;
     }
 
     public static boolean hasContent(ItemStack stack) {
@@ -169,8 +126,14 @@ public class SyringeItem extends Item {
     }
 
     public static boolean usesFilledTexture(ItemStack stack) {
-        String content = getContent(stack);
-        return "bliss".equals(content) || "morphine".equals(content) || "void".equals(content);
+        return isUsableContent(getContent(stack));
+    }
+
+    private static boolean isUsableContent(String content) {
+        return "bliss".equals(content)
+                || "morphine".equals(content)
+                || "void".equals(content)
+                || "naloxone".equals(content);
     }
 
     public static String getContent(ItemStack stack) {

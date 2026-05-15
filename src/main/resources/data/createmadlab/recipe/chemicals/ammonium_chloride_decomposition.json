@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -10,16 +10,16 @@
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:sodium_chloride"
+                        "id":  "createmadlab:sodium_chloride",
+                        "count":  1
                     },
                     {
-                        "id":  "createbb:ammonia",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createbb:ammonia"
                     },
                     {
-                        "id":  "minecraft:water",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "minecraft:water"
                     }
                 ],
     "heat_requirement":  "heated"

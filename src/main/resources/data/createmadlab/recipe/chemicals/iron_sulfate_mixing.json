@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,18 +6,18 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:sulfuric_acid",
-                            "amount":  50
+                            "amount":  50,
+                            "fluid":  "createmadlab:sulfuric_acid"
                         }
                     ],
     "results":  [
                     {
-                        "count":  1,
-                        "id":  "createmadlab:iron_sulfate"
+                        "id":  "createmadlab:iron_sulfate",
+                        "count":  1
                     },
                     {
-                        "id":  "createbb:hydrogen",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createbb:hydrogen"
                     }
                 ]
 }

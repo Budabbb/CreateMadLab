@@ -1,10 +1,10 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:methanol",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createbb:methanol"
                         },
                         {
                             "tag":  "minecraft:coals"
@@ -15,8 +15,8 @@
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:diethyl_ether",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:diethyl_ether"
                     }
                 ],
     "heat_requirement":  "heated"

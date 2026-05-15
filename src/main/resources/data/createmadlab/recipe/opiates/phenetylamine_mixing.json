@@ -1,10 +1,10 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:phenylacetone",
-                            "amount":  100
+                            "amount":  100,
+                            "fluid":  "createbb:phenylacetone"
                         },
                         {
                             "item":  "createmadlab:hydroxilamine"
@@ -15,16 +15,16 @@
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:phenethylamine",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:phenethylamine"
                     },
                     {
-                        "id":  "createmadlab:residue",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:residue"
                     },
                     {
-                        "count":  1,
-                        "id":  "createmadlab:vanadium_pentoxide_catalyst"
+                        "id":  "createmadlab:vanadium_pentoxide_catalyst",
+                        "count":  1
                     }
                 ]
 }

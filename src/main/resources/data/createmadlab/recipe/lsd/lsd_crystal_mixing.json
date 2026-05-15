@@ -1,4 +1,4 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
@@ -6,14 +6,14 @@
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:diethylamine",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:diethylamine"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:liquid_lsd",
-                        "amount":  50
+                        "amount":  50,
+                        "id":  "createmadlab:liquid_lsd"
                     }
                 ],
     "heat_requirement":  "heated"

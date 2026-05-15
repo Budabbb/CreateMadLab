@@ -23,8 +23,8 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
 
@@ -72,6 +72,18 @@ public final class MorphineClientEffectManager {
     }
 
     public static void activate(int remainingTicks, int totalTicks, int unstableHp, float health, boolean silentDecay, boolean convertedDamage) {
+        activate(remainingTicks, totalTicks, unstableHp, health, silentDecay, convertedDamage, false, 0.0F, 0.0F, 1.0F);
+    }
+
+    public static void activate(int remainingTicks, int totalTicks, int unstableHp, float health, boolean silentDecay,
+                                boolean convertedDamage, boolean fadeOut, float startIntensity, float startDebtIntensity) {
+        activate(remainingTicks, totalTicks, unstableHp, health, silentDecay, convertedDamage, fadeOut,
+                startIntensity, startDebtIntensity, 1.0F);
+    }
+
+    public static void activate(int remainingTicks, int totalTicks, int unstableHp, float health, boolean silentDecay,
+                                boolean convertedDamage, boolean fadeOut, float startIntensity, float startDebtIntensity,
+                                float visualStrength) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft == null) {
             return;
@@ -79,7 +91,14 @@ public final class MorphineClientEffectManager {
 
         int safeTotalTicks = totalTicks > 0 ? totalTicks : MorphineEffectsManager.getTotalDuration();
         int safeRemainingTicks = Mth.clamp(remainingTicks, 0, safeTotalTicks);
-        MorphineTripState.sync(safeTotalTicks, safeRemainingTicks, Math.max(0, unstableHp));
+        if (fadeOut) {
+            MorphineTripState.syncFadeOut(safeTotalTicks, safeRemainingTicks, Math.max(0, unstableHp),
+                    startIntensity, startDebtIntensity, visualStrength);
+        } else if (MorphineTripState.isActive()) {
+            MorphineTripState.extend(safeTotalTicks, safeRemainingTicks, Math.max(0, unstableHp), visualStrength);
+        } else {
+            MorphineTripState.sync(safeTotalTicks, safeRemainingTicks, Math.max(0, unstableHp), visualStrength);
+        }
         if (convertedDamage) {
             recentConvertedDamageTicks = Math.max(recentConvertedDamageTicks, 3);
         }
@@ -140,7 +159,6 @@ public final class MorphineClientEffectManager {
         }
         detectSilentDecayTransition(minecraft);
         suppressSilentDecayFeedback(minecraft);
-        softenHurtFeedback(minecraft);
         if (!MorphineTripState.isActive()) {
             deactivate();
         }
@@ -212,7 +230,7 @@ public final class MorphineClientEffectManager {
             return;
         }
 
-        float partialTick = (float) event.getPartialTick();
+        float partialTick = ClientRenderTime.partialTick(minecraft);
         float phaseIntensity = MorphineTripState.getSmoothedIntensity(partialTick);
         float debtIntensity = MorphineTripState.getSmoothedDebtIntensity(partialTick);
         float healthFactor = getMissingHealthFactor(minecraft.player);
@@ -234,27 +252,6 @@ public final class MorphineClientEffectManager {
         float healthPressure = 1.0F + healthFactor * 0.70F;
         float fovOffset = fovScale * breathingCycle * (0.45F + 0.55F * breathingWave) * healthPressure;
         event.setFOV(event.getFOV() + FOV_PULSE_DEGREES * fovOffset);
-    }
-
-    @SubscribeEvent
-    public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
-        if (!MorphineTripState.isActive()) {
-            return;
-        }
-
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft == null || minecraft.player == null || minecraft.level == null || minecraft.player.hurtTime <= 0) {
-            return;
-        }
-
-        float intensity = MorphineTripState.getSmoothedIntensity((float) event.getPartialTick());
-        if (intensity <= 0.08F) {
-            return;
-        }
-
-        float suppression = smoothstep(0.18F, 0.82F, intensity);
-        float rollScale = Mth.lerp(suppression, 0.78F, 0.28F);
-        event.setRoll(event.getRoll() * rollScale);
     }
 
     private static boolean ensureProcessorReady(Minecraft minecraft) {
@@ -642,25 +639,6 @@ public final class MorphineClientEffectManager {
         pendingObservedHealthDrop = 0.0F;
         pendingObservedDebtDrop = 0;
         pendingObservedDecayMatchTicks = 0;
-    }
-
-    private static void softenHurtFeedback(Minecraft minecraft) {
-        if (minecraft.player == null || minecraft.player.hurtTime <= 0) {
-            return;
-        }
-
-        float intensity = MorphineTripState.getTargetIntensity();
-        if (intensity <= 0.08F) {
-            return;
-        }
-
-        int cappedHurtTime = intensity >= 0.52F ? 1 : intensity >= 0.24F ? 2 : 3;
-        if (minecraft.player.hurtTime > cappedHurtTime) {
-            minecraft.player.hurtTime = cappedHurtTime;
-        }
-        if (intensity > 0.22F && minecraft.player.hurtTime > 1) {
-            minecraft.player.hurtTime--;
-        }
     }
 
     private static void setUniform(EffectInstance effect, String name, float value) {

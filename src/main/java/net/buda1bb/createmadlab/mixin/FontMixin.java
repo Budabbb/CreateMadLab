@@ -126,6 +126,6 @@ public abstract class FontMixin {
 
     @Unique
     private static boolean createmadlab$shouldSkipBlur() {
-        return createmadlab$renderingBlur;
+        return createmadlab$renderingBlur || TextScrambler.isBlurSuppressed();
     }
 }

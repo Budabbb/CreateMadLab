@@ -1,21 +1,26 @@
-﻿{
+{
     "type":  "create:mixing",
     "ingredients":  [
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createbb:hydrogen",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createbb:hydrogen"
                         },
                         {
                             "type":  "neoforge:single",
-                            "fluid":  "createmadlab:chlorine",
-                            "amount":  25
+                            "amount":  25,
+                            "fluid":  "createmadlab:chlorine"
+                        },
+                        {
+                            "type":  "neoforge:single",
+                            "amount":  50,
+                            "fluid":  "minecraft:water"
                         }
                     ],
     "results":  [
                     {
-                        "id":  "createmadlab:hydrochloric_acid",
-                        "amount":  100
+                        "amount":  100,
+                        "id":  "createmadlab:hydrochloric_acid"
                     }
                 ],
     "heat_requirement":  "heated"

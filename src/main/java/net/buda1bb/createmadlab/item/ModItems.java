@@ -2,9 +2,9 @@ package net.buda1bb.createmadlab.item;
 
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.buda1bb.createmadlab.CreateMadLab;
+import net.minecraft.core.registries.Registries;
 import net.buda1bb.createmadlab.block.ModBlocks;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
+
 
 import java.util.List;
 
@@ -98,6 +99,12 @@ public class ModItems {
 
     public static final DeferredHolder<Item, Item> MORPHINE_BASE =
             ITEMS.register("morphine_base", () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> OXYMORPHONE =
+            ITEMS.register("oxymorphone", () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> NALOXONE_BASE =
+            ITEMS.register("naloxone_base", () -> new Item(new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> DIAMORPHINE =
             ITEMS.register("diamorphine", () -> new Item(new Item.Properties()));
